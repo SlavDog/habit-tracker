@@ -725,66 +725,100 @@
         margin-top: 0.65rem;
         overflow-x: hidden;
       }
-      table.hm-table {
-        border-collapse: separate;
-        border-spacing: 0;
-        font-size: 0.72rem;
-        table-layout: fixed;
-        width: 100%;
+      .hm-week {
+        padding: 0.25rem 0 0.35rem;
+        border-bottom: 1px solid rgba(215, 179, 77, 0.12);
       }
-      table.hm-table th,
-      table.hm-table td {
-        padding: 0;
-        text-align: center;
+      .hm-week:last-child {
+        border-bottom: 0;
       }
-      .hm-day-col {
-        width: 28px;
-        text-align: right !important;
-        padding-right: 0.35rem !important;
+      .hm-week-head,
+      .hm-week-row {
+        display: grid;
+        grid-template-columns: minmax(68px, 1.15fr) repeat(7, minmax(0, 1fr));
+        align-items: center;
+        gap: 3px;
+      }
+      .hm-week-head {
+        padding-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
+        border-bottom: 1px solid rgba(215, 179, 77, 0.1);
+      }
+      .hm-week-label {
         color: var(--muted);
+        font-size: 0.58rem;
+      }
+      .hm-date-head {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1.1;
+        color: var(--muted);
+        font-size: 0.52rem;
+      }
+      .hm-date-head b {
+        color: var(--parchment-dim);
+        font-size: 0.64rem;
         font-weight: 500;
-        position: sticky;
-        left: 0;
-        z-index: 2;
+      }
+      .hm-date-head.empty {
+        visibility: hidden;
+      }
+      .hm-week-row + .hm-week-row {
+        margin-top: 3px;
+      }
+      .hm-habit-name {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        min-width: 0;
+        color: var(--parchment);
+        font-size: 0.66rem;
+      }
+      .hm-habit-name span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .hm-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .hm-empty-day {
+        height: 22px;
+      }
+      .hm-day-cell {
+        width: 100%;
+        height: 22px;
+        min-width: 0;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 5px;
         background: var(--bg-inset);
+        color: var(--parchment-dim);
+        font: inherit;
+        font-size: 0.64rem;
+        cursor: pointer;
       }
-      th.hm-day-col {
-        background: var(--bg-panel);
-        z-index: 3;
+      .hm-day-cell:hover:not(:disabled) {
+        border-color: var(--gold);
       }
-      .hm-day-col.today {
-        color: var(--gold-bright);
+      .hm-day-cell.today {
+        box-shadow: inset 0 0 0 1px var(--gold-bright);
+      }
+      .hm-day-cell.filled {
+        background: var(--habit-color);
+        border-color: transparent;
+        color: #160f18;
         font-weight: 700;
       }
-      th.hm-habit-head {
-        font-weight: 500;
-        text-align: center;
-        padding: 0.2rem 0 0.3rem !important;
-        border-bottom: 3px solid var(--gold-dim);
-        vertical-align: bottom;
-      }
-      .hm-label {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
-        display: inline-block;
-        font-size: 0.6rem;
-        white-space: nowrap;
-        color: var(--parchment-dim);
-      }
-      .hm-cell {
-        height: 19px;
-        border: 1px solid rgba(255, 255, 255, 0.03);
-      }
-      .hm-cell.future {
-        opacity: 0.35;
-      }
-      .hm-row-alt td:not(.hm-day-col) {
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .hm-day-col.today-row,
-      tr.hm-today-row .hm-day-col {
-        outline: 1px solid rgba(215, 179, 77, 0.4);
-        outline-offset: -1px;
+      .hm-day-cell:disabled {
+        opacity: 0.32;
+        cursor: not-allowed;
       }
       @media (max-width: 680px) {
         .table-scroll {
@@ -2564,57 +2598,86 @@
               '<div class="empty-note">Zatím nemáš žádné návyky. Přidej první přes postranní panel.</div>';
             return;
           }
-          let thead = '<thead><tr><th class="hm-day-col">Den</th>';
-          myHabits.forEach((h) => {
-            thead +=
-              '<th class="hm-habit-head" style="border-bottom-color:' +
-              (h.color || "#c9622a") +
-              '"><span class="hm-label" title="' +
-              escapeAttr(h.title) +
-              '">' +
-              escapeHtml(h.title) +
-              "</span></th>";
-          });
-          thead += "</tr></thead>";
-          let tbody = "<tbody>";
-          for (let d = 1; d <= nDays; d++) {
-            const dateStr = fmtDate(new Date(calYear, calMonth, d));
-            const isToday = dateStr === t;
-            const future = dateStr > t;
-            tbody +=
-              "<tr" +
-              (isToday ? ' class="hm-today-row"' : "") +
-              '><td class="hm-day-col' +
-              (isToday ? " today" : "") +
-              '">' +
-              d +
-              "</td>";
+          const weekdays = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+          const leadingDays = (new Date(calYear, calMonth, 1).getDay() + 6) % 7;
+          const weekCount = Math.ceil((leadingDays + nDays) / 7);
+          let markup = "";
+          for (let week = 0; week < weekCount; week++) {
+            markup +=
+              '<section class="hm-week"><div class="hm-week-head"><span class="hm-week-label">Návyk</span>';
+            for (let weekday = 0; weekday < 7; weekday++) {
+              const day = week * 7 + weekday - leadingDays + 1;
+              if (day < 1 || day > nDays) {
+                markup += '<span class="hm-date-head empty"></span>';
+              } else {
+                markup +=
+                  '<span class="hm-date-head"><span>' +
+                  weekdays[weekday] +
+                  "</span><b>" +
+                  day +
+                  "</b></span>";
+              }
+            }
+            markup += "</div>";
             myHabits.forEach((h) => {
-              const filled = isCovered(h, dateStr);
-              tbody +=
-                '<td class="hm-cell' +
-                (future ? " future" : "") +
-                '" style="' +
-                (filled ? "background:" + (h.color || "#c9622a") : "") +
-                '" data-habit="' +
-                h.id +
-                '" data-date="' +
-                dateStr +
-                '"></td>';
+              const color = h.color || "#c9622a";
+              markup +=
+                '<div class="hm-week-row"><div class="hm-habit-name" title="' +
+                escapeAttr(h.title) +
+                '"><span class="hm-dot" style="background:' +
+                escapeAttr(color) +
+                '"></span><span>' +
+                escapeHtml(h.title) +
+                "</span></div>";
+              for (let weekday = 0; weekday < 7; weekday++) {
+                const day = week * 7 + weekday - leadingDays + 1;
+                if (day < 1 || day > nDays) {
+                  markup += '<span class="hm-empty-day"></span>';
+                  continue;
+                }
+                const dateStr = fmtDate(new Date(calYear, calMonth, day));
+                const filled = isCovered(h, dateStr);
+                const future = dateStr > t;
+                const state = filled ? "splněno" : "nesplněno";
+                markup +=
+                  '<button type="button" class="hm-day-cell' +
+                  (filled ? " filled" : "") +
+                  (dateStr === t ? " today" : "") +
+                  '" style="--habit-color:' +
+                  escapeAttr(color) +
+                  '" data-habit="' +
+                  escapeAttr(h.id) +
+                  '" data-date="' +
+                  dateStr +
+                  '" aria-label="' +
+                  escapeAttr(
+                    h.title +
+                      ", " +
+                      day +
+                      ". " +
+                      MONTH_NAMES[calMonth] +
+                      ", " +
+                      state,
+                  ) +
+                  '"' +
+                  (future ? " disabled" : "") +
+                  ">" +
+                  day +
+                  "</button>";
+              }
+              markup += "</div>";
             });
-            tbody += "</tr>";
+            markup += "</section>";
           }
-          tbody += "</tbody>";
-          wrap.innerHTML =
-            '<table class="hm-table">' + thead + tbody + "</table>";
-          const hmTable = wrap.querySelector("table.hm-table");
-          hmTable.style.width = "100%";
-          wrap.querySelectorAll(".hm-cell:not(.future)").forEach((cell) => {
-            cell.addEventListener("click", () => {
-              const h = habits.find((x) => x.id === cell.dataset.habit);
-              if (h) toggleHabitDay(h, cell.dataset.date);
+          wrap.innerHTML = markup;
+          wrap
+            .querySelectorAll(".hm-day-cell:not(:disabled)")
+            .forEach((cell) => {
+              cell.addEventListener("click", () => {
+                const h = habits.find((x) => x.id === cell.dataset.habit);
+                if (h) toggleHabitDay(h, cell.dataset.date);
+              });
             });
-          });
         }
 
         /* ================= RENDER: ONE-OFF TASKS ================= */
