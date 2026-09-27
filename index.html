@@ -2406,7 +2406,7 @@
           }
         }
 
-        /* ---- recurring tasks (school lectures etc. — no reward, weekly/biweekly only) ---- */
+        /* ---- recurring tasks (weekly/biweekly) ---- */
         function recurringForChar(id) {
           return recurringTasks.filter((t) => t.ownerId === id);
         }
@@ -2424,6 +2424,9 @@
         function recurringLastCompletion(rt) {
           const c = rt.completions || [];
           return c.length ? c[c.length - 1] : null;
+        }
+        function recurringReward(rt) {
+          return (DIFFICULTY[rt.difficulty] || DIFFICULTY.easy).gold;
         }
         function recurringIsDoneNow(rt) {
           const lc = recurringLastCompletion(rt);
@@ -2451,14 +2454,44 @@
         }
         async function toggleRecurringTask(rt) {
           const completions = (rt.completions || []).slice();
+          const owner = characters[rt.ownerId];
+          const reward = recurringReward(rt);
           if (recurringIsDoneNow(rt)) {
+            const paidReward =
+              rt.lastRewardAmount || (rt.lastRewardPaid ? reward : 0);
             completions.pop();
-            await Store.updateRecurringTask(rt.id, { completions });
-            toast('Splnění "' + rt.title + '" zrušeno.');
+            await Store.updateRecurringTask(rt.id, {
+              completions,
+              lastRewardPaid: false,
+              lastRewardAmount: null,
+              lastCompletionDueDate: null,
+            });
+            if (paidReward && owner) {
+              await Store.updateCharacter(rt.ownerId, {
+                gold: Math.max(0, (owner.gold || 0) - paidReward),
+              });
+            }
+            toast(
+              'Splnění "' +
+                rt.title +
+                '" zrušeno' +
+                (paidReward ? ", −" + paidReward + " zlaťáků." : "."),
+            );
           } else {
+            const dueDate = recurringDueDate(rt);
             completions.push(todayStr());
-            await Store.updateRecurringTask(rt.id, { completions });
-            toast('Splněno: "' + rt.title + '".');
+            await Store.updateRecurringTask(rt.id, {
+              completions,
+              lastRewardPaid: true,
+              lastRewardAmount: reward,
+              lastCompletionDueDate: dueDate,
+            });
+            if (owner) {
+              await Store.updateCharacter(rt.ownerId, {
+                gold: (owner.gold || 0) + reward,
+              });
+            }
+            toast("+" + reward + ' zlaťáků za "' + rt.title + '"!', true);
           }
         }
         function recurringMeta(rt) {
@@ -2545,7 +2578,22 @@
             data: tk,
             done: !!tk.completed,
           }));
-          const due = [...dueH, ...dueO];
+          const dueR = recurringForChar(currentCharId)
+            .filter(
+              (rt) =>
+                (recurringDueDate(rt) <= t && !recurringIsDoneNow(rt)) ||
+                (recurringLastCompletion(rt) === t &&
+                  rt.lastCompletionDueDate &&
+                  rt.lastCompletionDueDate <= t),
+            )
+            .map((rt) => ({
+              kind: "recurring",
+              data: rt,
+              done:
+                recurringLastCompletion(rt) === t &&
+                rt.lastCompletionDueDate <= t,
+            }));
+          const due = [...dueH, ...dueO, ...dueR];
           if (due.length === 0) {
             list.innerHTML =
               '<div class="empty-note">Na dnešek nemáš žádné úkoly ani návyky.</div>';
@@ -2563,8 +2611,10 @@
                 ? intervalLabel(item.intervalDays) +
                   " · " +
                   (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
-                : "Jednorázový úkol · " +
-                  (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label;
+                : entry.kind === "recurring"
+                  ? recurringMeta(item)
+                  : "Jednorázový úkol · " +
+                    (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label;
             row.innerHTML =
               '<button class="task-check' +
               (entry.done ? " done" : "") +
@@ -2584,6 +2634,8 @@
               .querySelector(".task-check")
               .addEventListener("click", async () => {
                 if (entry.kind === "habit") await toggleHabitDay(item, t);
+                else if (entry.kind === "recurring")
+                  await toggleRecurringTask(item);
                 else await toggleOneOffTask(item);
               });
             list.appendChild(row);
@@ -2818,7 +2870,10 @@
               escapeHtml(rt.title) +
               '</div><div class="t-meta">' +
               recurringMeta(rt) +
-              "</div></div>";
+              "</div></div>" +
+              '<div class="task-reward">+' +
+              recurringReward(rt) +
+              " 🪙</div>";
             row
               .querySelector(".task-check")
               .addEventListener("click", () => toggleRecurringTask(rt));
@@ -3480,15 +3535,25 @@
           });
         }
 
-        /* ---- Recurring task modals (weekly/biweekly, no reward) ---- */
+        /* ---- Recurring task modals (weekly/biweekly) ---- */
         function recurringFormFields(rt) {
-          rt = rt || { intervalDays: 7, baseDueDate: todayStr() };
+          rt = rt || {
+            intervalDays: 7,
+            baseDueDate: todayStr(),
+            difficulty: "easy",
+          };
           const currentDue = rt.id
             ? recurringDueDate(rt)
             : rt.baseDueDate || todayStr();
           return `
     <div class="field"><label>Název (např. přednáška)</label><input type="text" id="f-rtitle" value="${escapeAttr(rt.title || "")}" placeholder="Např. Přednáška z analýzy"></div>
     <div class="field"><label>Popis</label><textarea id="f-rdesc" placeholder="Nepovinný popis">${escapeHtml(rt.description || "")}</textarea></div>
+    <div class="field"><label>Odměna za splnění</label><select id="f-rdifficulty">
+      <option value="easy" ${(rt.difficulty || "easy") === "easy" ? "selected" : ""}>Snadný · 5 zlaťáků</option>
+      <option value="medium" ${rt.difficulty === "medium" ? "selected" : ""}>Střední · 10 zlaťáků</option>
+      <option value="hard" ${rt.difficulty === "hard" ? "selected" : ""}>Těžký · 20 zlaťáků</option>
+      <option value="legendary" ${rt.difficulty === "legendary" ? "selected" : ""}>Legendární · 35 zlaťáků</option>
+    </select></div>
     <div class="field"><label>Interval</label>
       <div class="preset-row" id="f-rinterval-presets">
         <button type="button" class="preset-chip" data-days="7">Týdenní</button>
@@ -3540,10 +3605,14 @@
             await Store.addRecurringTask({
               title,
               description: modal.querySelector("#f-rdesc").value.trim(),
+              difficulty: modal.querySelector("#f-rdifficulty").value,
               intervalDays: ctrl.getDays(),
               baseDueDate: modal.querySelector("#f-rdue").value || todayStr(),
               ownerId: currentCharId,
               completions: [],
+              lastRewardPaid: false,
+              lastRewardAmount: null,
+              lastCompletionDueDate: null,
             });
             toast('Úkol "' + title + '" byl vytvořen.');
             closeModal();
@@ -3603,13 +3672,26 @@
               toast("Zadej název úkolu.");
               return;
             }
+            const intervalDays = ctrl.getDays();
+            const baseDueDate =
+              holder.querySelector("#f-rdue").value || recurringDueDate(rt);
+            const scheduleChanged =
+              intervalDays !== (rt.intervalDays || 7) ||
+              baseDueDate !== recurringDueDate(rt);
             await Store.updateRecurringTask(rt.id, {
               title,
               description: holder.querySelector("#f-rdesc").value.trim(),
-              intervalDays: ctrl.getDays(),
-              baseDueDate:
-                holder.querySelector("#f-rdue").value || rt.baseDueDate,
-              completions: [],
+              difficulty: holder.querySelector("#f-rdifficulty").value,
+              intervalDays,
+              baseDueDate: scheduleChanged ? baseDueDate : rt.baseDueDate,
+              completions: scheduleChanged ? [] : rt.completions || [],
+              lastRewardPaid: scheduleChanged ? false : !!rt.lastRewardPaid,
+              lastRewardAmount: scheduleChanged
+                ? null
+                : rt.lastRewardAmount || null,
+              lastCompletionDueDate: scheduleChanged
+                ? null
+                : rt.lastCompletionDueDate || null,
             });
             toast("Úkol uložen.");
             closeModal();
@@ -4105,6 +4187,7 @@
                   .classList.contains("hidden")
               )
                 return;
+              renderTasks();
               renderRecurringList();
             }),
           );
