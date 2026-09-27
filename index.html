@@ -16,7 +16,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
     <style>
       :root {
         color-scheme: dark;
@@ -1713,14 +1712,12 @@
           apiKey: "AIzaSyBVyOJFFiDRbbORtEMSv2QnW8JTxLlEUaA",
           authDomain: "kronika-navyku.firebaseapp.com",
           projectId: "kronika-navyku",
-          storageBucket: "kronika-navyku.firebasestorage.app",
           messagingSenderId: "490257431178",
           appId: "1:490257431178:web:cf8a5fb21bc431b2290b73",
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const firestore = firebase.firestore();
-        const storage = firebase.storage();
 
         /* ================= CONSTANTS ================= */
         const CHAR_IDS = ["p1", "p2"];
@@ -3578,8 +3575,7 @@
     <div class="field"><label>Název položky</label><input type="text" id="f-iname" value="${escapeAttr(item.name || "")}" placeholder="Např. Elixír síly"></div>
     <div class="field"><label>Popis</label><textarea id="f-idesc" placeholder="Krátký popis, zobrazí se kurzívou">${escapeHtml(item.description || "")}</textarea></div>
     <div class="field"><label>Cena (zlaťáky)</label><input type="number" id="f-iprice" min="0" value="${item.price != null ? item.price : 10}"></div>
-    <div class="field"><label>Obrázek (URL, nepovinné)</label><input type="url" id="f-iimg" value="${escapeAttr(item.image || "")}" placeholder="https://…"></div>
-    <div class="field"><label>Nebo nahrát obrázek</label><input type="file" id="f-iimg-file" accept="image/*"><span class="hint">Uloží se do Firebase Storage. Maximální velikost je 5 MB.</span></div>
+    <div class="field"><label>Obrázek (cesta nebo URL, nepovinné)</label><input type="text" id="f-iimg" value="${escapeAttr(item.image || "")}" placeholder="images/elixir.png"><span class="hint">Ulož obrázek do složky images a zadej jeho cestu, nebo vlož veřejnou přímou URL.</span></div>
     <div class="field checkbox-row"><input type="checkbox" id="f-ialt-on" ${item.altHabitId ? "checked" : ""}><label style="margin:0">Podmínit nákup i splněním návyku</label></div>
     <div id="f-alt-block" style="${item.altHabitId ? "" : "display:none"}">
       <div class="field"><label>Návyk</label><select id="f-ialt-habit">${habits.map((h) => '<option value="' + h.id + '" ' + (item.altHabitId === h.id ? "selected" : "") + ">" + escapeHtml(h.title) + " (" + (characters[h.ownerId]?.name || h.ownerId) + ")</option>").join("")}</select></div>
@@ -3595,31 +3591,36 @@
             block.style.display = toggle.checked ? "" : "none";
           });
         }
-        async function uploadShopImage(file) {
-          if (!file) return null;
-          if (!file.type.startsWith("image/"))
-            throw new Error("Vybraný soubor není obrázek.");
-          if (file.size > 5 * 1024 * 1024)
-            throw new Error("Obrázek může mít nejvýše 5 MB.");
-          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-          const ref = storage
-            .ref()
-            .child(
-              "shopItems/" +
-                Date.now() +
-                "_" +
-                Math.random().toString(36).slice(2, 8) +
-                "_" +
-                safeName,
+        function shopItemImageFromForm(form) {
+          const value = form.querySelector("#f-iimg").value.trim();
+          if (!value) return "";
+          if (value.startsWith("images/")) {
+            const path = value.split(/[?#]/, 1)[0];
+            const segments = path.split("/");
+            if (
+              segments.length > 1 &&
+              segments[0] === "images" &&
+              segments
+                .slice(1)
+                .every(
+                  (segment) => segment && segment !== "." && segment !== "..",
+                ) &&
+              !value.includes("\\")
+            ) {
+              return value;
+            }
+            throw new Error("Zadej cestu k obrázku uvnitř složky images.");
+          }
+          try {
+            const url = new URL(value);
+            if (url.protocol !== "http:" && url.protocol !== "https:")
+              throw new Error();
+          } catch {
+            throw new Error(
+              "Zadej platný odkaz začínající na http:// nebo https://.",
             );
-          await ref.put(file, { contentType: file.type });
-          return await ref.getDownloadURL();
-        }
-        async function shopItemImageFromForm(form) {
-          const file = form.querySelector("#f-iimg-file").files[0];
-          return file
-            ? await uploadShopImage(file)
-            : form.querySelector("#f-iimg").value.trim();
+          }
+          return value;
         }
         function openAddItemModal() {
           const modal = openModal(`
@@ -4035,7 +4036,16 @@
           );
           unsubscribers.push(
             Store.watchShopItems((data) => {
-              shopItems = data;
+              const onlyItem = data.length === 1 ? data[0] : null;
+              const itemImage = "images/ponozka.png";
+              if (onlyItem && onlyItem.image !== itemImage) {
+                shopItems = [{ ...onlyItem, image: itemImage }];
+                Store.updateShopItem(onlyItem.id, { image: itemImage }).catch(
+                  console.error,
+                );
+              } else {
+                shopItems = data;
+              }
               if (
                 !document
                   .getElementById("screen-select")
