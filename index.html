@@ -1097,6 +1097,46 @@
         font-style: italic;
         color: var(--parchment-dim);
       }
+      @media (hover: none), (max-width: 680px) {
+        .shop-item .item-icon-wrap {
+          order: -1;
+        }
+        .shop-item .item-tooltip,
+        .shop-item:hover .item-tooltip {
+          position: static;
+          display: block;
+          order: 0;
+          width: 100%;
+          padding: 0;
+          transform: none;
+          background: transparent;
+          border: 0;
+          box-shadow: none;
+          opacity: 1;
+          text-align: center;
+          transition: none;
+        }
+        .shop-item .item-name {
+          display: none;
+        }
+        .shop-item .item-price,
+        .shop-item .item-price2,
+        .shop-item .item-owned-tag {
+          order: 1;
+        }
+        .shop-item .item-price {
+          justify-content: center;
+          font-size: 0.86rem;
+        }
+        .shop-item .item-tooltip .tt-name {
+          font-size: 0.88rem;
+          overflow-wrap: anywhere;
+        }
+        .shop-item .item-tooltip .tt-desc {
+          line-height: 1.4;
+          overflow-wrap: anywhere;
+        }
+      }
 
       /* ---------- Inventory ---------- */
       .inv-grid {
@@ -2912,7 +2952,7 @@
               '<div class="item-tooltip"><div class="tt-name">' +
               escapeHtml(item.name) +
               '</div><div class="tt-desc">' +
-              escapeHtml(item.description || "") +
+              escapeHtml(item.description || "Bez popisu.") +
               "</div></div>" +
               '<div class="item-icon-wrap">' +
               (item.image
