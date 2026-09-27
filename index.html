@@ -584,6 +584,429 @@
         font-size: 0.9rem;
       }
 
+      /* ---------- Race ---------- */
+      .race-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+        align-items: start;
+        gap: 1.2rem;
+      }
+      .race-layout.has-race {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .race-layout:not(.has-race) {
+        grid-template-columns: minmax(0, 1fr);
+        align-content: center;
+        min-height: calc(100vh - var(--safe-t) - var(--safe-b) - 4.6rem);
+        gap: 1rem;
+      }
+      .race-intro {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-top: 0.4rem;
+      }
+      .race-layout:not(.has-race) .race-intro {
+        justify-content: center;
+        padding-top: 0;
+        text-align: center;
+      }
+      .race-layout:not(.has-race) .race-intro p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .race-layout:not(.has-race) .race-settings-shell {
+        width: min(100%, 520px);
+        justify-self: center;
+      }
+      .race-intro h2 {
+        font-size: 1.55rem;
+      }
+      .race-intro p {
+        max-width: 38ch;
+        margin: 0.45rem 0 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.5;
+      }
+      .race-settings-form {
+        display: grid;
+        gap: 0.7rem;
+        padding: 0.9rem 1rem;
+      }
+      .race-settings-shell.modal-open {
+        position: fixed;
+        inset: 0;
+        z-index: 65;
+        display: grid;
+        place-items: center;
+        padding: 1rem;
+        overflow-y: auto;
+        background: rgba(8, 6, 10, 0.76);
+        backdrop-filter: blur(3px);
+      }
+      .race-settings-shell.modal-open .race-settings-form {
+        width: min(100%, 430px);
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+      }
+      .race-settings-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+      }
+      .race-settings-close {
+        display: none;
+      }
+      .race-settings-shell.modal-open .race-settings-close {
+        display: inline-flex;
+      }
+      .race-form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.55rem;
+        flex-wrap: wrap;
+      }
+      .race-form-actions #race-delete {
+        margin-right: auto;
+      }
+      .race-settings-title {
+        color: var(--gold-bright);
+        font-family: var(--font-display);
+        font-size: 0.95rem;
+      }
+      .race-form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem 0.7rem;
+      }
+      .race-settings-form .field {
+        min-width: 0;
+        margin: 0;
+        gap: 0.25rem;
+      }
+      .race-settings-form .field label {
+        font-size: 0.68rem;
+      }
+      .race-settings-form select,
+      .race-settings-form input {
+        min-width: 0;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.78rem;
+      }
+      .race-form-wide {
+        grid-column: 1 / -1;
+      }
+      .race-form-dates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.55rem;
+      }
+      .race-form-error {
+        min-height: 1em;
+        margin: 0;
+        color: var(--danger-bright);
+        font-size: 0.72rem;
+      }
+      .race-overview {
+        padding: 1.1rem 1.25rem;
+      }
+      .race-overview-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        padding-bottom: 0.9rem;
+        border-bottom: 1px solid rgba(215, 179, 77, 0.14);
+      }
+      .race-overview-label {
+        color: var(--muted);
+        font-size: 0.66rem;
+      }
+      .race-overview-habit {
+        margin-top: 0.15rem;
+        font-family: var(--font-body);
+        font-size: 1rem;
+      }
+      .race-overview-period {
+        margin: 0.25rem 0 0;
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+      .race-prize {
+        max-width: 40%;
+        text-align: right;
+      }
+      .race-prize strong {
+        display: block;
+        margin-top: 0.2rem;
+        color: var(--gold-bright);
+        font-size: 0.9rem;
+        overflow-wrap: anywhere;
+      }
+      .race-contestants {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 0.8rem;
+        padding-top: 1rem;
+      }
+      .race-player {
+        display: grid;
+        grid-template-columns: 46px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.6rem;
+        min-width: 0;
+      }
+      .race-player > div:nth-child(2) {
+        min-width: 0;
+      }
+      .race-player.right {
+        grid-template-columns: auto minmax(0, 1fr) 46px;
+        text-align: right;
+      }
+      .race-player.right .race-streak {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      .race-player.right > div:nth-child(2) {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .race-player.right .race-avatar {
+        grid-column: 3;
+        grid-row: 1;
+      }
+      .race-avatar {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        border: 1px solid var(--gold-dim);
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 30%, #342638, #150f19 76%);
+        color: var(--gold);
+      }
+      .race-avatar img,
+      .race-avatar svg {
+        width: 100%;
+        height: 100%;
+      }
+      .race-avatar img {
+        object-fit: cover;
+      }
+      .race-player-name {
+        display: block;
+        overflow: hidden;
+        color: var(--parchment);
+        font-size: 0.84rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .race-player-habit {
+        display: block;
+        overflow: hidden;
+        margin-top: 0.1rem;
+        color: var(--muted);
+        font-size: 0.68rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .race-streak {
+        display: grid;
+        grid-template-columns: 26px auto auto;
+        align-items: center;
+        column-gap: 0.45rem;
+        min-height: 56px;
+        padding: 0.45rem 0.75rem;
+        border: 1px solid rgba(244, 145, 60, 0.72);
+        border-radius: 10px;
+        background: radial-gradient(
+          circle at 25% 15%,
+          rgba(255, 183, 91, 0.3),
+          rgba(201, 98, 42, 0.18) 48%,
+          rgba(21, 15, 25, 0.96)
+        );
+        box-shadow:
+          0 0 20px rgba(230, 116, 42, 0.28),
+          inset 0 0 14px rgba(244, 145, 60, 0.1);
+        color: #ffd0a1;
+        white-space: nowrap;
+      }
+      .race-flame {
+        grid-column: 1;
+        grid-row: 1;
+        width: 23px;
+        height: 25px;
+        color: #f08b39;
+        filter: drop-shadow(0 0 5px rgba(240, 139, 57, 0.45));
+      }
+      .race-streak-count {
+        grid-column: 2;
+        grid-row: 1;
+        font-family: var(--font-display);
+        font-size: 1.38rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .race-streak small {
+        display: block;
+        grid-column: 3;
+        grid-row: 1;
+        color: #ffe2c7;
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
+        line-height: 1.2;
+        text-align: left;
+        white-space: nowrap;
+      }
+      .race-vs {
+        align-self: center;
+        justify-self: center;
+        color: var(--gold-bright);
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-align: center;
+      }
+      .race-timeline {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        padding: 0.25rem 0;
+      }
+      .race-timeline:empty {
+        display: none;
+      }
+      .race-day {
+        position: relative;
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) 96px minmax(0, 1fr) 34px;
+        align-items: center;
+        gap: 0.6rem;
+        min-height: 68px;
+      }
+      .race-day::before {
+        content: "";
+        position: absolute;
+        top: -0.45rem;
+        bottom: -0.45rem;
+        left: 50%;
+        width: 2px;
+        transform: translateX(-50%);
+        background: linear-gradient(
+          180deg,
+          rgba(138, 113, 51, 0.16),
+          rgba(215, 179, 77, 0.5),
+          rgba(138, 113, 51, 0.16)
+        );
+      }
+      .race-day:first-child::before {
+        top: 50%;
+      }
+      .race-day:last-child::before {
+        bottom: 50%;
+      }
+      .race-day-side {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        min-width: 0;
+        color: var(--muted);
+        font-size: 0.74rem;
+      }
+      .race-day-side.left {
+        justify-content: flex-end;
+        text-align: right;
+      }
+      .race-day-side.right {
+        justify-content: flex-start;
+      }
+      .race-day-count {
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .race-day-side.done .race-day-result {
+        color: var(--gold-bright);
+        font-weight: 700;
+      }
+      .race-check {
+        width: 27px;
+        height: 27px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border: 1px solid var(--border-bronze);
+        border-radius: 50%;
+        color: var(--muted);
+      }
+      .race-check.done {
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--race-color);
+        background: color-mix(in srgb, var(--race-color) 30%, var(--bg-inset));
+        box-shadow:
+          0 0 16px color-mix(in srgb, var(--race-color) 45%, transparent),
+          inset 0 0 9px color-mix(in srgb, var(--race-color) 18%, transparent);
+        color: var(--parchment);
+      }
+      .race-check svg {
+        width: 13px;
+        height: 13px;
+      }
+      .race-check.done svg {
+        width: 23px;
+        height: 23px;
+      }
+      .race-day-date {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 54px;
+        border: 1px solid var(--border-bronze);
+        border-radius: 8px;
+        background: var(--bg-panel);
+        text-align: center;
+      }
+      .race-day-date.today {
+        border-color: var(--gold-bright);
+        box-shadow: 0 0 14px rgba(215, 179, 77, 0.16);
+      }
+      .race-day-name {
+        color: var(--gold-bright);
+        font-size: 0.7rem;
+        font-weight: 700;
+      }
+      .race-day-full-date {
+        margin-top: 0.1rem;
+        color: var(--muted);
+        font-size: 0.62rem;
+      }
+      .race-day-result {
+        display: block;
+        margin-top: 0.15rem;
+        color: var(--parchment-dim);
+        font-size: 0.64rem;
+      }
+      .race-empty {
+        padding: 1.8rem 1rem;
+        color: var(--muted);
+        text-align: center;
+      }
+
       /* ---------- Player card ---------- */
       .player-card {
         padding: 1.3rem 1.5rem;
@@ -1425,9 +1848,83 @@
           margin-left: 0;
           padding-top: calc(4.2rem + var(--safe-t));
         }
+        .race-layout:not(.has-race) {
+          min-height: calc(100vh - var(--safe-t) - var(--safe-b) - 7.2rem);
+        }
         .player-card {
           justify-content: center;
           text-align: center;
+        }
+        .race-layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 680px) {
+        .race-overview-top {
+          flex-direction: column;
+        }
+        .race-prize {
+          max-width: none;
+          text-align: left;
+        }
+        .race-contestants {
+          grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+          align-items: stretch;
+          gap: 0.45rem;
+        }
+        .race-vs {
+          font-size: 1.05rem;
+        }
+        .race-player {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.4rem;
+        }
+        .race-player.right {
+          flex-direction: column-reverse;
+          align-items: flex-end;
+          text-align: right;
+        }
+        .race-player > div:nth-child(2) {
+          width: 100%;
+          min-width: 0;
+        }
+        .race-avatar {
+          width: 32px;
+          height: 32px;
+        }
+        .race-streak {
+          grid-template-columns: 16px auto auto;
+          column-gap: 0.2rem;
+          min-height: 44px;
+          padding: 0.25rem 0.35rem;
+        }
+        .race-flame {
+          width: 16px;
+          height: 18px;
+        }
+        .race-streak-count {
+          font-size: 1rem;
+        }
+        .race-streak small {
+          display: block;
+          font-size: 0.6rem;
+          grid-column: 3;
+        }
+        .race-player-name,
+        .race-player-habit {
+          overflow: visible;
+          overflow-wrap: anywhere;
+          text-overflow: clip;
+          white-space: normal;
+        }
+        .race-day {
+          grid-template-columns: 22px minmax(0, 1fr) 68px minmax(0, 1fr) 22px;
+          gap: 0.2rem;
+        }
+        .race-day-result {
+          font-size: 0.58rem;
         }
       }
       @media (max-width: 480px) {
@@ -1543,6 +2040,13 @@
               <path d="M5 10v10h14V10" />
             </svg>
             Domů
+          </button>
+          <button class="nav-item" data-page="race">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M5 21V4" />
+              <path d="M5 4h13l-2 4 2 4H5" />
+            </svg>
+            Závod
           </button>
           <button class="nav-item" data-page="inventory">
             <svg class="icon" viewBox="0 0 24 24">
@@ -1852,6 +2356,131 @@
           </div>
           <div class="inv-grid" id="inv-grid"></div>
         </section>
+
+        <!-- RACE -->
+        <section class="page hidden" id="page-race">
+          <div class="race-layout">
+            <div class="race-intro">
+              <div>
+                <div class="nav-label">Společná výzva</div>
+                <h2>Závod</h2>
+                <p>
+                  Sledujte splnění návyků den po dni a zjistěte, kdo udrží
+                  tempo.
+                </p>
+              </div>
+              <button
+                class="btn btn-icon btn-ghost race-settings-open hidden"
+                id="race-settings-open"
+                type="button"
+                aria-label="Spravovat závod"
+                title="Spravovat závod"
+              >
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.7a8 8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.5-.9l-1.7.7-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.7a8 8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.5.9l1.7-.7 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.7Z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              class="race-settings-shell"
+              id="race-settings-shell"
+              aria-labelledby="race-settings-title"
+            >
+              <form class="panel race-settings-form" id="race-settings-form">
+                <div class="race-settings-header">
+                  <h3 class="race-settings-title" id="race-settings-title">
+                    Nastavení závodu
+                  </h3>
+                  <button
+                    class="btn btn-icon btn-ghost race-settings-close"
+                    id="race-settings-close"
+                    type="button"
+                    aria-label="Zavřít nastavení"
+                  >
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="m6 6 12 12M18 6 6 18" />
+                    </svg>
+                  </button>
+                </div>
+                <div class="race-form-grid">
+                  <div class="field">
+                    <label id="race-p1-label" for="race-habit-p1"
+                      >Tvůj návyk</label
+                    >
+                    <select id="race-habit-p1" required>
+                      <option value="">Vyber návyk</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label id="race-p2-label" for="race-habit-p2"
+                      >Návyk soupeře</label
+                    >
+                    <select id="race-habit-p2" required>
+                      <option value="">Vyber návyk</option>
+                    </select>
+                  </div>
+                  <div class="field race-form-wide">
+                    <label for="race-prize">O co se hraje</label>
+                    <input
+                      id="race-prize"
+                      type="text"
+                      placeholder="Např. společná večeře"
+                      required
+                    />
+                  </div>
+                  <div class="race-form-dates race-form-wide">
+                    <div class="field">
+                      <label for="race-start">Začátek</label>
+                      <input id="race-start" type="date" required />
+                    </div>
+                    <div class="field">
+                      <label for="race-end">Konec</label>
+                      <input id="race-end" type="date" required />
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="race-form-error"
+                  id="race-form-error"
+                  aria-live="polite"
+                ></p>
+                <div class="race-form-actions">
+                  <button
+                    class="btn btn-danger btn-sm hidden"
+                    id="race-delete"
+                    type="button"
+                  >
+                    Smazat závod
+                  </button>
+                  <button class="btn btn-gold btn-sm" type="submit">
+                    Uložit závod
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="panel race-overview hidden" id="race-overview">
+            <div class="race-overview-top">
+              <div>
+                <span class="race-overview-label">Závodní návyk</span>
+                <h3 class="race-overview-habit" id="race-overview-habit">—</h3>
+                <p class="race-overview-period" id="race-overview-period"></p>
+              </div>
+              <div class="race-prize">
+                <span class="race-overview-label">O co se hraje</span>
+                <strong id="race-overview-prize"></strong>
+              </div>
+            </div>
+            <div class="race-contestants" id="race-contestants"></div>
+          </div>
+          <div class="race-empty" id="race-empty">
+            Nejdřív nastavte návyky, odměnu a období závodu.
+          </div>
+          <div class="race-timeline" id="race-timeline"></div>
+        </section>
       </main>
     </div>
 
@@ -1972,6 +2601,7 @@
         let oneOffTasks = []; // all one-off tasks across characters
         let recurringTasks = []; // recurring school-style tasks (weekly/biweekly, no reward)
         let shopItems = [];
+        let raceSettings = null;
         let currentCharId = safeStorage.get(LS_CHAR_KEY) || null;
         let oneOffExpanded = false;
         let calMonth = new Date().getMonth();
@@ -1991,6 +2621,7 @@
                 oneOffTasks: [],
                 recurringTasks: [],
                 shopItems: [],
+                raceSettings: null,
               }
             );
           } catch (e) {
@@ -2001,6 +2632,7 @@
                 oneOffTasks: [],
                 recurringTasks: [],
                 shopItems: [],
+                raceSettings: null,
               }
             );
           }
@@ -2127,6 +2759,40 @@
               return () => {
                 localListeners = localListeners.filter((f) => f !== fn);
               };
+            }
+          },
+          watchRaceSettings(cb) {
+            if (storageMode === "db") {
+              return db.doc("raceSettings/active").onSnapshot(
+                (snap) => cb(snap.exists ? snap.data() : null),
+                (err) => console.error(err),
+              );
+            }
+            const fn = (d) => cb(d.raceSettings || null);
+            localListeners.push(fn);
+            fn(loadLocal());
+            return () => {
+              localListeners = localListeners.filter((f) => f !== fn);
+            };
+          },
+          async saveRaceSettings(settings) {
+            if (storageMode === "db") {
+              await db.doc("raceSettings/active").set(settings);
+            } else {
+              const d = loadLocal();
+              d.raceSettings = settings;
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async deleteRaceSettings() {
+            if (storageMode === "db") {
+              await db.doc("raceSettings/active").delete();
+            } else {
+              const d = loadLocal();
+              delete d.raceSettings;
+              saveLocal(d);
+              notifyLocal();
             }
           },
           async ensureCharacter(id, defaults) {
@@ -3188,7 +3854,7 @@
 
         /* ================= NAV / PAGES ================= */
         function showPage(page) {
-          ["home", "shop", "inventory"].forEach((p) => {
+          ["home", "shop", "inventory", "race"].forEach((p) => {
             document
               .getElementById("page-" + p)
               .classList.toggle("hidden", p !== page);
@@ -3197,6 +3863,7 @@
             el.classList.toggle("active", el.dataset.page === page);
           });
           closeSidebar();
+          if (page === "race") renderRacePage();
         }
         function openSidebar() {
           document.getElementById("sidebar").classList.add("open");
@@ -3237,6 +3904,304 @@
           renderRecurringList();
           renderShop();
           renderInventory();
+          renderRacePage();
+        }
+
+        function raceHabitOptions(ownerId, selectedId) {
+          const list = habitsForChar(ownerId)
+            .slice()
+            .sort((a, b) => a.title.localeCompare(b.title, "cs"));
+          return (
+            '<option value="">Vyber návyk</option>' +
+            list
+              .map((habit) => {
+                const selected = habit.id === selectedId ? " selected" : "";
+                return `<option value="${escapeAttr(habit.id)}"${selected}>${escapeHtml(habit.title)}</option>`;
+              })
+              .join("")
+          );
+        }
+        function raceStreak(habit) {
+          const today = todayStr();
+          const endDate =
+            today < raceSettings.endDate ? today : raceSettings.endDate;
+          const firstDay =
+            habit.startDate && habit.startDate > raceSettings.startDate
+              ? habit.startDate
+              : raceSettings.startDate;
+          const anchors = habitAnchors(habit).filter(
+            (anchor) => anchor >= firstDay && anchor <= endDate,
+          );
+          let cursor = endDate;
+          let streak = 0;
+          while (
+            cursor >= firstDay &&
+            anchors.some((anchor) => {
+              const anchorDate = parseDate(anchor);
+              const coveredThrough = new Date(anchorDate);
+              coveredThrough.setDate(
+                coveredThrough.getDate() + (habit.intervalDays || 1) - 1,
+              );
+              const day = parseDate(cursor);
+              return day >= anchorDate && day <= coveredThrough;
+            })
+          ) {
+            streak++;
+            cursor = addDays(cursor, -1);
+          }
+          return streak;
+        }
+        function raceAvatarMarkup(character) {
+          const avatar = character.avatar || character.avatarUrl || "";
+          return avatar
+            ? '<img src="' + escapeAttr(avatar) + '" alt="">'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>';
+        }
+        function racePlayerMarkup(id, habit, side) {
+          const character = characters[id] || {};
+          const streak = raceStreak(habit);
+          const streakUnit =
+            streak === 1 ? "den" : streak >= 2 && streak <= 4 ? "dny" : "dní";
+          const avatar =
+            '<div class="race-avatar">' +
+            raceAvatarMarkup(character) +
+            "</div>";
+          const identity =
+            '<div><strong class="race-player-name">' +
+            escapeHtml(character.name || DEFAULT_NAMES[id]) +
+            '</strong><span class="race-player-habit">' +
+            escapeHtml(habit.title) +
+            "</span></div>";
+          const streakContent =
+            '<div class="race-streak">' +
+            '<svg class="race-flame" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 2.5c.5 4-1.3 5.4-2.8 7.2C9.4 7.8 7.5 6.4 7.5 4 5.8 6.1 3 9.1 3 13.4a9 9 0 0 0 18 0c0-4.5-2.8-8.1-7.5-10.9Z"/><path fill="#ffd27a" d="M12.2 12.1c.2 1.8-1 2.6-1.5 3.7-.8-.7-1.2-1.3-1.2-2.2-1 1-1.8 2.2-1.8 3.7a4.3 4.3 0 0 0 8.6 0c0-1.9-1.3-3.8-4.1-5.2Z"/></svg><span class="race-streak-count">' +
+            streak +
+            "</span>" +
+            "<small>" +
+            streakUnit +
+            " v řadě</small></div>";
+          return (
+            '<div class="race-player ' +
+            side +
+            '">' +
+            (side === "right"
+              ? streakContent + identity + avatar
+              : avatar + identity + streakContent) +
+            "</div>"
+          );
+        }
+        function raceCheckMarkup(done, color, label) {
+          return done
+            ? '<span class="race-check done" style="--race-color:' +
+                escapeAttr(color) +
+                '" aria-label="' +
+                escapeAttr(label + ": splněno") +
+                '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg></span>'
+            : '<span class="race-check" aria-label="' +
+                escapeAttr(label + ": nesplněno") +
+                '"></span>';
+        }
+        function renderRaceTimeline(habitP1, habitP2) {
+          const timeline = document.getElementById("race-timeline");
+          const empty = document.getElementById("race-empty");
+          const today = todayStr();
+          if (today < raceSettings.startDate) {
+            timeline.innerHTML = "";
+            empty.textContent =
+              "Závod začne " + formatCzDate(raceSettings.startDate) + ".";
+            empty.classList.remove("hidden");
+            return;
+          }
+          empty.classList.add("hidden");
+          timeline.innerHTML = "";
+          const lastDate =
+            today < raceSettings.endDate ? today : raceSettings.endDate;
+          const weekdayNames = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
+          for (
+            let date = lastDate;
+            date >= raceSettings.startDate;
+            date = addDays(date, -1)
+          ) {
+            const dayNumber = daysBetween(raceSettings.startDate, date) + 1;
+            const p1Done = habitAnchors(habitP1).includes(date);
+            const p2Done = habitAnchors(habitP2).includes(date);
+            const isToday = date === today;
+            const dateObject = parseDate(date);
+            const dayLabel = isToday
+              ? "Dnes"
+              : weekdayNames[dateObject.getDay()];
+            const row = document.createElement("article");
+            row.className = "race-day";
+            row.innerHTML =
+              '<span class="race-day-count left" aria-label="Den ' +
+              dayNumber +
+              ' závodu">' +
+              dayNumber +
+              '</span><div class="race-day-side left' +
+              (p1Done ? " done" : "") +
+              '"><span class="race-day-result">' +
+              (p1Done ? "Splněno" : "Bez splnění") +
+              "</span>" +
+              raceCheckMarkup(
+                p1Done,
+                habitP1.color || "#c9622a",
+                characters[CHAR_IDS[0]]?.name || DEFAULT_NAMES[CHAR_IDS[0]],
+              ) +
+              '</div><time class="race-day-date' +
+              (isToday ? " today" : "") +
+              '" datetime="' +
+              date +
+              '"><span class="race-day-name">' +
+              dayLabel +
+              '</span><span class="race-day-full-date">' +
+              formatCzDate(date) +
+              "</span></time>" +
+              '<div class="race-day-side right' +
+              (p2Done ? " done" : "") +
+              '">' +
+              raceCheckMarkup(
+                p2Done,
+                habitP2.color || "#4a6fa5",
+                characters[CHAR_IDS[1]]?.name || DEFAULT_NAMES[CHAR_IDS[1]],
+              ) +
+              '<span class="race-day-result">' +
+              (p2Done ? "Splněno" : "Bez splnění") +
+              "</span></div>" +
+              '<span class="race-day-count right" aria-label="Den ' +
+              dayNumber +
+              ' závodu">' +
+              dayNumber +
+              "</span>";
+            timeline.appendChild(row);
+          }
+        }
+        function renderRacePage(resetForm = false) {
+          const selectP1 = document.getElementById("race-habit-p1");
+          const selectP2 = document.getElementById("race-habit-p2");
+          if (!selectP1 || !selectP2) return;
+          const settingsShell = document.getElementById("race-settings-shell");
+          const settingsButton = document.getElementById("race-settings-open");
+          const deleteButton = document.getElementById("race-delete");
+          const raceLayout = document.querySelector(".race-layout");
+          if (raceSettings) {
+            raceLayout.classList.add("has-race");
+            settingsButton.classList.remove("hidden");
+            deleteButton.classList.remove("hidden");
+            if (!settingsShell.classList.contains("modal-open"))
+              settingsShell.classList.add("hidden");
+          } else {
+            raceLayout.classList.remove("has-race");
+            settingsButton.classList.add("hidden");
+            deleteButton.classList.add("hidden");
+            settingsShell.classList.remove("hidden", "modal-open");
+            settingsShell.removeAttribute("role");
+            settingsShell.removeAttribute("aria-modal");
+          }
+          const nameP1 =
+            characters[CHAR_IDS[0]]?.name || DEFAULT_NAMES[CHAR_IDS[0]];
+          const nameP2 =
+            characters[CHAR_IDS[1]]?.name || DEFAULT_NAMES[CHAR_IDS[1]];
+          document.getElementById("race-p1-label").textContent =
+            nameP1 + " · návyk";
+          document.getElementById("race-p2-label").textContent =
+            nameP2 + " · návyk";
+          const currentP1 = selectP1.value;
+          const currentP2 = selectP2.value;
+          const p1Habits = habitsForChar(CHAR_IDS[0]);
+          const p2Habits = habitsForChar(CHAR_IDS[1]);
+          const wantedP1 = resetForm
+            ? raceSettings?.habitP1Id
+            : currentP1 || raceSettings?.habitP1Id;
+          const wantedP2 = resetForm
+            ? raceSettings?.habitP2Id
+            : currentP2 || raceSettings?.habitP2Id;
+          selectP1.innerHTML = raceHabitOptions(CHAR_IDS[0], wantedP1);
+          selectP2.innerHTML = raceHabitOptions(CHAR_IDS[1], wantedP2);
+          selectP1.value = p1Habits.some((habit) => habit.id === wantedP1)
+            ? wantedP1
+            : p1Habits[0]?.id || "";
+          selectP2.value = p2Habits.some((habit) => habit.id === wantedP2)
+            ? wantedP2
+            : p2Habits[0]?.id || "";
+          if (resetForm) {
+            document.getElementById("race-prize").value =
+              raceSettings?.prize || "";
+            document.getElementById("race-start").value =
+              raceSettings?.startDate || todayStr();
+            document.getElementById("race-end").value =
+              raceSettings?.endDate || addDays(todayStr(), 13);
+          } else {
+            if (!document.getElementById("race-start").value)
+              document.getElementById("race-start").value = todayStr();
+            if (!document.getElementById("race-end").value)
+              document.getElementById("race-end").value = addDays(
+                todayStr(),
+                13,
+              );
+          }
+          const overview = document.getElementById("race-overview");
+          const empty = document.getElementById("race-empty");
+          const timeline = document.getElementById("race-timeline");
+          const habitP1 = habits.find(
+            (habit) => habit.id === raceSettings?.habitP1Id,
+          );
+          const habitP2 = habits.find(
+            (habit) => habit.id === raceSettings?.habitP2Id,
+          );
+          if (!raceSettings) {
+            overview.classList.add("hidden");
+            timeline.innerHTML = "";
+            empty.textContent =
+              "Nejdřív nastavte návyky, odměnu a období závodu.";
+            empty.classList.remove("hidden");
+            return;
+          }
+          if (!habitP1 || !habitP2) {
+            overview.classList.add("hidden");
+            timeline.innerHTML = "";
+            empty.textContent =
+              "Vybraný návyk už není dostupný. Upravte nastavení závodu.";
+            empty.classList.remove("hidden");
+            return;
+          }
+          overview.classList.remove("hidden");
+          const habitTitle =
+            habitP1.title === habitP2.title
+              ? habitP1.title
+              : habitP1.title + " × " + habitP2.title;
+          document.getElementById("race-overview-habit").textContent =
+            habitTitle;
+          document.getElementById("race-overview-period").textContent =
+            formatCzDate(raceSettings.startDate) +
+            " – " +
+            formatCzDate(raceSettings.endDate) +
+            " · do " +
+            formatCzDate(raceSettings.endDate);
+          document.getElementById("race-overview-prize").textContent =
+            raceSettings.prize;
+          document.getElementById("race-contestants").innerHTML =
+            racePlayerMarkup(CHAR_IDS[0], habitP1, "left") +
+            '<span class="race-vs">VS</span>' +
+            racePlayerMarkup(CHAR_IDS[1], habitP2, "right");
+          renderRaceTimeline(habitP1, habitP2);
+        }
+        function openRaceSettingsModal() {
+          renderRacePage(true);
+          const shell = document.getElementById("race-settings-shell");
+          shell.classList.remove("hidden");
+          shell.classList.add("modal-open");
+          shell.setAttribute("role", "dialog");
+          shell.setAttribute("aria-modal", "true");
+          document.getElementById("race-settings-close").focus();
+        }
+        function closeRaceSettingsModal() {
+          const shell = document.getElementById("race-settings-shell");
+          shell.classList.remove("modal-open");
+          shell.removeAttribute("role");
+          shell.removeAttribute("aria-modal");
+          shell.classList.toggle("hidden", !!raceSettings);
+          if (raceSettings)
+            document.getElementById("race-settings-open").focus();
         }
 
         /* ================= MODALS ================= */
@@ -4132,6 +5097,96 @@
             el.addEventListener("click", () => showPage(el.dataset.page));
           });
           document
+            .getElementById("race-settings-open")
+            .addEventListener("click", openRaceSettingsModal);
+          document
+            .getElementById("race-settings-close")
+            .addEventListener("click", closeRaceSettingsModal);
+          const raceSettingsShell = document.getElementById(
+            "race-settings-shell",
+          );
+          raceSettingsShell.addEventListener("click", (event) => {
+            if (event.target === raceSettingsShell) closeRaceSettingsModal();
+          });
+          document.addEventListener("keydown", (event) => {
+            if (
+              event.key === "Escape" &&
+              raceSettingsShell.classList.contains("modal-open")
+            ) {
+              closeRaceSettingsModal();
+            }
+          });
+          document
+            .getElementById("race-delete")
+            .addEventListener("click", () => {
+              closeRaceSettingsModal();
+              openConfirm(
+                "Opravdu chceš smazat tento závod? Nastavení závodu bude odstraněno, splnění návyků zůstanou zachována.",
+                async () => {
+                  try {
+                    await Store.deleteRaceSettings();
+                    raceSettings = null;
+                    closeModal();
+                    renderRacePage(true);
+                    toast("Závod smazán.");
+                  } catch (error) {
+                    closeModal();
+                    toast(error.message || "Závod se nepodařilo smazat.");
+                  }
+                },
+              );
+            });
+          document
+            .getElementById("race-settings-form")
+            .addEventListener("submit", async (event) => {
+              event.preventDefault();
+              const error = document.getElementById("race-form-error");
+              const saveButton = event.currentTarget.querySelector(
+                'button[type="submit"]',
+              );
+              error.textContent = "";
+              const habitP1 = habits.find(
+                (habit) =>
+                  habit.id === document.getElementById("race-habit-p1").value,
+              );
+              const habitP2 = habits.find(
+                (habit) =>
+                  habit.id === document.getElementById("race-habit-p2").value,
+              );
+              const startDate = document.getElementById("race-start").value;
+              const endDate = document.getElementById("race-end").value;
+              const prize = document.getElementById("race-prize").value.trim();
+              if (!habitP1 || !habitP2 || !prize || !startDate || !endDate) {
+                error.textContent =
+                  "Vyberte oba návyky, odměnu a platné období závodu.";
+                return;
+              }
+              if (startDate > endDate) {
+                error.textContent = "Konec závodu musí být po jeho začátku.";
+                return;
+              }
+              const settings = {
+                habitP1Id: habitP1.id,
+                habitP2Id: habitP2.id,
+                prize,
+                startDate,
+                endDate,
+              };
+              saveButton.disabled = true;
+              try {
+                await Store.saveRaceSettings(settings);
+                raceSettings = settings;
+                closeRaceSettingsModal();
+                renderRacePage(true);
+                toast("Nastavení závodu uloženo.");
+              } catch (saveError) {
+                error.textContent =
+                  saveError.message || "Nastavení závodu se nepodařilo uložit.";
+              } finally {
+                saveButton.disabled = false;
+              }
+            });
+          document
             .getElementById("btn-switch-char")
             .addEventListener("click", () => {
               document.getElementById("app-shell").classList.add("hidden");
@@ -4297,6 +5352,7 @@
                 renderShop();
                 renderInventory();
                 renderTasks();
+                renderRacePage();
               } else {
                 renderCharSelect();
               }
@@ -4314,6 +5370,13 @@
               renderTasks();
               renderHabitTable();
               renderShop();
+              renderRacePage();
+            }),
+          );
+          unsubscribers.push(
+            Store.watchRaceSettings((data) => {
+              raceSettings = data;
+              renderRacePage(true);
             }),
           );
           unsubscribers.push(
