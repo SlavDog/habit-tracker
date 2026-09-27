@@ -699,7 +699,7 @@
 
       /* ---------- Habit table ---------- */
       .habit-panel {
-        padding: 1.2rem 1.3rem 1.4rem;
+        padding: 0.85rem 1rem 1rem;
         overflow: hidden;
       }
       .month-switch {
@@ -716,20 +716,21 @@
         font-size: 0.95rem;
       }
       .table-scroll {
-        overflow-x: auto;
-        margin-top: 1rem;
+        overflow-x: hidden;
+        margin-top: 0.65rem;
         padding-bottom: 0.3rem;
       }
       .habit-mobile-list {
         display: none;
-        margin-top: 1rem;
-        overflow-x: auto;
+        margin-top: 0.65rem;
+        overflow-x: hidden;
       }
       table.hm-table {
         border-collapse: separate;
         border-spacing: 0;
         font-size: 0.72rem;
         table-layout: fixed;
+        width: 100%;
       }
       table.hm-table th,
       table.hm-table td {
@@ -737,7 +738,7 @@
         text-align: center;
       }
       .hm-day-col {
-        width: 34px;
+        width: 28px;
         text-align: right !important;
         padding-right: 0.35rem !important;
         color: var(--muted);
@@ -756,10 +757,9 @@
         font-weight: 700;
       }
       th.hm-habit-head {
-        width: 28px;
         font-weight: 500;
         text-align: center;
-        padding: 0.3rem 0 0.4rem !important;
+        padding: 0.2rem 0 0.3rem !important;
         border-bottom: 3px solid var(--gold-dim);
         vertical-align: bottom;
       }
@@ -767,19 +767,16 @@
         writing-mode: vertical-rl;
         transform: rotate(180deg);
         display: inline-block;
-        font-size: 0.66rem;
+        font-size: 0.6rem;
         white-space: nowrap;
         color: var(--parchment-dim);
       }
       .hm-cell {
-        width: 28px;
-        height: 24px;
-        cursor: pointer;
+        height: 19px;
         border: 1px solid rgba(255, 255, 255, 0.03);
       }
       .hm-cell.future {
         opacity: 0.35;
-        cursor: not-allowed;
       }
       .hm-row-alt td:not(.hm-day-col) {
         background: rgba(255, 255, 255, 0.02);
@@ -800,8 +797,9 @@
       table.habit-grid {
         border-collapse: separate;
         border-spacing: 0;
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         table-layout: fixed;
+        width: 100%;
       }
       table.habit-grid th {
         font-weight: 400;
@@ -816,16 +814,15 @@
         left: 0;
         z-index: 2;
         text-align: left !important;
-        padding: 0.4rem 0.7rem 0.4rem 0.3rem !important;
+        padding: 0.25rem 0.45rem 0.25rem 0.2rem !important;
         background: var(--bg-panel);
-        width: 170px;
+        width: 140px;
       }
       .hg-day-head {
-        width: 26px;
         color: var(--muted);
         font-weight: 500;
-        padding-bottom: 0.3rem !important;
-        font-size: 0.7rem;
+        padding-bottom: 0.2rem !important;
+        font-size: 0.64rem;
       }
       .hg-day-head.today {
         color: var(--gold-bright);
@@ -834,26 +831,24 @@
       .hg-row-name {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.35rem;
       }
       .hg-dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         flex-shrink: 0;
       }
       .hg-name-txt {
         font-weight: 400;
-        font-size: 0.82rem;
+        font-size: 0.76rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
       .hg-cell {
-        width: 26px;
-        height: 26px;
+        height: 21px;
         border: 1px solid rgba(255, 255, 255, 0.04);
-        cursor: pointer;
         position: relative;
         background: var(--bg-inset);
       }
@@ -862,11 +857,7 @@
         outline-offset: -1px;
       }
       .hg-cell.future {
-        cursor: not-allowed;
         opacity: 0.35;
-      }
-      .hg-cell:hover:not(.future) {
-        filter: brightness(1.3);
       }
       .hg-cell.filled {
         box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
@@ -2555,7 +2546,7 @@
             tbody += "</tr>";
           });
           tbody += "</tbody>";
-          table.style.width = 170 + nDays * 26 + "px";
+          table.style.width = "100%";
           table.innerHTML = thead + tbody;
           table.querySelectorAll(".hg-cell:not(.future)").forEach((cell) => {
             cell.addEventListener("click", () => {
@@ -2617,10 +2608,7 @@
           wrap.innerHTML =
             '<table class="hm-table">' + thead + tbody + "</table>";
           const hmTable = wrap.querySelector("table.hm-table");
-          const naturalWidth = 34 + myHabits.length * 28;
-          const containerWidth = wrap.clientWidth || naturalWidth;
-          hmTable.style.width =
-            naturalWidth < containerWidth ? "100%" : naturalWidth + "px";
+          hmTable.style.width = "100%";
           wrap.querySelectorAll(".hm-cell:not(.future)").forEach((cell) => {
             cell.addEventListener("click", () => {
               const h = habits.find((x) => x.id === cell.dataset.habit);
