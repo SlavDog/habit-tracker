@@ -1171,6 +1171,13 @@
         font-size: 0.78rem;
         color: var(--muted);
       }
+      .task-text .t-meta .task-duedate-badge {
+        display: inline-block;
+        margin-left: 0.15rem;
+        color: #f5b14d;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
       .task-row.done .t-title {
         text-decoration: line-through;
         color: var(--muted);
@@ -3090,9 +3097,8 @@
         }
         function oneOffIsVisible(t, includeAll) {
           if (oneOffIsDoneNow(t)) return true;
-          return (
-            !t.completed && (includeAll || t.dueDate <= addDays(todayStr(), 7))
-          );
+          if (t.completed) return false;
+          return includeAll || t.dueDate <= addDays(todayStr(), 7);
         }
         function oneOffHasMore(id) {
           return oneOffForChar(id).some(
@@ -3124,7 +3130,10 @@
               " " +
               (Math.abs(diff) === 1 ? "den" : "dní")
             );
-          if (diff === 0) return "Jednorázový úkol · termín dnes";
+          if (diff === 0)
+            return 'Jednorázový úkol · <span class="task-duedate-badge">TERMÍN DNES</span>';
+          if (diff === 1)
+            return 'Jednorázový úkol · <span class="task-duedate-badge">POZOR ZITRA</span>';
           return (
             "Jednorázový úkol · termín za " +
             diff +
@@ -3274,7 +3283,16 @@
               " " +
               (Math.abs(diff) === 1 ? "den" : "dní")
             );
-          if (diff === 0) return intervalTxt + " · termín dnes";
+          if (diff === 0)
+            return (
+              intervalTxt +
+              ' · <span class="task-duedate-badge">TERMÍN DNES</span>'
+            );
+          if (diff === 1)
+            return (
+              intervalTxt +
+              ' · <span class="task-duedate-badge">POZOR ZITRA</span>'
+            );
           return (
             intervalTxt +
             " · termín za " +
@@ -3333,27 +3351,39 @@
             data: h,
             done: coveringAnchor(h, t) === t,
           }));
-          const dueO = dueOneOffToday(currentCharId).map((tk) => ({
-            kind: "oneoff",
-            data: tk,
-            done: !!tk.completed,
-          }));
-          const dueR = recurringForChar(currentCharId)
+          const dueO = oneOffForChar(currentCharId)
             .filter(
-              (rt) =>
-                (recurringDueDate(rt) <= t && !recurringIsDoneNow(rt)) ||
-                (recurringLastCompletion(rt) === t &&
-                  rt.lastCompletionDueDate &&
-                  rt.lastCompletionDueDate <= t),
+              (tk) =>
+                (tk.completed && oneOffIsDoneNow(tk)) ||
+                (!tk.completed && tk.dueDate <= t),
             )
+            .map((tk) => ({
+              kind: "oneoff",
+              data: tk,
+              done: !!tk.completed && oneOffIsDoneNow(tk),
+            }));
+          const dueR = recurringForChar(currentCharId)
+            .filter((rt) => {
+              if (recurringIsDoneNow(rt)) return true;
+              return recurringDueDate(rt) <= t;
+            })
             .map((rt) => ({
               kind: "recurring",
               data: rt,
-              done:
-                recurringLastCompletion(rt) === t &&
-                rt.lastCompletionDueDate <= t,
+              done: recurringIsDoneNow(rt),
             }));
-          const due = [...dueH, ...dueO, ...dueR];
+          const due = [...dueH, ...dueO, ...dueR].sort((a, b) => {
+            if (a.done !== b.done) return Number(a.done) - Number(b.done);
+            const aLabel =
+              (a.data.title || "").toLowerCase() ||
+              (a.kind === "recurring" && a.data.title) ||
+              "";
+            const bLabel =
+              (b.data.title || "").toLowerCase() ||
+              (b.kind === "recurring" && b.data.title) ||
+              "";
+            return aLabel.localeCompare(bLabel);
+          });
           if (due.length === 0) {
             list.innerHTML =
               '<div class="empty-note">Na dnešek nemáš žádné úkoly ani návyky.</div>';
@@ -3372,9 +3402,30 @@
                   " · " +
                   (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
                 : entry.kind === "recurring"
-                  ? recurringMeta(item)
-                  : "Jednorázový úkol · " +
-                    (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label;
+                  ? (() => {
+                      const due = recurringDueDate(item);
+                      const diff = daysBetween(todayStr(), due);
+                      if (diff === 0) {
+                        return (
+                          (item.intervalDays === 14
+                            ? "Dvoutýdenní"
+                            : "Týdenní") +
+                          " · " +
+                          (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
+                        );
+                      }
+                      return recurringMeta(item);
+                    })()
+                  : (() => {
+                      const diff = daysBetween(todayStr(), item.dueDate);
+                      if (diff === 0) {
+                        return (
+                          "Jednorázový úkol · " +
+                          (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
+                        );
+                      }
+                      return oneOffMeta(item);
+                    })();
             row.innerHTML =
               '<button class="task-check' +
               (entry.done ? " done" : "") +
@@ -3638,6 +3689,7 @@
             list.innerHTML = "";
             items.forEach((t) => {
               const done = oneOffIsDoneNow(t);
+              const reward = (DIFFICULTY[t.difficulty] || DIFFICULTY.easy).gold;
               const row = document.createElement("div");
               row.className = "task-row" + (done ? " done" : "");
               row.innerHTML =
@@ -3648,7 +3700,10 @@
                 escapeHtml(t.title) +
                 '</div><div class="t-meta">' +
                 oneOffMeta(t) +
-                "</div></div>";
+                "</div></div>" +
+                '<div class="task-reward">+' +
+                reward +
+                " 🪙</div>";
               row
                 .querySelector(".task-check")
                 .addEventListener("click", () => toggleOneOffTask(t));
