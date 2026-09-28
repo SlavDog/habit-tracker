@@ -4686,6 +4686,8 @@
               difficulty: holder.querySelector("#f-odiff").value,
               dueDate: holder.querySelector("#f-odue").value || t.dueDate,
               color: ctrl.getColor(),
+              completed: !!t.completed,
+              completedDate: t.completedDate || null,
             });
             toast("Úkol uložen.");
             closeModal();
@@ -4859,10 +4861,13 @@
             }
             const intervalDays = ctrl.getDays();
             const baseDueDate =
-              holder.querySelector("#f-rdue").value || recurringDueDate(rt);
+              holder.querySelector("#f-rdue").value ||
+              rt.baseDueDate ||
+              recurringDueDate(rt);
+            const originalBaseDueDate = rt.baseDueDate || recurringDueDate(rt);
             const scheduleChanged =
               intervalDays !== (rt.intervalDays || 7) ||
-              baseDueDate !== recurringDueDate(rt);
+              baseDueDate !== originalBaseDueDate;
             await Store.updateRecurringTask(rt.id, {
               title,
               description: holder.querySelector("#f-rdesc").value.trim(),
