@@ -1189,6 +1189,7 @@
         white-space: nowrap;
       }
       .task-row-actions {
+        position: relative;
         display: flex;
         align-items: center;
         gap: 0.2rem;
@@ -1196,8 +1197,19 @@
       }
       .task-row-action-menu {
         display: flex;
-        align-items: center;
-        gap: 0.2rem;
+        position: absolute;
+        z-index: 20;
+        top: calc(100% + 4px);
+        right: 0;
+        min-width: 136px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 2px;
+        padding: 4px;
+        border: 1px solid var(--border-bronze);
+        border-radius: var(--radius-sm);
+        background: var(--bg-panel);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
       }
       .task-row-action {
         width: 30px;
@@ -1214,6 +1226,17 @@
           background 0.15s ease,
           border-color 0.15s ease,
           color 0.15s ease;
+      }
+      .task-row-action-menu .task-row-action {
+        width: 100%;
+        height: 34px;
+        display: flex;
+        justify-content: flex-start;
+        gap: 0.55rem;
+        padding: 0 0.55rem;
+        border-color: transparent;
+        white-space: nowrap;
+        font-size: 0.82rem;
       }
       .task-row-action svg {
         width: 15px;
@@ -2329,8 +2352,7 @@
             <div class="page-head">
               <h3>Opakující se úkoly</h3>
               <p style="margin: 0">
-                Přednášky a pravidelné povinnosti — týdenní nebo dvoutýdenní,
-                bez odměny
+                Přednášky a pravidelné povinnosti — týdenní nebo dvoutýdenní
               </p>
             </div>
             <div class="task-list" id="recur-list"></div>
@@ -3201,7 +3223,12 @@
         function recurringIsDoneNow(rt) {
           const lc = recurringLastCompletion(rt);
           if (!lc) return false;
-          return daysBetween(lc, todayStr()) <= 2;
+          const today = todayStr();
+          const interval = rt.intervalDays || 7;
+          const completedDueDate =
+            rt.lastCompletionDueDate ||
+            addDays(recurringDueDate(rt), -interval);
+          return daysBetween(lc, today) >= 0 && today <= completedDueDate;
         }
         function recurringIsVisible(rt) {
           if (recurringIsDoneNow(rt)) return true;
@@ -3488,7 +3515,7 @@
               "task-row-action" + (action === "delete" ? " danger" : "");
             button.title = label;
             button.setAttribute("aria-label", label + " " + item.title);
-            button.innerHTML = icon;
+            button.innerHTML = icon + "<span>" + label + "</span>";
             button.addEventListener("click", (event) => {
               event.stopPropagation();
               menu.classList.add("hidden");
