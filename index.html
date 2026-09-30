@@ -1275,6 +1275,10 @@
         font-weight: 700;
         letter-spacing: 0.04em;
       }
+      .task-text .t-meta .task-overdue {
+        color: var(--danger-bright);
+        font-weight: 700;
+      }
       .task-row.done .t-title {
         text-decoration: line-through;
         color: var(--muted);
@@ -3264,10 +3268,11 @@
           const diff = daysBetween(todayStr(), t.dueDate);
           if (diff < 0)
             return (
-              "Jednorázový úkol · po termínu o " +
+              '<span class="task-overdue">Jednorázový úkol · po termínu o ' +
               -diff +
               " " +
-              (Math.abs(diff) === 1 ? "den" : "dní")
+              (Math.abs(diff) === 1 ? "den" : "dní") +
+              "</span>"
             );
           if (diff === 0)
             return 'Jednorázový úkol · <span class="task-duedate-badge">TERMÍN DNES</span>';
@@ -3421,11 +3426,13 @@
           const diff = daysBetween(todayStr(), due);
           if (diff < 0)
             return (
+              '<span class="task-overdue">' +
               intervalTxt +
               " · po termínu o " +
               -diff +
               " " +
-              (Math.abs(diff) === 1 ? "den" : "dní")
+              (Math.abs(diff) === 1 ? "den" : "dní") +
+              "</span>"
             );
           if (diff === 0)
             return (
