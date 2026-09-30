@@ -1290,6 +1290,104 @@
         flex-direction: column;
         gap: 0.55rem;
       }
+      .upcoming-days {
+        display: flex;
+        flex-direction: column;
+      }
+      .upcoming-day {
+        padding: 0.65rem 0;
+        border-bottom: 1px solid rgba(215, 179, 77, 0.14);
+      }
+      .upcoming-day:last-of-type {
+        border-bottom: 0;
+      }
+      .upcoming-day-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin: 0;
+        color: var(--gold-bright);
+        font-family: var(--font-body);
+        font-size: 0.84rem;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+      .upcoming-day-count {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 500;
+      }
+      .upcoming-day .task-list {
+        margin-top: 0.65rem;
+      }
+      .upcoming-later {
+        margin-top: 0.15rem;
+      }
+      .upcoming-later-summary {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.35rem 0;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.74rem;
+        font-weight: 500;
+        list-style: none;
+        transition: color 0.15s ease;
+      }
+      .upcoming-later-summary:hover {
+        color: var(--parchment-dim);
+      }
+      .upcoming-later-summary::-webkit-details-marker {
+        display: none;
+      }
+      .upcoming-later-summary::before {
+        content: "›";
+        color: inherit;
+        font-size: 1rem;
+        line-height: 0.8;
+        transition: transform 0.15s ease;
+      }
+      .upcoming-later[open] > .upcoming-later-summary::before {
+        transform: rotate(90deg);
+      }
+      .upcoming-later-days {
+        margin-top: 0.3rem;
+      }
+      .recent-completed-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-top: 0.8rem;
+        padding: 0.8rem 0 0.1rem;
+        border: 0;
+        border-top: 1px solid rgba(215, 179, 77, 0.16);
+        background: transparent;
+        color: var(--gold-bright);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-align: left;
+        cursor: pointer;
+      }
+      .recent-completed-toggle:disabled {
+        color: var(--muted);
+        cursor: default;
+      }
+      .recent-completed-toggle svg {
+        width: 15px;
+        height: 15px;
+        transition: transform 0.15s ease;
+      }
+      .recent-completed-toggle[aria-expanded="true"] svg {
+        transform: rotate(90deg);
+      }
+      .recent-completed-count {
+        margin-left: auto;
+        color: var(--muted);
+        font-weight: 500;
+      }
       .task-row {
         display: flex;
         align-items: center;
@@ -1332,6 +1430,10 @@
       .task-check.done svg {
         opacity: 1;
         color: #0d160c;
+      }
+      .task-check:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
       }
       .task-swatch {
         width: 9px;
@@ -2518,6 +2620,28 @@
             </details>
           </div>
 
+          <div class="panel" style="padding: 1.2rem 1.3rem 1.4rem">
+            <div class="page-head"><h3>Nadcházející úkoly</h3></div>
+            <div class="upcoming-days" id="upcoming-days">
+              <div class="empty-note">Žádné nadcházející úkoly.</div>
+            </div>
+            <button
+              class="recent-completed-toggle"
+              id="recent-completed-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="recent-completed-list"
+              disabled
+            >
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+              <span>Nedávno splněné</span>
+              <span class="recent-completed-count" id="recent-completed-count">0</span>
+            </button>
+            <div class="task-list hidden" id="recent-completed-list"></div>
+          </div>
+
           <div class="panel habit-panel">
             <div class="page-head">
               <h3>Tabulka návyků</h3>
@@ -2549,25 +2673,6 @@
             <div class="habit-mobile-list" id="habit-mobile-list"></div>
           </div>
 
-          <div class="panel" style="padding: 1.2rem 1.3rem 1.4rem">
-            <div class="page-head">
-              <div>
-                <h3>Jednorázové úkoly</h3>
-                <p style="margin: 0">Nejbližší úkoly a nedávno splněné</p>
-              </div>
-            </div>
-            <div class="task-list" id="oneoff-list"></div>
-          </div>
-
-          <div class="panel" style="padding: 1.2rem 1.3rem">
-            <div class="page-head">
-              <h3>Opakující se úkoly</h3>
-              <p style="margin: 0">
-                Přednášky a pravidelné povinnosti — týdenní nebo dvoutýdenní
-              </p>
-            </div>
-            <div class="task-list" id="recur-list"></div>
-          </div>
         </section>
 
         <!-- SHOP -->
@@ -2857,7 +2962,7 @@
         let shopItems = [];
         let raceSettings = null;
         let currentCharId = safeStorage.get(LS_CHAR_KEY) || null;
-        let oneOffExpanded = false;
+        let recentlyCompletedExpanded = false;
         let calMonth = new Date().getMonth();
         let calYear = new Date().getFullYear();
 
@@ -3329,28 +3434,6 @@
           const daysSinceCompletion = daysBetween(t.completedDate, todayStr());
           return daysSinceCompletion >= 0 && daysSinceCompletion <= 2;
         }
-        function oneOffIsVisible(t, includeAll) {
-          if (oneOffIsDoneNow(t)) return true;
-          if (t.completed) return false;
-          return includeAll || t.dueDate <= addDays(todayStr(), 7);
-        }
-        function oneOffHasMore(id) {
-          return oneOffForChar(id).some(
-            (t) => !t.completed && t.dueDate > addDays(todayStr(), 7),
-          );
-        }
-        function visibleOneOffForChar(id, includeAll) {
-          const list = oneOffForChar(id).filter((t) =>
-            oneOffIsVisible(t, includeAll),
-          );
-          const pending = list
-            .filter((t) => !oneOffIsDoneNow(t))
-            .sort((a, b) => (a.dueDate < b.dueDate ? -1 : 1));
-          const done = list
-            .filter(oneOffIsDoneNow)
-            .sort((a, b) => (a.completedDate < b.completedDate ? -1 : 1));
-          return [...pending, ...done];
-        }
         function oneOffMeta(t) {
           if (oneOffIsDoneNow(t))
             return (
@@ -3441,25 +3524,6 @@
             rt.lastCompletionDueDate ||
             addDays(recurringDueDate(rt), -interval);
           return daysBetween(lc, today) >= 0 && today <= completedDueDate;
-        }
-        function recurringIsVisible(rt) {
-          if (recurringIsDoneNow(rt)) return true;
-          const due = recurringDueDate(rt);
-          return due <= addDays(todayStr(), 7);
-        }
-        function visibleRecurringForChar(id) {
-          const list = recurringForChar(id).filter(recurringIsVisible);
-          const pending = list
-            .filter((rt) => !recurringIsDoneNow(rt))
-            .sort((a, b) =>
-              recurringDueDate(a) < recurringDueDate(b) ? -1 : 1,
-            );
-          const done = list.filter(recurringIsDoneNow).sort((a, b) => {
-            const la = recurringLastCompletion(a),
-              lb = recurringLastCompletion(b);
-            return la < lb ? -1 : 1;
-          });
-          return [...pending, ...done];
         }
         async function toggleRecurringTask(rt) {
           const completions = (rt.completions || []).slice();
@@ -3567,7 +3631,7 @@
         }
         function selectCharacter(id) {
           currentCharId = id;
-          oneOffExpanded = false;
+          recentlyCompletedExpanded = false;
           safeStorage.set(LS_CHAR_KEY, id);
           document.getElementById("screen-select").classList.add("hidden");
           document.getElementById("app-shell").classList.remove("hidden");
@@ -3582,6 +3646,251 @@
           document.getElementById("pc-title").textContent =
             c.title || "Nováček";
           document.getElementById("pc-gold").textContent = c.gold || 0;
+        }
+
+        function taskEntryMeta(entry) {
+          const item = entry.data;
+          const difficulty = DIFFICULTY[item.difficulty] || DIFFICULTY.easy;
+          if (entry.kind === "habit") {
+            return (
+              intervalLabel(item.intervalDays) +
+              " · " +
+              difficulty.label +
+              (entry.done && entry.completionDate
+                ? " · splněno " + formatCzDate(entry.completionDate)
+                : "")
+            );
+          }
+          if (entry.kind === "oneoff") {
+            if (!entry.done && item.dueDate === todayStr()) {
+              return "Jednorázový úkol · " + difficulty.label;
+            }
+            return oneOffMeta(item);
+          }
+          if (entry.upcoming) {
+            const diff = daysBetween(todayStr(), entry.dueDate);
+            return (
+              (item.intervalDays === 14 ? "Dvoutýdenní" : "Týdenní") +
+              " · termín za " +
+              diff +
+              " " +
+              (diff === 1 ? "den" : "dní") +
+              " (" +
+              formatCzDate(entry.dueDate) +
+              ")"
+            );
+          }
+          if (!entry.done && recurringDueDate(item) === todayStr()) {
+            return (
+              (item.intervalDays === 14 ? "Dvoutýdenní" : "Týdenní") +
+              " · " +
+              difficulty.label
+            );
+          }
+          return recurringMeta(item);
+        }
+
+        function renderTaskEntries(entries, target) {
+          target.innerHTML = "";
+          entries.forEach((entry) => {
+            const item = entry.data;
+            const row = document.createElement("div");
+            row.className = "task-row" + (entry.done ? " done" : "");
+            const reward = (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
+              .gold;
+            row.innerHTML =
+              '<button class="task-check' +
+              (entry.done ? " done" : "") +
+              '" aria-label="Splnit"' +
+              (entry.locked ? ' disabled title="Další termín"' : "") +
+              '><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
+              '<span class="task-swatch" style="background:' +
+              escapeAttr(item.color || "#c9622a") +
+              '"></span>' +
+              '<div class="task-text"><div class="t-title">' +
+              escapeHtml(item.title) +
+              '</div><div class="t-meta">' +
+              taskEntryMeta(entry) +
+              "</div></div>" +
+              '<div class="task-reward">+' +
+              reward +
+              " 🪙</div>";
+            row
+              .querySelector(".task-check")
+              .addEventListener("click", async () => {
+                if (entry.kind === "habit") {
+                  await toggleHabitDay(item, entry.completionDate || todayStr());
+                } else if (entry.kind === "recurring") {
+                  await toggleRecurringTask(item);
+                } else {
+                  await toggleOneOffTask(item);
+                }
+              });
+            wireTaskRowActions(row, entry.kind, item);
+            target.appendChild(row);
+          });
+        }
+
+        function renderUpcomingTasks() {
+          const list = document.getElementById("upcoming-days");
+          const today = todayStr();
+          const laterWasOpen =
+            list.querySelector(".upcoming-later")?.open || false;
+          const upcoming = [
+            ...oneOffForChar(currentCharId)
+              .filter((task) => !task.completed && task.dueDate > today)
+              .map((task) => ({
+                kind: "oneoff",
+                data: task,
+                done: false,
+                dueDate: task.dueDate,
+                upcoming: true,
+              })),
+            ...recurringForChar(currentCharId)
+              .map((task) => ({
+                kind: "recurring",
+                data: task,
+                done: false,
+                dueDate: recurringDueDate(task),
+                upcoming: true,
+                locked: recurringIsDoneNow(task),
+              }))
+              .filter((entry) => entry.dueDate > today),
+          ].sort(
+            (a, b) =>
+              a.dueDate.localeCompare(b.dueDate) ||
+              (a.data.title || "").localeCompare(b.data.title || "", "cs"),
+          );
+          list.innerHTML = "";
+          if (upcoming.length === 0) {
+            list.innerHTML =
+              '<div class="empty-note">Žádné nadcházející úkoly.</div>';
+          } else {
+            const nextWeek = addDays(today, 7);
+            const near = upcoming.filter((entry) => entry.dueDate <= nextWeek);
+            const later = upcoming.filter((entry) => entry.dueDate > nextWeek);
+            const renderDateGroups = (entries, target) => {
+              const groups = new Map();
+              entries.forEach((entry) => {
+                if (!groups.has(entry.dueDate)) groups.set(entry.dueDate, []);
+                groups.get(entry.dueDate).push(entry);
+              });
+              groups.forEach((dayEntries, date) => {
+                const dateLabel = new Intl.DateTimeFormat("cs-CZ", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                }).format(parseDate(date));
+                const day = document.createElement("section");
+                day.className = "upcoming-day";
+                const heading = document.createElement("h4");
+                heading.className = "upcoming-day-heading";
+                const title = document.createElement("span");
+                title.textContent =
+                  dateLabel.charAt(0).toLocaleUpperCase("cs-CZ") +
+                  dateLabel.slice(1);
+                const count = document.createElement("span");
+                count.className = "upcoming-day-count";
+                count.textContent = dayEntries.length + " položek";
+                heading.append(title, count);
+                const taskList = document.createElement("div");
+                taskList.className = "task-list";
+                day.append(heading, taskList);
+                target.appendChild(day);
+                renderTaskEntries(dayEntries, taskList);
+              });
+            };
+            if (near.length > 0) {
+              renderDateGroups(near, list);
+            } else if (later.length > 0) {
+              list.innerHTML =
+                '<div class="empty-note">V příštích 7 dnech žádné úkoly.</div>';
+            }
+            if (later.length > 0) {
+              const laterDetails = document.createElement("details");
+              laterDetails.className = "upcoming-later";
+              laterDetails.open = laterWasOpen;
+              const summary = document.createElement("summary");
+              summary.className = "upcoming-later-summary";
+              const label = document.createElement("span");
+              label.textContent = "Pozdější úkoly";
+              const count = document.createElement("span");
+              count.className = "upcoming-day-count";
+              count.textContent = later.length + " položek";
+              summary.append(label, count);
+              const laterList = document.createElement("div");
+              laterList.className = "upcoming-days upcoming-later-days";
+              laterDetails.append(summary, laterList);
+              list.appendChild(laterDetails);
+              renderDateGroups(later, laterList);
+            }
+          }
+          renderRecentlyCompletedTasks();
+        }
+
+        function renderRecentlyCompletedTasks() {
+          const button = document.getElementById("recent-completed-toggle");
+          const count = document.getElementById("recent-completed-count");
+          const list = document.getElementById("recent-completed-list");
+          const today = todayStr();
+          const oldestDate = addDays(today, -2);
+          const recent = [];
+          habitsForChar(currentCharId).forEach((habit) => {
+            habitAnchors(habit)
+              .filter((date) => date >= oldestDate && date <= today)
+              .forEach((date) => {
+                recent.push({
+                  kind: "habit",
+                  data: habit,
+                  done: true,
+                  completionDate: date,
+                  completedOn: date,
+                });
+              });
+          });
+          oneOffForChar(currentCharId)
+            .filter(
+              (task) =>
+                task.completed &&
+                task.completedDate >= oldestDate &&
+                task.completedDate <= today,
+            )
+            .forEach((task) => {
+              recent.push({
+                kind: "oneoff",
+                data: task,
+                done: true,
+                completedOn: task.completedDate,
+              });
+            });
+          recurringForChar(currentCharId).forEach((task) => {
+            const completionDate = recurringLastCompletion(task);
+            if (completionDate >= oldestDate && completionDate <= today) {
+              recent.push({
+                kind: "recurring",
+                data: task,
+                done: true,
+                completedOn: completionDate,
+              });
+            }
+          });
+          recent.sort(
+            (a, b) =>
+              b.completedOn.localeCompare(a.completedOn) ||
+              (a.data.title || "").localeCompare(b.data.title || "", "cs"),
+          );
+          count.textContent = recent.length;
+          button.disabled = recent.length === 0;
+          if (recent.length === 0) recentlyCompletedExpanded = false;
+          button.setAttribute(
+            "aria-expanded",
+            String(recentlyCompletedExpanded),
+          );
+          list.classList.toggle(
+            "hidden",
+            !recentlyCompletedExpanded || recent.length === 0,
+          );
+          renderTaskEntries(recent, list);
         }
 
         /* ================= RENDER: TODAY'S TASKS ================= */
@@ -3661,18 +3970,23 @@
           const dueO = oneOffForChar(currentCharId)
             .filter(
               (tk) =>
-                (tk.completed && oneOffIsDoneNow(tk)) ||
+                (tk.completed &&
+                  tk.completedDate === t &&
+                  tk.dueDate <= t) ||
                 (!tk.completed && tk.dueDate <= t),
             )
             .map((tk) => ({
               kind: "oneoff",
               data: tk,
-              done: !!tk.completed && oneOffIsDoneNow(tk),
+              done: !!tk.completed && tk.completedDate === t,
             }));
           const dueR = recurringForChar(currentCharId)
             .filter((rt) => {
-              if (recurringIsDoneNow(rt)) return true;
-              return recurringDueDate(rt) <= t;
+              if (!recurringIsDoneNow(rt)) return recurringDueDate(rt) <= t;
+              const completedDueDate =
+                rt.lastCompletionDueDate ||
+                addDays(recurringDueDate(rt), -(rt.intervalDays || 7));
+              return recurringLastCompletion(rt) === t && completedDueDate <= t;
             })
             .map((rt) => ({
               kind: "recurring",
@@ -3746,79 +4060,12 @@
           document.getElementById("task-done-earned").textContent =
             "+" + earnedReward + " ZÍSKÁNO";
 
-          const renderEntries = (entries, target) => {
-            target.innerHTML = "";
-            entries.forEach((entry) => {
-              const item = entry.data;
-              const row = document.createElement("div");
-              row.className = "task-row" + (entry.done ? " done" : "");
-              const reward = (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
-                .gold;
-              const meta =
-                entry.kind === "habit"
-                  ? intervalLabel(item.intervalDays) +
-                    " · " +
-                    (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
-                  : entry.kind === "recurring"
-                    ? (() => {
-                        const due = recurringDueDate(item);
-                        const diff = daysBetween(todayStr(), due);
-                        if (diff === 0) {
-                          return (
-                            (item.intervalDays === 14
-                              ? "Dvoutýdenní"
-                              : "Týdenní") +
-                            " · " +
-                            (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
-                              .label
-                          );
-                        }
-                        return recurringMeta(item);
-                      })()
-                    : (() => {
-                        const diff = daysBetween(todayStr(), item.dueDate);
-                        if (diff === 0) {
-                          return (
-                            "Jednorázový úkol · " +
-                            (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
-                              .label
-                          );
-                        }
-                        return oneOffMeta(item);
-                      })();
-              row.innerHTML =
-                '<button class="task-check' +
-                (entry.done ? " done" : "") +
-                '" aria-label="Splnit"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
-                '<span class="task-swatch" style="background:' +
-                (item.color || "#c9622a") +
-                '"></span>' +
-                '<div class="task-text"><div class="t-title">' +
-                escapeHtml(item.title) +
-                '</div><div class="t-meta">' +
-                meta +
-                "</div></div>" +
-                '<div class="task-reward">+' +
-                reward +
-                " 🪙</div>";
-              row
-                .querySelector(".task-check")
-                .addEventListener("click", async () => {
-                  if (entry.kind === "habit") await toggleHabitDay(item, t);
-                  else if (entry.kind === "recurring")
-                    await toggleRecurringTask(item);
-                  else await toggleOneOffTask(item);
-                });
-              wireTaskRowActions(row, entry.kind, item);
-              target.appendChild(row);
-            });
-          };
-          renderEntries(pending, list);
+          renderTaskEntries(pending, list);
           if (pending.length === 0) {
             list.innerHTML =
               '<div class="empty-note">Všechny dnešní úkoly jsou hotové.</div>';
           }
-          renderEntries(completed, doneList);
+          renderTaskEntries(completed, doneList);
         }
         function wireTaskRowActions(row, kind, item) {
           const actions = document.createElement("div");
@@ -4043,89 +4290,6 @@
             });
         }
 
-        /* ================= RENDER: ONE-OFF TASKS ================= */
-        function renderOneOffList() {
-          const list = document.getElementById("oneoff-list");
-          const hasMore = oneOffHasMore(currentCharId);
-          if (!hasMore) oneOffExpanded = false;
-          const items = visibleOneOffForChar(currentCharId, oneOffExpanded);
-          if (items.length === 0) {
-            list.innerHTML =
-              '<div class="empty-note">Žádné blízké ani nedávno splněné položky.</div>';
-          } else {
-            list.innerHTML = "";
-            items.forEach((t) => {
-              const done = oneOffIsDoneNow(t);
-              const reward = (DIFFICULTY[t.difficulty] || DIFFICULTY.easy).gold;
-              const row = document.createElement("div");
-              row.className = "task-row" + (done ? " done" : "");
-              row.innerHTML =
-                '<button class="task-check' +
-                (done ? " done" : "") +
-                '" aria-label="Splnit"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
-                '<div class="task-text"><div class="t-title">' +
-                escapeHtml(t.title) +
-                '</div><div class="t-meta">' +
-                oneOffMeta(t) +
-                "</div></div>" +
-                '<div class="task-reward">+' +
-                reward +
-                " 🪙</div>";
-              row
-                .querySelector(".task-check")
-                .addEventListener("click", () => toggleOneOffTask(t));
-              wireTaskRowActions(row, "oneoff", t);
-              list.appendChild(row);
-            });
-          }
-          if (hasMore) {
-            const button = document.createElement("button");
-            button.className = "btn btn-ghost btn-sm";
-            button.style.alignSelf = "center";
-            button.textContent = oneOffExpanded
-              ? "Zobrazit méně"
-              : "Zobrazit více";
-            button.addEventListener("click", () => {
-              oneOffExpanded = !oneOffExpanded;
-              renderOneOffList();
-            });
-            list.appendChild(button);
-          }
-        }
-
-        /* ================= RENDER: RECURRING TASKS (list only, no table) ================= */
-        function renderRecurringList() {
-          const list = document.getElementById("recur-list");
-          const items = visibleRecurringForChar(currentCharId);
-          if (items.length === 0) {
-            list.innerHTML =
-              '<div class="empty-note">Žádné blízké ani nedávno splněné položky.</div>';
-            return;
-          }
-          list.innerHTML = "";
-          items.forEach((rt) => {
-            const done = recurringIsDoneNow(rt);
-            const row = document.createElement("div");
-            row.className = "task-row" + (done ? " done" : "");
-            row.innerHTML =
-              '<button class="task-check' +
-              (done ? " done" : "") +
-              '" aria-label="Splnit"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
-              '<div class="task-text"><div class="t-title">' +
-              escapeHtml(rt.title) +
-              '</div><div class="t-meta">' +
-              recurringMeta(rt) +
-              "</div></div>" +
-              '<div class="task-reward">+' +
-              recurringReward(rt) +
-              " 🪙</div>";
-            row
-              .querySelector(".task-check")
-              .addEventListener("click", () => toggleRecurringTask(rt));
-            wireTaskRowActions(row, "recurring", rt);
-            list.appendChild(row);
-          });
-        }
         /* ================= RENDER: SHOP ================= */
         function iconPotionSvg() {
           return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2h6"/><path d="M10 2v5.5L5.5 15a4 4 0 0 0 3.5 6h6a4 4 0 0 0 3.5-6L14 7.5V2"/><path d="M7.5 14h9"/></svg>';
@@ -4334,9 +4498,8 @@
           if (!currentCharId) return;
           renderPlayerCard();
           renderTasks();
+          renderUpcomingTasks();
           renderHabitTable();
-          renderOneOffList();
-          renderRecurringList();
           renderShop();
           renderInventory();
           renderRacePage();
@@ -5537,6 +5700,18 @@
             el.addEventListener("click", () => showPage(el.dataset.page));
           });
           document
+            .getElementById("recent-completed-toggle")
+            .addEventListener("click", (event) => {
+              recentlyCompletedExpanded = !recentlyCompletedExpanded;
+              event.currentTarget.setAttribute(
+                "aria-expanded",
+                String(recentlyCompletedExpanded),
+              );
+              document
+                .getElementById("recent-completed-list")
+                .classList.toggle("hidden", !recentlyCompletedExpanded);
+            });
+          document
             .getElementById("race-settings-open")
             .addEventListener("click", openRaceSettingsModal);
           document
@@ -5792,6 +5967,7 @@
                 renderShop();
                 renderInventory();
                 renderTasks();
+                renderUpcomingTasks();
                 renderRacePage();
               } else {
                 renderCharSelect();
@@ -5808,6 +5984,7 @@
               )
                 return;
               renderTasks();
+              renderUpcomingTasks();
               renderHabitTable();
               renderShop();
               renderRacePage();
@@ -5829,7 +6006,7 @@
               )
                 return;
               renderTasks();
-              renderOneOffList();
+              renderUpcomingTasks();
             }),
           );
           unsubscribers.push(
@@ -5842,7 +6019,7 @@
               )
                 return;
               renderTasks();
-              renderRecurringList();
+              renderUpcomingTasks();
             }),
           );
           unsubscribers.push(
