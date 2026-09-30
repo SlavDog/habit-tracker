@@ -5275,9 +5275,32 @@
       </div>
     </div>
     <div class="field"><label>Datum nejbližšího termínu</label><input type="date" id="f-rdue" value="${currentDue}"><span class="hint">Změna termínu nebo intervalu vynuluje historii nedávných splnění.</span></div>
+    <div class="field"><label>Barva</label>
+      <div class="color-row" id="f-rcolor-row">
+        ${HABIT_COLORS.map((c) => '<span class="color-dot" data-color="' + c + '" style="background:' + c + '"></span>').join("")}
+        <input type="color" id="f-rcolor-custom" value="${rt.color || HABIT_COLORS[0]}" style="width:44px;height:32px;padding:2px">
+      </div>
+    </div>
   `;
         }
-        function wireRecurringForm(modal, initialDays) {
+        function wireRecurringForm(modal, initialDays, initialColor) {
+          modal.querySelectorAll("#f-rcolor-row .color-dot").forEach((dot) => {
+            if (dot.dataset.color === initialColor) dot.classList.add("active");
+            dot.addEventListener("click", () => {
+              modal
+                .querySelectorAll("#f-rcolor-row .color-dot")
+                .forEach((d) => d.classList.remove("active"));
+              dot.classList.add("active");
+              modal.querySelector("#f-rcolor-custom").value = dot.dataset.color;
+            });
+          });
+          modal
+            .querySelector("#f-rcolor-custom")
+            .addEventListener("input", () => {
+              modal
+                .querySelectorAll("#f-rcolor-row .color-dot")
+                .forEach((d) => d.classList.remove("active"));
+            });
           modal
             .querySelectorAll("#f-rinterval-presets .preset-chip")
             .forEach((chip) => {
@@ -5297,6 +5320,7 @@
               );
               return active ? Number(active.dataset.days) : 7;
             },
+            getColor: () => modal.querySelector("#f-rcolor-custom").value,
           };
         }
         function openAddRecurModal() {
@@ -5309,7 +5333,10 @@
           modal
             .querySelector("#m-cancel")
             .addEventListener("click", closeModal);
-          const ctrl = wireRecurringForm(modal, 7);
+          const initialColor =
+            HABIT_COLORS[recurringTasks.length % HABIT_COLORS.length];
+          modal.querySelector("#f-rcolor-custom").value = initialColor;
+          const ctrl = wireRecurringForm(modal, 7, initialColor);
           modal.querySelector("#m-save").addEventListener("click", async () => {
             const title = modal.querySelector("#f-rtitle").value.trim();
             if (!title) {
@@ -5322,6 +5349,7 @@
               difficulty: modal.querySelector("#f-rdifficulty").value,
               intervalDays: ctrl.getDays(),
               baseDueDate: modal.querySelector("#f-rdue").value || todayStr(),
+              color: ctrl.getColor(),
               ownerId: currentCharId,
               completions: [],
               lastRewardPaid: false,
@@ -5371,7 +5399,11 @@
               return;
             }
             holder.innerHTML = recurringFormFields(rt);
-            ctrl = wireRecurringForm(holder, rt.intervalDays || 7);
+            ctrl = wireRecurringForm(
+              holder,
+              rt.intervalDays || 7,
+              rt.color || HABIT_COLORS[0],
+            );
           }
           modal
             .querySelector("#f-pick")
@@ -5401,6 +5433,7 @@
               title,
               description: holder.querySelector("#f-rdesc").value.trim(),
               difficulty: holder.querySelector("#f-rdifficulty").value,
+              color: ctrl.getColor(),
               intervalDays,
               baseDueDate: scheduleChanged ? baseDueDate : rt.baseDueDate,
               completions: scheduleChanged ? [] : rt.completions || [],
