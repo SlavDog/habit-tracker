@@ -1626,7 +1626,7 @@
       .hm-week-head,
       .hm-week-row {
         display: grid;
-        grid-template-columns: minmax(68px, 1.15fr) repeat(7, minmax(0, 1fr));
+        grid-template-columns: minmax(68px, 1.15fr) repeat(7, minmax(0, 1fr)) 28px;
         align-items: center;
         gap: 3px;
       }
@@ -1687,9 +1687,9 @@
         padding: 0;
         display: grid;
         place-items: center;
-        border: 1px solid rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 5px;
-        background: var(--bg-inset);
+        background: rgba(255, 255, 255, 0.025);
         color: var(--parchment-dim);
         font: inherit;
         font-size: 0.64rem;
@@ -1698,8 +1698,17 @@
       .hm-day-cell:hover:not(:disabled) {
         border-color: var(--gold);
       }
-      .hm-day-cell.today {
-        box-shadow: inset 0 0 0 1px var(--gold-bright);
+      .hm-day-cell.today:not(.filled) {
+        border: 1.5px dashed rgba(215, 179, 77, 0.75);
+        background: transparent;
+      }
+      .hm-streak-head {
+        color: var(--muted);
+        font-size: 0.7rem;
+        text-align: right;
+      }
+      .hm-streak {
+        font-size: 0.66rem;
       }
       .hm-day-cell.filled {
         background: var(--habit-color);
@@ -1721,7 +1730,7 @@
       }
       table.habit-grid {
         border-collapse: separate;
-        border-spacing: 0;
+        border-spacing: 3px 4px;
         font-size: 0.72rem;
         table-layout: fixed;
         width: 100%;
@@ -1739,14 +1748,14 @@
         left: 0;
         z-index: 2;
         text-align: left !important;
-        padding: 0.25rem 0.45rem 0.25rem 0.2rem !important;
-        background: var(--bg-panel);
-        width: 140px;
+        padding: 0 0.5rem 0 0.2rem !important;
+        background: transparent;
+        width: 150px;
       }
       .hg-day-head {
         color: var(--muted);
         font-weight: 500;
-        padding-bottom: 0.2rem !important;
+        padding-bottom: 0.1rem !important;
         font-size: 0.64rem;
       }
       .hg-day-head.today {
@@ -1756,7 +1765,7 @@
       .hg-row-name {
         display: flex;
         align-items: center;
-        gap: 0.35rem;
+        gap: 0.5rem;
       }
       .habit-edit-link {
         cursor: pointer;
@@ -1767,34 +1776,67 @@
         color: var(--gold-bright);
       }
       .hg-dot {
-        width: 8px;
-        height: 8px;
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
         flex-shrink: 0;
       }
       .hg-name-txt {
-        font-weight: 400;
-        font-size: 0.76rem;
+        font-weight: 500;
+        font-size: 0.82rem;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
       .hg-cell {
-        height: 21px;
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        position: relative;
-        background: var(--bg-inset);
+        height: 26px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.025);
         cursor: pointer;
+        transition:
+          border-color 0.12s ease,
+          filter 0.12s ease;
       }
-      .hg-cell.today-col {
-        outline: 1px solid rgba(215, 179, 77, 0.5);
-        outline-offset: -1px;
+      .hg-cell:not(.future):not(.filled):hover {
+        border-color: rgba(215, 179, 77, 0.45);
+      }
+      .hg-cell.filled {
+        border-color: transparent;
+      }
+      .hg-cell.filled:hover {
+        filter: brightness(1.12);
+      }
+      .hg-cell.today-col:not(.filled) {
+        border: 1.5px dashed rgba(215, 179, 77, 0.75);
+        background: transparent;
       }
       .hg-cell.future {
         opacity: 0.35;
+        cursor: default;
       }
-      .hg-cell.filled {
-        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+      .hg-streak-col {
+        width: 44px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: right !important;
+        padding: 0 0.2rem 0.1rem 0 !important;
+      }
+      .hg-streak,
+      .hm-streak {
+        color: var(--muted);
+        font-weight: 700;
+        text-align: right !important;
+        white-space: nowrap;
+      }
+      .hg-streak {
+        font-size: 0.82rem;
+        padding: 0 0.2rem 0 0.4rem !important;
+      }
+      .hg-streak.active,
+      .hm-streak.active {
+        color: var(--gold-bright);
       }
 
       /* ---------- Shop ---------- */
@@ -3345,6 +3387,40 @@
             return d >= start && d <= end;
           });
         }
+        // Consecutive covered days ending today (or yesterday, if today is still open).
+        function habitStreak(h) {
+          const today = todayStr();
+          const doneToday = isCovered(h, today);
+          let cursor = doneToday ? today : addDays(today, -1);
+          let streak = 0;
+          while (
+            (!h.startDate || cursor >= h.startDate) &&
+            isCovered(h, cursor)
+          ) {
+            streak++;
+            cursor = addDays(cursor, -1);
+          }
+          return { streak, doneToday };
+        }
+        function habitStreakMarkup(h, tag, className) {
+          const { streak, doneToday } = habitStreak(h);
+          return (
+            "<" +
+            tag +
+            ' class="' +
+            className +
+            (doneToday && streak > 0 ? " active" : "") +
+            '" title="Série: ' +
+            streak +
+            " " +
+            (streak === 1 ? "den" : streak >= 2 && streak <= 4 ? "dny" : "dní") +
+            '">' +
+            streak +
+            " d</" +
+            tag +
+            ">"
+          );
+        }
         function coveringAnchor(h, dateStr) {
           const d = parseDate(dateStr);
           return (
@@ -4144,12 +4220,12 @@
               d +
               "</th>";
           }
-          thead += "</tr></thead>";
+          thead += '<th class="hg-streak-col" title="Série" aria-label="Série">🔥</th></tr></thead>';
           let tbody = "<tbody>";
           if (myHabits.length === 0) {
             tbody +=
               '<tr><td class="hg-habit-col" colspan="' +
-              (nDays + 1) +
+              (nDays + 2) +
               '"><div class="empty-note" style="text-align:left;padding:.6rem 0">Zatím nemáš žádné návyky. Přidej první tlačítkem + Nový.</div></td></tr>';
           }
           myHabits.forEach((h) => {
@@ -4174,14 +4250,14 @@
                 (isToday ? " today-col" : "") +
                 (filled ? " filled" : "") +
                 '" style="' +
-                (filled ? "background:" + (h.color || "#c9622a") : "") +
+                (filled ? "background-color:" + (h.color || "#c9622a") : "") +
                 '" data-habit="' +
                 h.id +
                 '" data-date="' +
                 dateStr +
                 '"></td>';
             }
-            tbody += "</tr>";
+            tbody += habitStreakMarkup(h, "td", "hg-streak") + "</tr>";
           });
           tbody += "</tbody>";
           table.style.width = "100%";
@@ -4220,7 +4296,17 @@
           const leadingDays = (new Date(calYear, calMonth, 1).getDay() + 6) % 7;
           const weekCount = Math.ceil((leadingDays + nDays) / 7);
           let markup = "";
+          const todayDay =
+            parseDate(t).getFullYear() === calYear &&
+            parseDate(t).getMonth() === calMonth
+              ? parseDate(t).getDate()
+              : null;
           for (let week = 0; week < weekCount; week++) {
+            const weekStart = week * 7 - leadingDays + 1;
+            const isTodayWeek =
+              todayDay !== null &&
+              todayDay >= weekStart &&
+              todayDay < weekStart + 7;
             markup +=
               '<section class="hm-week"><div class="hm-week-head"><span class="hm-week-label">Návyk</span>';
             for (let weekday = 0; weekday < 7; weekday++) {
@@ -4236,7 +4322,10 @@
                   "</b></span>";
               }
             }
-            markup += "</div>";
+            markup +=
+              '<span class="hm-streak-head" title="Série">' +
+              (isTodayWeek ? "🔥" : "") +
+              "</span></div>";
             myHabits.forEach((h) => {
               const color = h.color || "#c9622a";
               markup +=
@@ -4285,7 +4374,10 @@
                   day +
                   "</button>";
               }
-              markup += "</div>";
+              markup +=
+                (isTodayWeek
+                  ? habitStreakMarkup(h, "span", "hm-streak")
+                  : '<span class="hm-streak"></span>') + "</div>";
             });
             markup += "</section>";
           }
