@@ -597,6 +597,103 @@
         font-size: 0.9rem;
       }
 
+      .task-progress {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        margin: 0.35rem 0 1rem;
+      }
+      .task-progress-stats {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.9rem;
+        color: var(--parchment-dim);
+        font-size: 0.82rem;
+      }
+      .task-progress-stats strong {
+        color: var(--gold-bright);
+      }
+      .task-progress-bar {
+        display: flex;
+        gap: 3px;
+        height: 12px;
+      }
+      .task-progress-segment {
+        flex: var(--segment-weight) 1 0;
+        min-width: 0;
+        border-radius: 3px;
+        background: transparent;
+        border: 1px dashed var(--segment-color);
+        cursor: help;
+      }
+      .task-progress-tooltip {
+        position: fixed;
+        z-index: 1000;
+        width: max-content;
+        max-width: calc(100vw - 16px);
+        max-height: calc(100vh - 16px);
+        max-height: calc(100dvh - 16px);
+        padding: 0.4rem 0.6rem;
+        border: 1px solid var(--border-bronze-light);
+        border-radius: var(--radius-sm);
+        background: var(--bg-void-2);
+        color: var(--parchment);
+        font: 500 0.78rem var(--font-body);
+        text-align: center;
+        overflow-wrap: anywhere;
+        overflow-y: auto;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(4px);
+        transition:
+          opacity 0.16s ease,
+          transform 0.16s ease,
+          visibility 0.16s ease;
+      }
+      .task-progress-tooltip.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .task-progress-segment.done {
+        background: var(--segment-color);
+        border-style: solid;
+      }
+      .task-done-section {
+        margin-top: 1rem;
+        padding-top: 0.7rem;
+        border-top: 1px solid rgba(215, 179, 77, 0.16);
+      }
+      .task-done-section > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        color: var(--parchment-dim);
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        list-style: none;
+      }
+      .task-done-section > summary::-webkit-details-marker {
+        display: none;
+      }
+      .task-done-section > summary::before {
+        content: "›";
+        font-size: 1.2rem;
+        line-height: 0.8;
+      }
+      .task-done-section[open] > summary::before {
+        transform: rotate(90deg);
+      }
+      .task-done-earned {
+        margin-left: auto;
+        color: var(--gold-dim);
+        letter-spacing: 0;
+      }
+
       /* ---------- Race ---------- */
       .race-layout {
         display: grid;
@@ -2302,9 +2399,28 @@
 
           <div class="panel" style="padding: 1.2rem 1.3rem">
             <div class="page-head"><h3>Dnešní úkoly</h3></div>
+            <div class="task-progress hidden" id="task-progress">
+              <div class="task-progress-stats">
+                <span id="task-progress-count"></span>
+                <span id="task-progress-reward"></span>
+              </div>
+              <div
+                class="task-progress-bar"
+                id="task-progress-bar"
+                role="img"
+                aria-label="Průběh dnešních úkolů"
+              ></div>
+            </div>
             <div class="task-list" id="task-list">
               <div class="empty-note">Načítám kroniku…</div>
             </div>
+            <details class="task-done-section hidden" id="task-done-section">
+              <summary>
+                <span>HOTOVO · <span id="task-done-count">0</span></span>
+                <span class="task-done-earned" id="task-done-earned"></span>
+              </summary>
+              <div class="task-list" id="task-done-list"></div>
+            </details>
           </div>
 
           <div class="panel habit-panel">
@@ -3373,6 +3489,71 @@
         /* ================= RENDER: TODAY'S TASKS ================= */
         function renderTasks() {
           const list = document.getElementById("task-list");
+          const doneList = document.getElementById("task-done-list");
+          const doneSection = document.getElementById("task-done-section");
+          const progress = document.getElementById("task-progress");
+          const progressBar = document.getElementById("task-progress-bar");
+          let progressTooltip = document.getElementById(
+            "task-progress-tooltip",
+          );
+          if (!progressTooltip) {
+            progressTooltip = document.createElement("div");
+            progressTooltip.id = "task-progress-tooltip";
+            progressTooltip.className = "task-progress-tooltip";
+            progressTooltip.setAttribute("role", "tooltip");
+            document.body.appendChild(progressTooltip);
+          }
+          let touchTooltipTimer;
+          const hideProgressTooltip = () => {
+            progressTooltip.classList.remove("visible");
+          };
+          const showProgressTooltip = (segment, isTouch) => {
+            progressTooltip.textContent = segment.dataset.tooltip;
+            const segmentBounds = segment.getBoundingClientRect();
+            const tooltipBounds = progressTooltip.getBoundingClientRect();
+            const gutter = 8;
+            const viewportWidth = document.documentElement.clientWidth;
+            const left = Math.max(
+              gutter,
+              Math.min(
+                segmentBounds.left +
+                  segmentBounds.width / 2 -
+                  tooltipBounds.width / 2,
+                viewportWidth - tooltipBounds.width - gutter,
+              ),
+            );
+            const topAbove =
+              segmentBounds.top - tooltipBounds.height - gutter;
+            const maxTop = Math.max(
+              gutter,
+              window.innerHeight - tooltipBounds.height - gutter,
+            );
+            const top =
+              topAbove >= gutter
+                ? topAbove
+                : Math.min(segmentBounds.bottom + gutter, maxTop);
+            progressTooltip.style.left = left + "px";
+            progressTooltip.style.top = top + "px";
+            progressTooltip.classList.add("visible");
+            if (isTouch) {
+              clearTimeout(touchTooltipTimer);
+              touchTooltipTimer = setTimeout(hideProgressTooltip, 3000);
+            }
+          };
+          progressBar.onpointerover = (event) => {
+            const segment = event.target.closest(".task-progress-segment");
+            if (segment) {
+              showProgressTooltip(segment, event.pointerType === "touch");
+            }
+          };
+          progressBar.onpointerdown = (event) => {
+            if (event.pointerType !== "touch") return;
+            const segment = event.target.closest(".task-progress-segment");
+            if (segment) showProgressTooltip(segment, true);
+          };
+          progressBar.onpointerout = (event) => {
+            if (event.pointerType !== "touch") hideProgressTooltip();
+          };
           const t = todayStr();
           const dueH = dueHabitsToday(currentCharId).map((h) => ({
             kind: "habit",
@@ -3415,71 +3596,131 @@
           if (due.length === 0) {
             list.innerHTML =
               '<div class="empty-note">Na dnešek nemáš žádné úkoly ani návyky.</div>';
+            doneList.innerHTML = "";
+            doneSection.classList.add("hidden");
+            progress.classList.add("hidden");
             return;
           }
-          list.innerHTML = "";
-          due.forEach((entry) => {
-            const item = entry.data;
-            const row = document.createElement("div");
-            row.className = "task-row" + (entry.done ? " done" : "");
-            const reward = (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
-              .gold;
-            const meta =
-              entry.kind === "habit"
-                ? intervalLabel(item.intervalDays) +
-                  " · " +
-                  (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
-                : entry.kind === "recurring"
-                  ? (() => {
-                      const due = recurringDueDate(item);
-                      const diff = daysBetween(todayStr(), due);
-                      if (diff === 0) {
-                        return (
-                          (item.intervalDays === 14
-                            ? "Dvoutýdenní"
-                            : "Týdenní") +
-                          " · " +
-                          (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
-                        );
-                      }
-                      return recurringMeta(item);
-                    })()
-                  : (() => {
-                      const diff = daysBetween(todayStr(), item.dueDate);
-                      if (diff === 0) {
-                        return (
-                          "Jednorázový úkol · " +
-                          (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
-                        );
-                      }
-                      return oneOffMeta(item);
-                    })();
-            row.innerHTML =
-              '<button class="task-check' +
-              (entry.done ? " done" : "") +
-              '" aria-label="Splnit"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
-              '<span class="task-swatch" style="background:' +
-              (item.color || "#c9622a") +
-              '"></span>' +
-              '<div class="task-text"><div class="t-title">' +
-              escapeHtml(item.title) +
-              '</div><div class="t-meta">' +
-              meta +
-              "</div></div>" +
-              '<div class="task-reward">+' +
-              reward +
-              " 🪙</div>";
-            row
-              .querySelector(".task-check")
-              .addEventListener("click", async () => {
-                if (entry.kind === "habit") await toggleHabitDay(item, t);
-                else if (entry.kind === "recurring")
-                  await toggleRecurringTask(item);
-                else await toggleOneOffTask(item);
-              });
-            wireTaskRowActions(row, entry.kind, item);
-            list.appendChild(row);
-          });
+          const pending = due.filter((entry) => !entry.done);
+          const completed = due.filter((entry) => entry.done);
+          const rewardFor = (entry) =>
+            (DIFFICULTY[entry.data.difficulty] || DIFFICULTY.easy).gold;
+          const totalReward = due.reduce(
+            (sum, entry) => sum + rewardFor(entry),
+            0,
+          );
+          const earnedReward = completed.reduce(
+            (sum, entry) => sum + rewardFor(entry),
+            0,
+          );
+          document.getElementById("task-progress-count").innerHTML =
+            "<strong>" +
+            completed.length +
+            "</strong> / " +
+            due.length +
+            " hotovo";
+          document.getElementById("task-progress-reward").innerHTML =
+            "<strong>" + earnedReward + "</strong> / " + totalReward + " 🪙";
+          progressBar.innerHTML = [...completed, ...pending]
+            .map((entry) => {
+              const color = escapeAttr(entry.data.color || "#c9622a");
+              const weight = rewardFor(entry);
+              const status = entry.done ? " done" : "";
+              const label = escapeAttr(entry.data.title || "Úkol");
+              return (
+                '<span class="task-progress-segment' +
+                status +
+                '" style="--segment-weight:' +
+                weight +
+                ";--segment-color:" +
+                color +
+                '" data-tooltip="' +
+                label +
+                (entry.done ? " · hotovo" : " · zbývá") +
+                '"></span>'
+              );
+            })
+            .join("");
+          progress.classList.remove("hidden");
+          doneSection.classList.toggle("hidden", completed.length === 0);
+          document.getElementById("task-done-count").textContent =
+            completed.length;
+          document.getElementById("task-done-earned").textContent =
+            "+" + earnedReward + " ZÍSKÁNO";
+
+          const renderEntries = (entries, target) => {
+            target.innerHTML = "";
+            entries.forEach((entry) => {
+              const item = entry.data;
+              const row = document.createElement("div");
+              row.className = "task-row" + (entry.done ? " done" : "");
+              const reward = (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
+                .gold;
+              const meta =
+                entry.kind === "habit"
+                  ? intervalLabel(item.intervalDays) +
+                    " · " +
+                    (DIFFICULTY[item.difficulty] || DIFFICULTY.easy).label
+                  : entry.kind === "recurring"
+                    ? (() => {
+                        const due = recurringDueDate(item);
+                        const diff = daysBetween(todayStr(), due);
+                        if (diff === 0) {
+                          return (
+                            (item.intervalDays === 14
+                              ? "Dvoutýdenní"
+                              : "Týdenní") +
+                            " · " +
+                            (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
+                              .label
+                          );
+                        }
+                        return recurringMeta(item);
+                      })()
+                    : (() => {
+                        const diff = daysBetween(todayStr(), item.dueDate);
+                        if (diff === 0) {
+                          return (
+                            "Jednorázový úkol · " +
+                            (DIFFICULTY[item.difficulty] || DIFFICULTY.easy)
+                              .label
+                          );
+                        }
+                        return oneOffMeta(item);
+                      })();
+              row.innerHTML =
+                '<button class="task-check' +
+                (entry.done ? " done" : "") +
+                '" aria-label="Splnit"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
+                '<span class="task-swatch" style="background:' +
+                (item.color || "#c9622a") +
+                '"></span>' +
+                '<div class="task-text"><div class="t-title">' +
+                escapeHtml(item.title) +
+                '</div><div class="t-meta">' +
+                meta +
+                "</div></div>" +
+                '<div class="task-reward">+' +
+                reward +
+                " 🪙</div>";
+              row
+                .querySelector(".task-check")
+                .addEventListener("click", async () => {
+                  if (entry.kind === "habit") await toggleHabitDay(item, t);
+                  else if (entry.kind === "recurring")
+                    await toggleRecurringTask(item);
+                  else await toggleOneOffTask(item);
+                });
+              wireTaskRowActions(row, entry.kind, item);
+              target.appendChild(row);
+            });
+          };
+          renderEntries(pending, list);
+          if (pending.length === 0) {
+            list.innerHTML =
+              '<div class="empty-note">Všechny dnešní úkoly jsou hotové.</div>';
+          }
+          renderEntries(completed, doneList);
         }
         function wireTaskRowActions(row, kind, item) {
           const actions = document.createElement("div");
