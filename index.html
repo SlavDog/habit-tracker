@@ -606,6 +606,48 @@
         );
         margin: 0.2rem 0;
       }
+      .new-btn {
+        width: 100%;
+      }
+      .new-btn .icon {
+        width: 16px;
+        height: 16px;
+      }
+      .new-type-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .new-type-option {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        width: 100%;
+        padding: 0.8rem 0.95rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        color: var(--parchment);
+        text-align: left;
+        cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
+      }
+      .new-type-option:hover,
+      .new-type-option:focus-visible {
+        border-color: var(--gold);
+        background: rgba(215, 179, 77, 0.08);
+      }
+      .new-type-title {
+        color: var(--gold-bright);
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .new-type-desc {
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
       .sidebar-foot {
         margin-top: auto;
         padding-top: 0.6rem;
@@ -1716,6 +1758,14 @@
         align-items: center;
         gap: 0.35rem;
       }
+      .habit-edit-link {
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .habit-edit-link:hover,
+      .habit-edit-link:focus-visible {
+        color: var(--gold-bright);
+      }
       .hg-dot {
         width: 8px;
         height: 8px;
@@ -1776,6 +1826,16 @@
       .shop-counter {
         padding: 1.2rem;
         border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px);
+      }
+      .shop-manage {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.8rem;
+      }
+      .shop-manage .icon {
+        width: 14px;
+        height: 14px;
       }
       .shop-grid {
         display: grid;
@@ -1978,17 +2038,16 @@
         backdrop-filter: blur(2px);
         z-index: 60;
         display: flex;
-        align-items: center;
-        justify-content: center;
         padding: 1rem;
+        padding-top: calc(1rem + var(--safe-t));
+        padding-bottom: calc(1rem + var(--safe-b));
         overflow-y: auto;
       }
       .modal {
         width: 100%;
         max-width: 440px;
+        margin: auto;
         padding: 1.4rem 1.4rem 1.6rem;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
       }
       .modal-head {
         display: flex;
@@ -2371,6 +2430,13 @@
           </svg>
           <span>Kronika návyků</span>
         </div>
+        <button class="btn btn-gold new-btn" id="btn-new" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Nový
+        </button>
         <nav class="nav-group">
           <button class="nav-item" data-page="home">
             <svg class="icon" viewBox="0 0 24 24">
@@ -2403,114 +2469,6 @@
             Závod
           </button>
         </nav>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
-          <div class="nav-label">Návyky</div>
-          <button class="nav-item" id="btn-add-habit">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Přidat návyk
-          </button>
-          <button class="nav-item" id="btn-edit-habit">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-            </svg>
-            Upravit návyk
-          </button>
-          <button class="nav-item" id="btn-del-habit">
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4h6v2" />
-            </svg>
-            Odstranit návyk
-          </button>
-        </div>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
-          <div class="nav-label">Jednorázové úkoly</div>
-          <button class="nav-item" id="btn-add-oneoff">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Přidat úkol
-          </button>
-          <button class="nav-item" id="btn-edit-oneoff">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-            </svg>
-            Upravit úkol
-          </button>
-          <button class="nav-item" id="btn-del-oneoff">
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4h6v2" />
-            </svg>
-            Odstranit úkol
-          </button>
-        </div>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
-          <div class="nav-label">Opakující se úkoly</div>
-          <button class="nav-item" id="btn-add-recur">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Přidat úkol
-          </button>
-          <button class="nav-item" id="btn-edit-recur">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-            </svg>
-            Upravit úkol
-          </button>
-          <button class="nav-item" id="btn-del-recur">
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4h6v2" />
-            </svg>
-            Odstranit úkol
-          </button>
-        </div>
-        <div class="nav-divider"></div>
-        <div class="nav-group">
-          <div class="nav-label">Obchod</div>
-          <button class="nav-item" id="btn-add-item">
-            <svg class="icon" viewBox="0 0 24 24">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Přidat položku
-          </button>
-          <button class="nav-item" id="btn-edit-item">
-            <svg class="icon" viewBox="0 0 24 24">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
-            </svg>
-            Upravit položku
-          </button>
-          <button class="nav-item" id="btn-del-item">
-            <svg class="icon" viewBox="0 0 24 24">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14H6L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4h6v2" />
-            </svg>
-            Odstranit položku
-          </button>
-        </div>
         <div class="sidebar-foot">
           <button class="switch-char-btn" id="btn-switch-char">
             <svg
@@ -2697,6 +2655,31 @@
               <div class="page-head">
                 <h3>Krámek</h3>
                 <p style="margin: 0">Vyměň zlaťáky za výbavu</p>
+              </div>
+              <div class="shop-manage">
+                <button class="btn btn-ghost btn-sm" id="btn-add-item" type="button">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  Přidat položku
+                </button>
+                <button class="btn btn-ghost btn-sm" id="btn-edit-item" type="button">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                  </svg>
+                  Upravit
+                </button>
+                <button class="btn btn-ghost btn-sm" id="btn-del-item" type="button">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                    <path d="M10 11v6M14 11v6" />
+                    <path d="M9 6V4h6v2" />
+                  </svg>
+                  Odstranit
+                </button>
               </div>
               <div
                 class="shop-grid"
@@ -4167,11 +4150,13 @@
             tbody +=
               '<tr><td class="hg-habit-col" colspan="' +
               (nDays + 1) +
-              '"><div class="empty-note" style="text-align:left;padding:.6rem 0">Zatím nemáš žádné návyky. Přidej první přes postranní panel.</div></td></tr>';
+              '"><div class="empty-note" style="text-align:left;padding:.6rem 0">Zatím nemáš žádné návyky. Přidej první tlačítkem + Nový.</div></td></tr>';
           }
           myHabits.forEach((h) => {
             tbody +=
-              '<tr><td class="hg-habit-col"><div class="hg-row-name"><span class="hg-dot" style="background:' +
+              '<tr><td class="hg-habit-col"><div class="hg-row-name habit-edit-link" role="button" tabindex="0" data-edit-habit="' +
+              escapeAttr(h.id) +
+              '"><span class="hg-dot" style="background:' +
               (h.color || "#c9622a") +
               '"></span><span class="hg-name-txt" title="' +
               escapeAttr(h.title) +
@@ -4207,14 +4192,28 @@
               if (h) toggleHabitDay(h, cell.dataset.date);
             });
           });
+          wireHabitEditLinks(table);
           renderHabitMobileList(myHabits, nDays, t);
+        }
+
+        function wireHabitEditLinks(root) {
+          root.querySelectorAll("[data-edit-habit]").forEach((el) => {
+            const open = () => openEditHabitModal(el.dataset.editHabit);
+            el.addEventListener("click", open);
+            el.addEventListener("keydown", (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                open();
+              }
+            });
+          });
         }
 
         function renderHabitMobileList(myHabits, nDays, t) {
           const wrap = document.getElementById("habit-mobile-list");
           if (myHabits.length === 0) {
             wrap.innerHTML =
-              '<div class="empty-note">Zatím nemáš žádné návyky. Přidej první přes postranní panel.</div>';
+              '<div class="empty-note">Zatím nemáš žádné návyky. Přidej první tlačítkem + Nový.</div>';
             return;
           }
           const weekdays = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
@@ -4241,7 +4240,9 @@
             myHabits.forEach((h) => {
               const color = h.color || "#c9622a";
               markup +=
-                '<div class="hm-week-row"><div class="hm-habit-name" title="' +
+                '<div class="hm-week-row"><div class="hm-habit-name habit-edit-link" role="button" tabindex="0" data-edit-habit="' +
+                escapeAttr(h.id) +
+                '" title="' +
                 escapeAttr(h.title) +
                 '"><span class="hm-dot" style="background:' +
                 escapeAttr(color) +
@@ -4297,6 +4298,7 @@
                 if (h) toggleHabitDay(h, cell.dataset.date);
               });
             });
+          wireHabitEditLinks(wrap);
         }
 
         /* ================= RENDER: SHOP ================= */
@@ -4307,7 +4309,7 @@
           const grid = document.getElementById("shop-grid");
           if (shopItems.length === 0) {
             grid.innerHTML =
-              '<div class="empty-note">Obchodník zatím nemá zboží. Přidej položky přes postranní panel.</div>';
+              '<div class="empty-note">Obchodník zatím nemá zboží. Přidej první položku tlačítkem výše.</div>';
             return;
           }
           const owned = new Set(
@@ -4925,6 +4927,53 @@
           };
         }
 
+        function openNewChooserModal() {
+          const types = [
+            {
+              id: "habit",
+              title: "Návyk",
+              desc: "Opakuje se v pravidelném intervalu, sleduje se v tabulce.",
+              open: openAddHabitModal,
+            },
+            {
+              id: "oneoff",
+              title: "Jednorázový úkol",
+              desc: "Splníš jednou do zvoleného data.",
+              open: openAddOneOffModal,
+            },
+            {
+              id: "recurring",
+              title: "Opakující se úkol",
+              desc: "Týdenní nebo dvoutýdenní úkol s termínem.",
+              open: openAddRecurModal,
+            },
+          ];
+          const modal = openModal(`
+    <div class="modal-head"><h3>Co chceš přidat?</h3><button class="btn btn-icon btn-ghost" id="m-close"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="new-type-list">
+      ${types
+        .map(
+          (t) =>
+            '<button type="button" class="new-type-option" data-type="' +
+            t.id +
+            '"><span class="new-type-title">' +
+            t.title +
+            '</span><span class="new-type-desc">' +
+            t.desc +
+            "</span></button>",
+        )
+        .join("")}
+    </div>
+  `);
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelectorAll(".new-type-option").forEach((button) => {
+            button.addEventListener("click", () => {
+              const type = types.find((t) => t.id === button.dataset.type);
+              closeModal();
+              type.open();
+            });
+          });
+        }
         function openAddHabitModal() {
           const modal = openModal(`
     <div class="modal-head"><h3>Přidat návyk</h3><button class="btn btn-icon btn-ghost" id="m-close"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -4982,12 +5031,28 @@
     <div class="modal-head"><h3>Upravit návyk</h3><button class="btn btn-icon btn-ghost" id="m-close"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
     <div class="field"><label>Vyber návyk</label><select id="f-pick">${habitSelectOptions(mine, selectedId)}</select></div>
     <div id="edit-fields-holder"></div>
-    <div class="modal-actions"><button class="btn btn-ghost" id="m-cancel">Zrušit</button><button class="btn btn-gold" id="m-save" ${mine.length === 0 ? "disabled" : ""}>Uložit</button></div>
+    <div class="modal-actions"><button class="btn btn-danger" id="m-del" style="margin-right:auto" ${mine.length === 0 ? "disabled" : ""}>Odstranit</button><button class="btn btn-ghost" id="m-cancel">Zrušit</button><button class="btn btn-gold" id="m-save" ${mine.length === 0 ? "disabled" : ""}>Uložit</button></div>
   `);
           modal.querySelector("#m-close").addEventListener("click", closeModal);
           modal
             .querySelector("#m-cancel")
             .addEventListener("click", closeModal);
+          modal.querySelector("#m-del").addEventListener("click", () => {
+            const h = mine.find(
+              (x) => x.id === modal.querySelector("#f-pick").value,
+            );
+            if (!h) return;
+            openConfirm(
+              'Opravdu chceš odstranit návyk "' +
+                h.title +
+                '"? Tuto akci nelze vrátit zpět.',
+              async () => {
+                await Store.deleteHabit(h.id);
+                toast("Návyk odstraněn.");
+                closeModal();
+              },
+            );
+          });
           let ctrl = null;
           function loadHabitIntoForm() {
             const h = mine.find(
@@ -5856,78 +5921,19 @@
           document
             .getElementById("btn-edit-char")
             .addEventListener("click", openEditCharModal);
-          document
-            .getElementById("btn-add-habit")
-            .addEventListener("click", () => {
-              openAddHabitModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-edit-habit")
-            .addEventListener("click", () => {
-              openEditHabitModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-del-habit")
-            .addEventListener("click", () => {
-              openDeleteHabitModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-add-oneoff")
-            .addEventListener("click", () => {
-              openAddOneOffModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-edit-oneoff")
-            .addEventListener("click", () => {
-              openEditOneOffModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-del-oneoff")
-            .addEventListener("click", () => {
-              openDeleteOneOffModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-add-recur")
-            .addEventListener("click", () => {
-              openAddRecurModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-edit-recur")
-            .addEventListener("click", () => {
-              openEditRecurModal();
-              closeSidebar();
-            });
-          document
-            .getElementById("btn-del-recur")
-            .addEventListener("click", () => {
-              openDeleteRecurModal();
-              closeSidebar();
-            });
+          document.getElementById("btn-new").addEventListener("click", () => {
+            openNewChooserModal();
+            closeSidebar();
+          });
           document
             .getElementById("btn-add-item")
-            .addEventListener("click", () => {
-              openAddItemModal();
-              closeSidebar();
-            });
+            .addEventListener("click", openAddItemModal);
           document
             .getElementById("btn-edit-item")
-            .addEventListener("click", () => {
-              openEditItemModal();
-              closeSidebar();
-            });
+            .addEventListener("click", openEditItemModal);
           document
             .getElementById("btn-del-item")
-            .addEventListener("click", () => {
-              openDeleteItemModal();
-              closeSidebar();
-            });
+            .addEventListener("click", openDeleteItemModal);
           function shiftMonth(delta) {
             calMonth += delta;
             if (calMonth < 0) {
