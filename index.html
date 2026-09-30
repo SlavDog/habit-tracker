@@ -3515,15 +3515,20 @@
         function recurringReward(rt) {
           return (DIFFICULTY[rt.difficulty] || DIFFICULTY.easy).gold;
         }
+        function recurringCompletedDueDate(rt) {
+          return (
+            rt.lastCompletionDueDate ||
+            addDays(recurringDueDate(rt), -(rt.intervalDays || 7))
+          );
+        }
         function recurringIsDoneNow(rt) {
           const lc = recurringLastCompletion(rt);
           if (!lc) return false;
           const today = todayStr();
-          const interval = rt.intervalDays || 7;
-          const completedDueDate =
-            rt.lastCompletionDueDate ||
-            addDays(recurringDueDate(rt), -interval);
-          return daysBetween(lc, today) >= 0 && today <= completedDueDate;
+          const completedDueDate = recurringCompletedDueDate(rt);
+          // Stays done through its deadline (or the completion day, if completed late).
+          const doneUntil = completedDueDate > lc ? completedDueDate : lc;
+          return daysBetween(lc, today) >= 0 && today <= doneUntil;
         }
         async function toggleRecurringTask(rt) {
           const completions = (rt.completions || []).slice();
@@ -3747,14 +3752,18 @@
                 upcoming: true,
               })),
             ...recurringForChar(currentCharId)
-              .map((task) => ({
-                kind: "recurring",
-                data: task,
-                done: false,
-                dueDate: recurringDueDate(task),
-                upcoming: true,
-                locked: recurringIsDoneNow(task),
-              }))
+              .map((task) => {
+                const done = recurringIsDoneNow(task);
+                return {
+                  kind: "recurring",
+                  data: task,
+                  done,
+                  dueDate: done
+                    ? recurringCompletedDueDate(task)
+                    : recurringDueDate(task),
+                  upcoming: true,
+                };
+              })
               .filter((entry) => entry.dueDate > today),
           ].sort(
             (a, b) =>
@@ -3983,10 +3992,10 @@
           const dueR = recurringForChar(currentCharId)
             .filter((rt) => {
               if (!recurringIsDoneNow(rt)) return recurringDueDate(rt) <= t;
-              const completedDueDate =
-                rt.lastCompletionDueDate ||
-                addDays(recurringDueDate(rt), -(rt.intervalDays || 7));
-              return recurringLastCompletion(rt) === t && completedDueDate <= t;
+              return (
+                recurringLastCompletion(rt) === t &&
+                recurringCompletedDueDate(rt) <= t
+              );
             })
             .map((rt) => ({
               kind: "recurring",
