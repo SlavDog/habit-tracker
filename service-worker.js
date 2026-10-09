@@ -1,4 +1,9 @@
-const CACHE_NAME = "kronika-navykov-v1";
+const CACHE_NAME = "kronika-navykov-v6";
+// Map tiles and place search change often and would bloat the cache.
+const NETWORK_ONLY_HOSTS = [
+  "tiles.openfreemap.org",
+  "nominatim.openstreetmap.org",
+];
 const ASSETS = [
   "./",
   "./index.html",
@@ -32,6 +37,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (NETWORK_ONLY_HOSTS.includes(new URL(event.request.url).hostname)) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {

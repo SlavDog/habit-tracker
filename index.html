@@ -2261,6 +2261,343 @@
         margin-bottom: 0.2rem;
       }
 
+      /* ---------- Trips ---------- */
+      #page-trips {
+        max-width: 1180px;
+      }
+      .trip-head-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .trip-tag-bar {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+      .trip-tag-bar:empty {
+        display: none;
+      }
+      .preset-chip .trip-chip-count {
+        color: var(--muted);
+        margin-left: 0.2rem;
+      }
+      .trip-map-panel {
+        padding: 0;
+        overflow: hidden;
+      }
+      .trip-map {
+        height: min(72vh, 680px);
+        min-height: 360px;
+        border-radius: var(--radius);
+        background:
+          radial-gradient(
+            circle at 50% 50%,
+            #241c3a 0%,
+            #120d1c 45%,
+            #07050b 100%
+          );
+      }
+      .trip-map-status {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .trip-map .maplibregl-ctrl-group {
+        background: var(--bg-panel);
+        border: 1px solid var(--border-bronze);
+      }
+      .trip-map .maplibregl-ctrl-group button + button {
+        border-top-color: var(--border-bronze);
+      }
+      .trip-map .maplibregl-ctrl-group .maplibregl-ctrl-icon {
+        filter: invert(0.85) sepia(0.4);
+      }
+      .trip-pick-banner {
+        position: absolute;
+        left: 50%;
+        bottom: 1rem;
+        transform: translateX(-50%);
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.5rem 0.6rem 0.5rem 1rem;
+        border-radius: 999px;
+        background: var(--bg-panel);
+        border: 1px solid var(--gold);
+        color: var(--gold-bright);
+        font-size: 0.85rem;
+        font-weight: 600;
+        box-shadow: var(--shadow-deep);
+        white-space: nowrap;
+      }
+      .trip-marker {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .trip-marker::after {
+        content: "";
+        width: 2px;
+        height: 9px;
+        background: var(--gold-bright);
+      }
+      .trip-marker-pin {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 2px solid var(--gold-bright);
+        background: var(--bg-panel);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: transform 0.15s ease;
+      }
+      .trip-marker-pin img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .trip-marker-label {
+        position: absolute;
+        bottom: calc(100% + 4px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        background: var(--bg-panel);
+        border: 1px solid var(--border-bronze-light);
+        color: var(--parchment);
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease;
+      }
+      .trip-marker:hover .trip-marker-pin {
+        transform: scale(1.12);
+      }
+      .trip-marker:hover .trip-marker-label {
+        opacity: 1;
+      }
+      .trip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+      .trip-card {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+        padding: 0;
+        overflow: hidden;
+        border-radius: var(--radius);
+        border: 1px solid var(--border-bronze);
+        background: linear-gradient(
+          180deg,
+          var(--bg-panel),
+          var(--bg-panel-alt)
+        );
+        color: var(--parchment);
+        cursor: pointer;
+        transition:
+          border-color 0.15s ease,
+          transform 0.15s ease;
+      }
+      .trip-card:hover,
+      .trip-card:focus-visible {
+        border-color: var(--gold);
+        transform: translateY(-2px);
+      }
+      .trip-card-img {
+        aspect-ratio: 16 / 10;
+        background: var(--bg-inset);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.4rem;
+      }
+      .trip-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .trip-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        padding: 0.8rem 0.9rem 1rem;
+      }
+      .trip-card-name {
+        font-family: var(--font-display);
+        font-weight: 700;
+        color: var(--gold-bright);
+        font-size: 1rem;
+      }
+      .trip-card-desc {
+        margin: 0;
+        color: var(--parchment-dim);
+        font-size: 0.82rem;
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .trip-tags {
+        display: flex;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+      }
+      .trip-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        color: var(--parchment-dim);
+        font-size: 0.72rem;
+      }
+      .trip-modal {
+        max-width: 560px;
+      }
+      .trip-detail-hero {
+        margin: -1.4rem -1.4rem 1rem;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: var(--radius) var(--radius) 0 0;
+        background: var(--bg-inset);
+      }
+      .trip-detail-hero img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .trip-detail-desc {
+        color: var(--parchment-dim);
+        font-size: 0.9rem;
+        line-height: 1.55;
+        white-space: pre-wrap;
+        margin: 0.9rem 0 0;
+      }
+      .trip-detail-coords {
+        margin-top: 0.9rem;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .trip-detail-actions {
+        flex-wrap: wrap;
+      }
+      .trip-detail-actions .btn-danger {
+        margin-right: auto;
+      }
+      .trip-inline-row {
+        display: flex;
+        gap: 0.4rem;
+      }
+      .trip-inline-row input {
+        min-width: 0;
+      }
+      .trip-inline-row .btn {
+        flex-shrink: 0;
+      }
+      .trip-new-tag #f-tnew-emoji,
+      .trip-tag-manage-row #f-tnew-emoji {
+        width: 3.6rem;
+        flex-shrink: 0;
+        text-align: center;
+      }
+      .trip-search-results {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .trip-search-results:empty {
+        display: none;
+      }
+      .trip-search-result {
+        text-align: left;
+        padding: 0.45rem 0.6rem;
+        border-radius: 7px;
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        color: var(--parchment-dim);
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      .trip-search-result:hover {
+        border-color: var(--gold);
+        color: var(--parchment);
+      }
+      .trip-location-actions {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .trip-image-preview {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        border-radius: 7px;
+        overflow: hidden;
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+      }
+      .trip-image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .trip-tag-picker {
+        display: flex;
+        gap: 0.35rem;
+        flex-wrap: wrap;
+      }
+      .trip-tag-manage-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+      }
+      .trip-tag-manage-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        padding: 0.4rem 0.4rem 0.4rem 0.7rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        font-size: 0.9rem;
+      }
+      @media (max-width: 680px) {
+        .trip-map {
+          height: 58vh;
+          min-height: 300px;
+        }
+        .trip-pick-banner {
+          white-space: normal;
+          width: calc(100% - 2rem);
+          justify-content: space-between;
+        }
+      }
+
       @media (max-width: 860px) {
         #btn-menu {
           display: flex;
@@ -2507,6 +2844,14 @@
               <path d="M5 4h13l-2 4 2 4H5" />
             </svg>
             Závod
+          </button>
+          <button class="nav-item" data-page="trips">
+            <svg class="icon" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M3 12h18" />
+              <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18" />
+            </svg>
+            Výlety
           </button>
         </nav>
         <div class="sidebar-foot">
@@ -2863,6 +3208,39 @@
           </div>
           <div class="race-timeline" id="race-timeline"></div>
         </section>
+
+        <!-- TRIPS -->
+        <section class="page hidden" id="page-trips">
+          <div class="page-head">
+            <div>
+              <h2>Výlety</h2>
+              <p>Místa, kam bychom se mohli vydat</p>
+            </div>
+            <div class="trip-head-actions">
+              <button class="btn btn-ghost btn-sm" id="btn-trip-tags" type="button">
+                Tagy
+              </button>
+              <button class="btn btn-gold btn-sm" id="btn-add-trip" type="button">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Přidat výlet
+              </button>
+            </div>
+          </div>
+          <div class="trip-tag-bar" id="trip-tag-bar"></div>
+          <div class="panel trip-map-panel">
+            <div class="trip-map" id="trip-map"></div>
+            <div class="trip-pick-banner hidden" id="trip-pick-banner">
+              <span>Klikni na mapu tam, kam chceš výlet umístit</span>
+              <button class="btn btn-ghost btn-sm" id="trip-pick-cancel" type="button">
+                Zrušit
+              </button>
+            </div>
+          </div>
+          <div class="trip-grid" id="trip-grid"></div>
+        </section>
       </main>
     </div>
 
@@ -2984,6 +3362,8 @@
         let recurringTasks = []; // recurring school-style tasks (weekly/biweekly, no reward)
         let shopItems = [];
         let raceSettings = null;
+        let trips = [];
+        let tripTags = [];
         let currentCharId = safeStorage.get(LS_CHAR_KEY) || null;
         let recentlyCompletedExpanded = false;
         let calMonth = new Date().getMonth();
@@ -3352,6 +3732,106 @@
             } else {
               const d = loadLocal();
               d.shopItems = d.shopItems.filter((s) => s.id !== id);
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          watchTrips(cb) {
+            if (storageMode === "db") {
+              return db.collection("trips").onSnapshot(
+                (snap) => {
+                  cb(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+                },
+                (err) => {
+                  console.error(err);
+                },
+              );
+            } else {
+              const fn = (d) => cb(d.trips || []);
+              localListeners.push(fn);
+              fn(loadLocal());
+              return () => {
+                localListeners = localListeners.filter((f) => f !== fn);
+              };
+            }
+          },
+          async addTrip(data) {
+            if (storageMode === "db") {
+              await db.collection("trips").add(data);
+            } else {
+              const d = loadLocal();
+              const id =
+                "v_" +
+                Date.now() +
+                "_" +
+                Math.random().toString(36).slice(2, 7);
+              d.trips = d.trips || [];
+              d.trips.push({ id, ...data });
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async updateTrip(id, patch) {
+            if (storageMode === "db") {
+              await db.doc("trips/" + id).update(patch);
+            } else {
+              const d = loadLocal();
+              d.trips = (d.trips || []).map((t) =>
+                t.id === id ? { ...t, ...patch } : t,
+              );
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async deleteTrip(id) {
+            if (storageMode === "db") {
+              await db.doc("trips/" + id).delete();
+            } else {
+              const d = loadLocal();
+              d.trips = (d.trips || []).filter((t) => t.id !== id);
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          watchTripTags(cb) {
+            if (storageMode === "db") {
+              return db.collection("tripTags").onSnapshot(
+                (snap) => {
+                  cb(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+                },
+                (err) => {
+                  console.error(err);
+                },
+              );
+            } else {
+              const fn = (d) => cb(d.tripTags || []);
+              localListeners.push(fn);
+              fn(loadLocal());
+              return () => {
+                localListeners = localListeners.filter((f) => f !== fn);
+              };
+            }
+          },
+          async addTripTag(data) {
+            if (storageMode === "db") {
+              const ref = await db.collection("tripTags").add(data);
+              return ref.id;
+            }
+            const d = loadLocal();
+            const id =
+              "vt_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+            d.tripTags = d.tripTags || [];
+            d.tripTags.push({ id, ...data });
+            saveLocal(d);
+            notifyLocal();
+            return id;
+          },
+          async deleteTripTag(id) {
+            if (storageMode === "db") {
+              await db.doc("tripTags/" + id).delete();
+            } else {
+              const d = loadLocal();
+              d.tripTags = (d.tripTags || []).filter((t) => t.id !== id);
               saveLocal(d);
               notifyLocal();
             }
@@ -4554,7 +5034,8 @@
 
         /* ================= NAV / PAGES ================= */
         function showPage(page) {
-          ["home", "shop", "inventory", "race"].forEach((p) => {
+          if (tripPickCancel) tripPickCancel();
+          ["home", "shop", "inventory", "race", "trips"].forEach((p) => {
             document
               .getElementById("page-" + p)
               .classList.toggle("hidden", p !== page);
@@ -4564,6 +5045,10 @@
           });
           closeSidebar();
           if (page === "race") renderRacePage();
+          if (page === "trips") {
+            renderTripsPage();
+            initTripMap();
+          }
         }
         function openSidebar() {
           document.getElementById("sidebar").classList.add("open");
@@ -5664,7 +6149,10 @@
           });
         }
         function shopItemImageFromForm(form) {
-          const value = form.querySelector("#f-iimg").value.trim();
+          return validateImageRef(form.querySelector("#f-iimg").value);
+        }
+        function validateImageRef(value) {
+          value = value.trim();
           if (!value) return "";
           if (value.startsWith("images/")) {
             const path = value.split(/[?#]/, 1)[0];
@@ -5878,6 +6366,649 @@
           });
         }
 
+        /* ================= TRIPS ================= */
+        const MAPLIBRE_BASE = "https://unpkg.com/maplibre-gl@5.6.0/dist/";
+        const TRIP_MAP_STYLE = "https://tiles.openfreemap.org/styles/liberty";
+        let mapLibreLoading = null;
+        let tripMap = null;
+        let tripMapInitStarted = false;
+        let tripMarkers = [];
+        let tripFilterTagId = null;
+        let tripPickCancel = null;
+
+        function loadMapLibre() {
+          if (window.maplibregl) return Promise.resolve(window.maplibregl);
+          if (!mapLibreLoading) {
+            mapLibreLoading = new Promise((resolve, reject) => {
+              const css = document.createElement("link");
+              css.rel = "stylesheet";
+              css.href = MAPLIBRE_BASE + "maplibre-gl.css";
+              document.head.appendChild(css);
+              const script = document.createElement("script");
+              script.src = MAPLIBRE_BASE + "maplibre-gl.js";
+              script.onload = () => resolve(window.maplibregl);
+              script.onerror = () => {
+                mapLibreLoading = null;
+                script.remove();
+                reject(new Error("Knihovnu mapy se nepodařilo načíst."));
+              };
+              document.head.appendChild(script);
+            });
+          }
+          return mapLibreLoading;
+        }
+
+        function initTripMap() {
+          if (tripMap) {
+            tripMap.resize();
+            return;
+          }
+          if (tripMapInitStarted) return;
+          tripMapInitStarted = true;
+          const container = document.getElementById("trip-map");
+          container.innerHTML =
+            '<div class="trip-map-status">Načítám zeměkouli…</div>';
+          loadMapLibre()
+            .then((maplibregl) => {
+              container.innerHTML = "";
+              tripMap = new maplibregl.Map({
+                container,
+                style: TRIP_MAP_STYLE,
+                center: [12, 51],
+                zoom: 3,
+                attributionControl: { compact: true },
+              });
+              tripMap.addControl(
+                new maplibregl.NavigationControl({ visualizePitch: true }),
+                "top-right",
+              );
+              tripMap.on("style.load", () => {
+                tripMap.setProjection({ type: "globe" });
+              });
+              renderTripMarkers(sortedTrips(filteredTrips()));
+            })
+            .catch((error) => {
+              console.error(error);
+              tripMapInitStarted = false;
+              container.innerHTML =
+                '<div class="trip-map-status">Mapu se nepodařilo načíst. Zkontroluj připojení k internetu a otevři stránku znovu.</div>';
+            });
+        }
+
+        function sortedTripTags() {
+          return tripTags
+            .slice()
+            .sort((a, b) => (a.name || "").localeCompare(b.name || "", "cs"));
+        }
+        function tripTagsFor(trip) {
+          const ids = trip.tagIds || [];
+          return sortedTripTags().filter((t) => ids.includes(t.id));
+        }
+        function tripTagHtml(tag) {
+          return (
+            '<span class="trip-tag">' +
+            escapeHtml(tag.emoji || "") +
+            " " +
+            escapeHtml(tag.name || "") +
+            "</span>"
+          );
+        }
+        function tripFallbackEmoji(trip) {
+          const first = tripTagsFor(trip).find((t) => t.emoji);
+          return first ? first.emoji : "🧭";
+        }
+        function tripThumbHtml(trip) {
+          return trip.image
+            ? '<img src="' + escapeAttr(trip.image) + '" alt="" loading="lazy">'
+            : "<span>" + escapeHtml(tripFallbackEmoji(trip)) + "</span>";
+        }
+        function hasTripLocation(trip) {
+          return Number.isFinite(trip.lat) && Number.isFinite(trip.lng);
+        }
+        function filteredTrips() {
+          if (!tripFilterTagId) return trips;
+          return trips.filter((t) => (t.tagIds || []).includes(tripFilterTagId));
+        }
+        function sortedTrips(list) {
+          return list
+            .slice()
+            .sort((a, b) => (a.name || "").localeCompare(b.name || "", "cs"));
+        }
+
+        function renderTripsPage() {
+          if (
+            tripFilterTagId &&
+            !tripTags.some((t) => t.id === tripFilterTagId)
+          )
+            tripFilterTagId = null;
+          renderTripTagBar();
+          const list = sortedTrips(filteredTrips());
+          renderTripList(list);
+          renderTripMarkers(list);
+        }
+
+        function renderTripTagBar() {
+          const bar = document.getElementById("trip-tag-bar");
+          const tags = sortedTripTags();
+          if (tags.length === 0) {
+            bar.innerHTML = "";
+            return;
+          }
+          const chip = (id, label, count) =>
+            '<button type="button" class="preset-chip' +
+            (tripFilterTagId === id ? " active" : "") +
+            '" data-tag-filter="' +
+            escapeAttr(id || "") +
+            '">' +
+            label +
+            '<span class="trip-chip-count">' +
+            count +
+            "</span></button>";
+          bar.innerHTML =
+            chip(null, "Vše", trips.length) +
+            tags
+              .map((t) =>
+                chip(
+                  t.id,
+                  escapeHtml(t.emoji || "") + " " + escapeHtml(t.name || ""),
+                  trips.filter((tr) => (tr.tagIds || []).includes(t.id))
+                    .length,
+                ),
+              )
+              .join("");
+        }
+
+        function renderTripList(list) {
+          const grid = document.getElementById("trip-grid");
+          if (list.length === 0) {
+            grid.innerHTML =
+              '<div class="empty-note">' +
+              (trips.length === 0
+                ? "Zatím tu nejsou žádné výlety. Přidej první místo, kam byste se mohli vydat."
+                : "S tímto tagem tu zatím žádný výlet není.") +
+              "</div>";
+            return;
+          }
+          grid.innerHTML = list
+            .map((trip) => {
+              const tags = tripTagsFor(trip);
+              return (
+                '<button type="button" class="trip-card" data-trip="' +
+                escapeAttr(trip.id) +
+                '"><div class="trip-card-img">' +
+                tripThumbHtml(trip) +
+                '</div><div class="trip-card-body"><div class="trip-card-name">' +
+                escapeHtml(trip.name) +
+                "</div>" +
+                (tags.length
+                  ? '<div class="trip-tags">' +
+                    tags.map(tripTagHtml).join("") +
+                    "</div>"
+                  : "") +
+                (trip.description
+                  ? '<p class="trip-card-desc">' +
+                    escapeHtml(trip.description) +
+                    "</p>"
+                  : "") +
+                "</div></button>"
+              );
+            })
+            .join("");
+        }
+
+        function renderTripMarkers(list) {
+          if (!tripMap) return;
+          tripMarkers.forEach((m) => m.remove());
+          tripMarkers = list.filter(hasTripLocation).map((trip) => {
+            const el = document.createElement("div");
+            el.className = "trip-marker";
+            el.setAttribute("aria-label", trip.name);
+            el.innerHTML =
+              '<div class="trip-marker-pin">' +
+              tripThumbHtml(trip) +
+              '</div><div class="trip-marker-label">' +
+              escapeHtml(trip.name) +
+              "</div>";
+            el.addEventListener("click", (event) => {
+              event.stopPropagation();
+              if (!tripPickCancel) openTripDetailModal(trip.id);
+            });
+            return new window.maplibregl.Marker({
+              element: el,
+              anchor: "bottom",
+            })
+              .setLngLat([trip.lng, trip.lat])
+              .addTo(tripMap);
+          });
+        }
+
+        function showTripOnMap(trip) {
+          if (!tripMap || !hasTripLocation(trip)) return;
+          document
+            .getElementById("trip-map")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+          tripMap.flyTo({
+            center: [trip.lng, trip.lat],
+            zoom: Math.max(tripMap.getZoom(), 9),
+            speed: 1.4,
+          });
+        }
+
+        function mapyCzUrl(trip) {
+          return (
+            "https://mapy.cz/zakladni?source=coor&id=" +
+            trip.lng +
+            "%2C" +
+            trip.lat +
+            "&x=" +
+            trip.lng +
+            "&y=" +
+            trip.lat +
+            "&z=14"
+          );
+        }
+
+        function openTripDetailModal(tripId) {
+          const trip = trips.find((t) => t.id === tripId);
+          if (!trip) return;
+          const tags = tripTagsFor(trip);
+          const modal = openModal(`
+    ${trip.image ? `<div class="trip-detail-hero"><img src="${escapeAttr(trip.image)}" alt=""></div>` : ""}
+    <div class="modal-head"><h3>${escapeHtml(trip.name)}</h3><button class="btn btn-icon btn-ghost" id="m-close" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    ${tags.length ? `<div class="trip-tags">${tags.map(tripTagHtml).join("")}</div>` : ""}
+    ${trip.description ? `<p class="trip-detail-desc">${escapeHtml(trip.description)}</p>` : ""}
+    ${hasTripLocation(trip) ? `<div class="trip-detail-coords">📍 ${trip.lat.toFixed(4)}, ${trip.lng.toFixed(4)} · <a href="${escapeAttr(mapyCzUrl(trip))}" target="_blank" rel="noopener">Otevřít v Mapy.cz</a></div>` : ""}
+    <div class="modal-actions trip-detail-actions">
+      <button class="btn btn-danger btn-sm" id="t-del" type="button">Odstranit</button>
+      <button class="btn btn-ghost btn-sm" id="t-show" type="button">Ukázat na mapě</button>
+      <button class="btn btn-gold btn-sm" id="t-edit" type="button">Upravit</button>
+    </div>
+  `);
+          modal.classList.add("trip-modal");
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelector("#t-show").addEventListener("click", () => {
+            closeModal();
+            showTripOnMap(trip);
+          });
+          modal
+            .querySelector("#t-edit")
+            .addEventListener("click", () => openTripFormModal(trip));
+          modal.querySelector("#t-del").addEventListener("click", () => {
+            openConfirm(
+              'Opravdu chceš odstranit výlet "' + trip.name + '"?',
+              async () => {
+                try {
+                  await Store.deleteTrip(trip.id);
+                  toast("Výlet odstraněn.");
+                } catch (error) {
+                  console.error(error);
+                  toast(error.message || "Výlet se nepodařilo odstranit.");
+                }
+                closeModal();
+              },
+            );
+          });
+        }
+
+        async function searchPlaces(query) {
+          const res = await fetch(
+            "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&accept-language=cs&q=" +
+              encodeURIComponent(query),
+            { headers: { Accept: "application/json" } },
+          );
+          if (!res.ok) throw new Error("Vyhledávání se nezdařilo.");
+          return res.json();
+        }
+
+        function startTripLocationPick(onPick) {
+          if (!tripMap) {
+            toast("Mapa se ještě načítá, zkus to za chvilku.");
+            return;
+          }
+          const modalRoot = document.getElementById("modal-root");
+          const banner = document.getElementById("trip-pick-banner");
+          const onClick = (event) => finish(event.lngLat);
+          const onKey = (event) => {
+            if (event.key === "Escape") finish(null);
+          };
+          function finish(lngLat) {
+            tripPickCancel = null;
+            tripMap.off("click", onClick);
+            document.removeEventListener("keydown", onKey);
+            tripMap.getCanvas().style.cursor = "";
+            banner.classList.add("hidden");
+            modalRoot.classList.remove("hidden");
+            if (lngLat) onPick(lngLat);
+          }
+          tripPickCancel = () => finish(null);
+          tripMap.stop();
+          tripMap.on("click", onClick);
+          document.addEventListener("keydown", onKey);
+          tripMap.getCanvas().style.cursor = "crosshair";
+          banner.classList.remove("hidden");
+          modalRoot.classList.add("hidden");
+          document
+            .getElementById("trip-map")
+            .scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function openTripFormModal(trip) {
+          const editing = !!trip;
+          trip = trip || {};
+          const selectedTags = new Set(trip.tagIds || []);
+          const modal = openModal(`
+    <div class="modal-head"><h3>${editing ? "Upravit výlet" : "Nový výlet"}</h3><button class="btn btn-icon btn-ghost" id="m-close" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="field"><label for="f-tname">Název místa</label><input type="text" id="f-tname" value="${escapeAttr(trip.name || "")}" placeholder="Např. Pravčická brána"></div>
+    <div class="field"><label for="f-tdesc">Popis</label><textarea id="f-tdesc" placeholder="Co tam uvidíme, jak se tam dostat…">${escapeHtml(trip.description || "")}</textarea></div>
+    <div class="field"><label for="f-tsearch">Lokace</label>
+      <div class="trip-inline-row"><input type="text" id="f-tsearch" placeholder="Hledat místo, např. Sněžka"><button class="btn btn-ghost btn-sm" id="f-tsearch-btn" type="button">Hledat</button></div>
+      <div class="trip-search-results" id="f-tresults"></div>
+      <div class="trip-inline-row"><input type="number" id="f-tlat" step="any" min="-90" max="90" placeholder="Šířka (49.8)" aria-label="Zeměpisná šířka" value="${hasTripLocation(trip) ? trip.lat : ""}"><input type="number" id="f-tlng" step="any" min="-180" max="180" placeholder="Délka (15.5)" aria-label="Zeměpisná délka" value="${hasTripLocation(trip) ? trip.lng : ""}"></div>
+      <div class="trip-location-actions"><button class="btn btn-ghost btn-sm" id="f-tpick" type="button">📍 Vybrat na mapě</button><span class="hint">Vyhledej místo, klikni do mapy, nebo zadej souřadnice.</span></div>
+    </div>
+    <div class="field"><label for="f-timg">Obrázek</label>
+      <div class="trip-image-preview hidden" id="f-tpreview"></div>
+      <input type="text" id="f-timg" value="${escapeAttr(trip.image || "")}" placeholder="https://… nebo images/…">
+      <span class="hint">Vlož veřejnou přímou URL obrázku, nebo cestu do složky images.</span>
+    </div>
+    <div class="field"><label>Tagy</label>
+      <div class="trip-tag-picker" id="f-ttags"></div>
+      <div class="trip-inline-row trip-new-tag"><input type="text" id="f-tnew-emoji" placeholder="🏔️" maxlength="8" aria-label="Emoji tagu"><input type="text" id="f-tnew-name" placeholder="Nový tag, např. Hory" aria-label="Název tagu"><button class="btn btn-ghost btn-sm" id="f-tnew-add" type="button">Přidat</button></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" id="m-cancel" type="button">Zrušit</button><button class="btn btn-gold" id="m-save" type="button">${editing ? "Uložit" : "Vytvořit"}</button></div>
+  `);
+          modal.classList.add("trip-modal");
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal
+            .querySelector("#m-cancel")
+            .addEventListener("click", closeModal);
+
+          const nameInput = modal.querySelector("#f-tname");
+          const latInput = modal.querySelector("#f-tlat");
+          const lngInput = modal.querySelector("#f-tlng");
+          function setLocation(lat, lng) {
+            latInput.value = Number(lat).toFixed(6);
+            lngInput.value = Number(lng).toFixed(6);
+          }
+
+          /* -- location search -- */
+          const searchInput = modal.querySelector("#f-tsearch");
+          const searchBtn = modal.querySelector("#f-tsearch-btn");
+          const results = modal.querySelector("#f-tresults");
+          let lastResults = [];
+          async function runSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+            searchBtn.disabled = true;
+            results.innerHTML = '<span class="hint">Hledám…</span>';
+            try {
+              lastResults = await searchPlaces(query);
+              results.innerHTML = lastResults.length
+                ? lastResults
+                    .map(
+                      (r, i) =>
+                        '<button type="button" class="trip-search-result" data-result="' +
+                        i +
+                        '">' +
+                        escapeHtml(r.display_name) +
+                        "</button>",
+                    )
+                    .join("")
+                : '<span class="hint">Nic jsem nenašel, zkus jiný název.</span>';
+            } catch (error) {
+              console.error(error);
+              results.innerHTML =
+                '<span class="hint">Vyhledávání se nezdařilo, zkus to znovu.</span>';
+            }
+            searchBtn.disabled = false;
+          }
+          searchBtn.addEventListener("click", runSearch);
+          searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              runSearch();
+            }
+          });
+          results.addEventListener("click", (event) => {
+            const btn = event.target.closest("[data-result]");
+            if (!btn) return;
+            const r = lastResults[Number(btn.dataset.result)];
+            if (!r) return;
+            setLocation(r.lat, r.lon);
+            if (!nameInput.value.trim())
+              nameInput.value = r.name || r.display_name.split(",")[0];
+            results.innerHTML =
+              '<span class="hint">Vybráno: ' +
+              escapeHtml(r.display_name) +
+              "</span>";
+          });
+          modal.querySelector("#f-tpick").addEventListener("click", () => {
+            startTripLocationPick((lngLat) =>
+              setLocation(lngLat.lat, lngLat.lng),
+            );
+          });
+
+          /* -- image -- */
+          const imgInput = modal.querySelector("#f-timg");
+          const preview = modal.querySelector("#f-tpreview");
+          function renderPreview() {
+            const src = imgInput.value.trim();
+            preview.classList.toggle("hidden", !src);
+            preview.innerHTML = src
+              ? '<img src="' + escapeAttr(src) + '" alt="">'
+              : "";
+          }
+          imgInput.addEventListener("change", renderPreview);
+          renderPreview();
+
+          /* -- tags -- */
+          const picker = modal.querySelector("#f-ttags");
+          function renderTagPicker() {
+            const tags = sortedTripTags();
+            picker.innerHTML = tags.length
+              ? tags
+                  .map(
+                    (t) =>
+                      '<button type="button" class="preset-chip' +
+                      (selectedTags.has(t.id) ? " active" : "") +
+                      '" data-tag="' +
+                      escapeAttr(t.id) +
+                      '" aria-pressed="' +
+                      selectedTags.has(t.id) +
+                      '">' +
+                      escapeHtml(t.emoji || "") +
+                      " " +
+                      escapeHtml(t.name || "") +
+                      "</button>",
+                  )
+                  .join("")
+              : '<span class="hint">Zatím žádné tagy – vytvoř první níže.</span>';
+          }
+          picker.addEventListener("click", (event) => {
+            const btn = event.target.closest("[data-tag]");
+            if (!btn) return;
+            const id = btn.dataset.tag;
+            if (selectedTags.has(id)) selectedTags.delete(id);
+            else selectedTags.add(id);
+            renderTagPicker();
+          });
+          const newEmoji = modal.querySelector("#f-tnew-emoji");
+          const newName = modal.querySelector("#f-tnew-name");
+          const newAdd = modal.querySelector("#f-tnew-add");
+          async function addTag() {
+            const emoji = newEmoji.value.trim();
+            const name = newName.value.trim();
+            if (!name) {
+              toast("Zadej název tagu.");
+              return;
+            }
+            newAdd.disabled = true;
+            try {
+              const id = await Store.addTripTag({ emoji, name });
+              if (!tripTags.some((t) => t.id === id))
+                tripTags = tripTags.concat({ id, emoji, name });
+              selectedTags.add(id);
+              newEmoji.value = "";
+              newName.value = "";
+              renderTagPicker();
+            } catch (error) {
+              console.error(error);
+              toast(error.message || "Tag se nepodařilo vytvořit.");
+            }
+            newAdd.disabled = false;
+          }
+          newAdd.addEventListener("click", addTag);
+          newName.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addTag();
+            }
+          });
+          renderTagPicker();
+
+          /* -- save -- */
+          const saveButton = modal.querySelector("#m-save");
+          const saveLabel = saveButton.textContent;
+          saveButton.addEventListener("click", async () => {
+            if (saveButton.disabled) return;
+            const name = nameInput.value.trim();
+            if (!name) {
+              toast("Zadej název místa.");
+              return;
+            }
+            const lat = parseFloat(latInput.value);
+            const lng = parseFloat(lngInput.value);
+            if (
+              !Number.isFinite(lat) ||
+              !Number.isFinite(lng) ||
+              Math.abs(lat) > 90 ||
+              Math.abs(lng) > 180
+            ) {
+              toast("Vyber lokaci – vyhledej místo nebo klikni do mapy.");
+              return;
+            }
+            saveButton.disabled = true;
+            saveButton.textContent = "Ukládám…";
+            try {
+              const data = {
+                name,
+                description: modal.querySelector("#f-tdesc").value.trim(),
+                image: validateImageRef(imgInput.value),
+                lat,
+                lng,
+                tagIds: [...selectedTags].filter((id) =>
+                  tripTags.some((t) => t.id === id),
+                ),
+              };
+              if (editing) {
+                await Store.updateTrip(trip.id, data);
+                toast("Výlet uložen.");
+              } else {
+                await Store.addTrip({ ...data, createdAt: Date.now() });
+                toast('Výlet "' + name + '" přidán na mapu.');
+              }
+              closeModal();
+              showTripOnMap({ lat, lng });
+            } catch (error) {
+              console.error(error);
+              toast(error.message || "Výlet se nepodařilo uložit.");
+              saveButton.disabled = false;
+              saveButton.textContent = saveLabel;
+            }
+          });
+        }
+
+        function openTripTagsModal() {
+          const modal = openModal(`
+    <div class="modal-head"><h3>Tagy výletů</h3><button class="btn btn-icon btn-ghost" id="m-close" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="trip-tag-manage-list" id="t-tag-list"></div>
+    <div class="field"><label for="f-tnew-name">Nový tag</label>
+      <div class="trip-inline-row trip-new-tag"><input type="text" id="f-tnew-emoji" placeholder="🏔️" maxlength="8" aria-label="Emoji tagu"><input type="text" id="f-tnew-name" placeholder="Např. Hory"><button class="btn btn-gold btn-sm" id="f-tnew-add" type="button">Přidat</button></div>
+    </div>
+  `);
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          const listEl = modal.querySelector("#t-tag-list");
+          function renderList() {
+            const tags = sortedTripTags();
+            listEl.innerHTML = tags.length
+              ? tags
+                  .map(
+                    (t) =>
+                      '<div class="trip-tag-manage-row"><span>' +
+                      escapeHtml(t.emoji || "") +
+                      " " +
+                      escapeHtml(t.name || "") +
+                      '</span><button class="btn btn-ghost btn-sm" type="button" data-del-tag="' +
+                      escapeAttr(t.id) +
+                      '">Odstranit</button></div>',
+                  )
+                  .join("")
+              : '<div class="empty-note">Zatím žádné tagy.</div>';
+          }
+          listEl.addEventListener("click", (event) => {
+            const btn = event.target.closest("[data-del-tag]");
+            if (!btn) return;
+            const tag = tripTags.find((t) => t.id === btn.dataset.delTag);
+            if (!tag) return;
+            openConfirm(
+              'Opravdu chceš odstranit tag "' +
+                tag.name +
+                '"? Z výletů se odebere, výlety zůstanou.',
+              async () => {
+                try {
+                  await Promise.all(
+                    trips
+                      .filter((t) => (t.tagIds || []).includes(tag.id))
+                      .map((t) =>
+                        Store.updateTrip(t.id, {
+                          tagIds: t.tagIds.filter((id) => id !== tag.id),
+                        }),
+                      ),
+                  );
+                  await Store.deleteTripTag(tag.id);
+                  toast("Tag odstraněn.");
+                } catch (error) {
+                  console.error(error);
+                  toast(error.message || "Tag se nepodařilo odstranit.");
+                }
+                closeModal();
+              },
+            );
+          });
+          const newEmoji = modal.querySelector("#f-tnew-emoji");
+          const newName = modal.querySelector("#f-tnew-name");
+          const newAdd = modal.querySelector("#f-tnew-add");
+          async function addTag() {
+            const name = newName.value.trim();
+            if (!name) {
+              toast("Zadej název tagu.");
+              return;
+            }
+            newAdd.disabled = true;
+            try {
+              const emoji = newEmoji.value.trim();
+              const id = await Store.addTripTag({ emoji, name });
+              if (!tripTags.some((t) => t.id === id))
+                tripTags = tripTags.concat({ id, emoji, name });
+              newEmoji.value = "";
+              newName.value = "";
+              renderList();
+            } catch (error) {
+              console.error(error);
+              toast(error.message || "Tag se nepodařilo vytvořit.");
+            }
+            newAdd.disabled = false;
+          }
+          newAdd.addEventListener("click", addTag);
+          newName.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              addTag();
+            }
+          });
+          renderList();
+        }
+
         /* ================= WIRE UP UI ================= */
         function wireStaticUI() {
           let resizeTimer = null;
@@ -6024,6 +7155,31 @@
           document
             .getElementById("btn-del-item")
             .addEventListener("click", openDeleteItemModal);
+          document
+            .getElementById("btn-add-trip")
+            .addEventListener("click", () => openTripFormModal());
+          document
+            .getElementById("btn-trip-tags")
+            .addEventListener("click", openTripTagsModal);
+          document
+            .getElementById("trip-tag-bar")
+            .addEventListener("click", (event) => {
+              const btn = event.target.closest("[data-tag-filter]");
+              if (!btn) return;
+              tripFilterTagId = btn.dataset.tagFilter || null;
+              renderTripsPage();
+            });
+          document
+            .getElementById("trip-grid")
+            .addEventListener("click", (event) => {
+              const card = event.target.closest("[data-trip]");
+              if (card) openTripDetailModal(card.dataset.trip);
+            });
+          document
+            .getElementById("trip-pick-cancel")
+            .addEventListener("click", () => {
+              if (tripPickCancel) tripPickCancel();
+            });
           function shiftMonth(delta) {
             calMonth += delta;
             if (calMonth < 0) {
@@ -6180,6 +7336,18 @@
                 return;
               renderShop();
               renderInventory();
+            }),
+          );
+          unsubscribers.push(
+            Store.watchTrips((data) => {
+              trips = data;
+              renderTripsPage();
+            }),
+          );
+          unsubscribers.push(
+            Store.watchTripTags((data) => {
+              tripTags = data;
+              renderTripsPage();
             }),
           );
 
