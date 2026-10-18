@@ -1,4 +1,4 @@
-const CACHE_NAME = "kronika-navykov-v6";
+const CACHE_NAME = "kronika-navykov-v7";
 // Map tiles and place search change often and would bloat the cache.
 const NETWORK_ONLY_HOSTS = [
   "tiles.openfreemap.org",

@@ -2116,6 +2116,7 @@
       input[type="text"],
       input[type="number"],
       input[type="date"],
+      input[type="time"],
       input[type="url"],
       input[type="email"],
       input[type="password"],
@@ -2598,6 +2599,311 @@
         }
       }
 
+      /* ---------- Schedule ---------- */
+      #page-schedule {
+        max-width: 1180px;
+      }
+      .sched-panel {
+        padding: 1rem 1.1rem 1.2rem;
+      }
+      .sched-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+      }
+      .sched-toolbar .month-label {
+        min-width: 15ch;
+      }
+      #btn-sched-today {
+        margin-left: auto;
+      }
+      .sched-week-badge {
+        padding: 0.2rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        color: var(--parchment-dim);
+        font-size: 0.75rem;
+      }
+      .sched-week-badge strong {
+        color: var(--gold-bright);
+      }
+      .sched-scroll {
+        overflow-x: auto;
+      }
+      .sched-grid {
+        --sched-hours: 10;
+        display: grid;
+        grid-template-columns: 4.2rem minmax(0, 1fr);
+        min-width: calc(4.2rem + var(--sched-hours) * 64px);
+      }
+      .sched-dayhead {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 0.05rem;
+        padding-right: 0.5rem;
+        border-top: 1px solid rgba(92, 70, 48, 0.45);
+        color: var(--muted);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .sched-dayhead strong {
+        font-family: var(--font-display);
+        color: var(--parchment);
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .sched-dayhead.today,
+      .sched-dayhead.today strong {
+        color: var(--gold-bright);
+      }
+      .sched-times {
+        position: relative;
+        height: 1.6rem;
+      }
+      .sched-times span {
+        position: absolute;
+        bottom: 0.35rem;
+        transform: translateX(-50%);
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .sched-times span:first-child {
+        transform: none;
+      }
+      .sched-row {
+        position: relative;
+        border-top: 1px solid rgba(92, 70, 48, 0.45);
+        border-right: 1px solid rgba(92, 70, 48, 0.55);
+        background-image: linear-gradient(
+          to right,
+          rgba(92, 70, 48, 0.45) 1px,
+          transparent 1px
+        );
+        background-size: calc(100% / var(--sched-hours)) 100%;
+        cursor: cell;
+      }
+      .sched-row:last-child,
+      .sched-dayhead.last {
+        border-bottom: 1px solid rgba(92, 70, 48, 0.45);
+      }
+      .sched-row.today {
+        background-color: rgba(215, 179, 77, 0.05);
+      }
+      .sched-event {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        overflow: hidden;
+        text-align: left;
+        padding: 0.3rem 0.4rem;
+        border-radius: 6px;
+        border: 1px solid color-mix(in srgb, var(--ev) 55%, transparent);
+        border-left: 3px solid var(--ev);
+        background: color-mix(in srgb, var(--ev) 26%, var(--bg-panel));
+        color: var(--parchment);
+        font-size: 0.72rem;
+        line-height: 1.25;
+        cursor: pointer;
+        transition: box-shadow 0.15s ease;
+      }
+      .sched-event:hover,
+      .sched-event:focus-visible {
+        z-index: 2;
+        border-color: var(--ev);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+      }
+      .sched-event span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .sched-event-title {
+        font-weight: 700;
+      }
+      .sched-event-time {
+        color: var(--parchment-dim);
+        font-size: 0.68rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .sched-now {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--danger-bright);
+        z-index: 3;
+        pointer-events: none;
+      }
+      .sched-now::before {
+        content: "";
+        position: absolute;
+        left: -3px;
+        top: -4px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--danger-bright);
+      }
+      .sched-agenda {
+        display: none;
+      }
+      .sched-agenda-day {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      .sched-agenda-head {
+        font-family: var(--font-display);
+        font-weight: 700;
+        color: var(--parchment);
+        font-size: 0.9rem;
+      }
+      .sched-agenda-head span {
+        font-family: var(--font-body);
+        font-weight: 400;
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-left: 0.3rem;
+      }
+      .sched-agenda-day.today .sched-agenda-head {
+        color: var(--gold-bright);
+      }
+      .sched-agenda-item,
+      .sched-list-row {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        width: 100%;
+        text-align: left;
+        padding: 0.55rem 0.7rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-bronze);
+        border-left: 3px solid var(--ev);
+        background: var(--bg-inset);
+        color: var(--parchment);
+        cursor: pointer;
+      }
+      .sched-agenda-item:hover,
+      .sched-list-row:hover {
+        border-color: var(--ev);
+      }
+      .sched-agenda-time {
+        flex-shrink: 0;
+        min-width: 5.6rem;
+        color: var(--parchment-dim);
+        font-size: 0.8rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .sched-agenda-body,
+      .sched-list-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        min-width: 0;
+      }
+      .sched-agenda-body strong,
+      .sched-list-body strong {
+        font-size: 0.9rem;
+      }
+      .sched-agenda-body small,
+      .sched-list-body small {
+        color: var(--muted);
+        font-size: 0.76rem;
+      }
+      .sched-agenda-empty {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-style: italic;
+      }
+      .sched-list-panel {
+        padding: 1.2rem 1.3rem 1.4rem;
+      }
+      .sched-list-group + .sched-list-group {
+        margin-top: 1.1rem;
+      }
+      .sched-list-group h4 {
+        font-size: 0.78rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin: 0.6rem 0 0.5rem;
+      }
+      .sched-list-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 0.5rem;
+      }
+      .sched-list-row.past {
+        opacity: 0.55;
+      }
+      .sched-day-picker .preset-chip {
+        min-width: 2.6rem;
+        text-align: center;
+      }
+      .sched-time-row {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .sched-time-row input {
+        min-width: 0;
+      }
+      .sched-occ-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+        gap: 0.35rem;
+        margin-bottom: 0.4rem;
+      }
+      .sched-detail-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        color: var(--parchment-dim);
+        font-size: 0.88rem;
+      }
+      .sched-detail-terms {
+        list-style: none;
+        margin: 0.8rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .sched-detail-terms li.past {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+      @media (max-width: 680px) {
+        .sched-scroll {
+          display: none;
+        }
+        .sched-agenda {
+          display: flex;
+          flex-direction: column;
+          gap: 0.9rem;
+        }
+        #btn-sched-today {
+          margin-left: 0;
+        }
+        .sched-occ-row {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+        }
+        .sched-occ-row input[type="date"] {
+          grid-column: 1 / -1;
+        }
+      }
+
       @media (max-width: 860px) {
         #btn-menu {
           display: flex;
@@ -2852,6 +3158,15 @@
               <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18" />
             </svg>
             Výlety
+          </button>
+          <button class="nav-item" data-page="schedule">
+            <svg class="icon" viewBox="0 0 24 24">
+              <rect x="3" y="5" width="18" height="16" rx="1.5" />
+              <path d="M3 10h18" />
+              <path d="M8 3v4M16 3v4" />
+              <path d="M7 14h3M14 14h3M7 17.5h3" />
+            </svg>
+            Rozvrh
           </button>
         </nav>
         <div class="sidebar-foot">
@@ -3241,6 +3556,70 @@
           </div>
           <div class="trip-grid" id="trip-grid"></div>
         </section>
+
+        <!-- SCHEDULE -->
+        <section class="page hidden" id="page-schedule">
+          <div class="page-head">
+            <div>
+              <h2>Rozvrh</h2>
+              <p>Pravidelné aktivity a akce s termíny</p>
+            </div>
+            <button class="btn btn-gold btn-sm" id="btn-add-schedule" type="button">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Přidat do rozvrhu
+            </button>
+          </div>
+          <div class="panel sched-panel">
+            <div class="sched-toolbar">
+              <div class="month-switch">
+                <button
+                  class="btn btn-icon btn-ghost"
+                  id="btn-sched-prev"
+                  type="button"
+                  aria-label="Předchozí týden"
+                >
+                  <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    style="width: 16px; height: 16px"
+                  >
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+                <span class="month-label" id="sched-week-label">—</span>
+                <button
+                  class="btn btn-icon btn-ghost"
+                  id="btn-sched-next"
+                  type="button"
+                  aria-label="Další týden"
+                >
+                  <svg
+                    class="icon"
+                    viewBox="0 0 24 24"
+                    style="width: 16px; height: 16px"
+                  >
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
+              <span class="sched-week-badge" id="sched-week-badge"></span>
+              <button class="btn btn-ghost btn-sm" id="btn-sched-today" type="button">
+                Tento týden
+              </button>
+            </div>
+            <div class="sched-scroll">
+              <div class="sched-grid" id="sched-grid"></div>
+            </div>
+            <div class="sched-agenda" id="sched-agenda"></div>
+          </div>
+          <div class="panel sched-list-panel">
+            <div class="page-head"><h3>Všechny položky rozvrhu</h3></div>
+            <div id="sched-list"></div>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -3364,6 +3743,7 @@
         let raceSettings = null;
         let trips = [];
         let tripTags = [];
+        let scheduleItems = []; // weekly activities and dated events, per character
         let currentCharId = safeStorage.get(LS_CHAR_KEY) || null;
         let recentlyCompletedExpanded = false;
         let calMonth = new Date().getMonth();
@@ -3832,6 +4212,65 @@
             } else {
               const d = loadLocal();
               d.tripTags = (d.tripTags || []).filter((t) => t.id !== id);
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          watchScheduleItems(cb) {
+            if (storageMode === "db") {
+              return db.collection("scheduleItems").onSnapshot(
+                (snap) => {
+                  cb(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+                },
+                (err) => {
+                  console.error(err);
+                },
+              );
+            } else {
+              const fn = (d) => cb(d.scheduleItems || []);
+              localListeners.push(fn);
+              fn(loadLocal());
+              return () => {
+                localListeners = localListeners.filter((f) => f !== fn);
+              };
+            }
+          },
+          async addScheduleItem(data) {
+            if (storageMode === "db") {
+              await db.collection("scheduleItems").add(data);
+            } else {
+              const d = loadLocal();
+              const id =
+                "sc_" +
+                Date.now() +
+                "_" +
+                Math.random().toString(36).slice(2, 7);
+              d.scheduleItems = d.scheduleItems || [];
+              d.scheduleItems.push({ id, ...data });
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async updateScheduleItem(id, patch) {
+            if (storageMode === "db") {
+              await db.doc("scheduleItems/" + id).update(patch);
+            } else {
+              const d = loadLocal();
+              d.scheduleItems = (d.scheduleItems || []).map((s) =>
+                s.id === id ? { ...s, ...patch } : s,
+              );
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async deleteScheduleItem(id) {
+            if (storageMode === "db") {
+              await db.doc("scheduleItems/" + id).delete();
+            } else {
+              const d = loadLocal();
+              d.scheduleItems = (d.scheduleItems || []).filter(
+                (s) => s.id !== id,
+              );
               saveLocal(d);
               notifyLocal();
             }
@@ -5035,7 +5474,7 @@
         /* ================= NAV / PAGES ================= */
         function showPage(page) {
           if (tripPickCancel) tripPickCancel();
-          ["home", "shop", "inventory", "race", "trips"].forEach((p) => {
+          ["home", "shop", "inventory", "race", "trips", "schedule"].forEach((p) => {
             document
               .getElementById("page-" + p)
               .classList.toggle("hidden", p !== page);
@@ -5049,6 +5488,7 @@
             renderTripsPage();
             initTripMap();
           }
+          if (page === "schedule") renderSchedulePage();
         }
         function openSidebar() {
           document.getElementById("sidebar").classList.add("open");
@@ -5089,6 +5529,7 @@
           renderShop();
           renderInventory();
           renderRacePage();
+          renderSchedulePage();
         }
 
         function raceHabitOptions(ownerId, selectedId) {
@@ -5521,6 +5962,12 @@
               title: "Opakující se úkol",
               desc: "Týdenní nebo dvoutýdenní úkol s termínem.",
               open: openAddRecurModal,
+            },
+            {
+              id: "schedule",
+              title: "Položka rozvrhu",
+              desc: "Pravidelná aktivita (i sudé/liché týdny) nebo akce s termíny.",
+              open: () => openScheduleFormModal(),
             },
           ];
           const modal = openModal(`
@@ -7009,6 +7456,776 @@
           renderList();
         }
 
+        /* ================= SCHEDULE ================= */
+        const WEEKDAY_SHORT = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+        const WEEKDAY_LONG = [
+          "Pondělí",
+          "Úterý",
+          "Středa",
+          "Čtvrtek",
+          "Pátek",
+          "Sobota",
+          "Neděle",
+        ];
+        const SCHEDULE_REPEAT = {
+          every: "Každý týden",
+          even: "Sudé týdny",
+          odd: "Liché týdny",
+        };
+        const SCHEDULE_LANE_PX = 50;
+        let scheduleWeekStart = null;
+
+        // 0 = Monday … 6 = Sunday
+        function weekdayIndex(dateStr) {
+          return (parseDate(dateStr).getDay() + 6) % 7;
+        }
+        function mondayOf(dateStr) {
+          return addDays(dateStr, -weekdayIndex(dateStr));
+        }
+        // ISO 8601 week number – the usual basis for "sudý/lichý týden".
+        function isoWeek(dateStr) {
+          const d = parseDate(dateStr);
+          d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7));
+          const week1 = new Date(d.getFullYear(), 0, 4);
+          return (
+            1 +
+            Math.round(
+              ((d - week1) / 86400000 - 3 + ((week1.getDay() + 6) % 7)) / 7,
+            )
+          );
+        }
+        function weekParityLabel(dateStr) {
+          return isoWeek(dateStr) % 2 === 0 ? "sudý" : "lichý";
+        }
+        function timeToMin(t) {
+          const p = String(t || "0:0").split(":").map(Number);
+          return p[0] * 60 + (p[1] || 0);
+        }
+        function minToTime(min) {
+          return (
+            String(Math.floor(min / 60)).padStart(2, "0") +
+            ":" +
+            String(min % 60).padStart(2, "0")
+          );
+        }
+        function czTermCount(n) {
+          if (n === 1) return "1 termín";
+          if (n >= 2 && n <= 4) return n + " termíny";
+          return n + " termínů";
+        }
+        function scheduleForChar(id) {
+          return scheduleItems.filter((s) => s.ownerId === id);
+        }
+        function sortedScheduleTerms(item) {
+          return (item.occurrences || [])
+            .slice()
+            .sort((a, b) =>
+              (a.date + a.startTime).localeCompare(b.date + b.startTime),
+            );
+        }
+        function nextScheduleTerm(item) {
+          const today = todayStr();
+          return sortedScheduleTerms(item).find((o) => o.date >= today) || null;
+        }
+        function weeklyItemOccursOn(item, dateStr) {
+          if (!(item.days || []).includes(weekdayIndex(dateStr))) return false;
+          if (item.validFrom && dateStr < item.validFrom) return false;
+          if (item.validTo && dateStr > item.validTo) return false;
+          if (item.repeat === "even" || item.repeat === "odd")
+            return (isoWeek(dateStr) % 2 === 0) === (item.repeat === "even");
+          return true;
+        }
+        function scheduleOccurrencesOn(dateStr) {
+          const out = [];
+          scheduleForChar(currentCharId).forEach((item) => {
+            if (item.kind === "dates") {
+              (item.occurrences || []).forEach((o) => {
+                if (o.date === dateStr)
+                  out.push({ item, date: dateStr, start: o.startTime, end: o.endTime });
+              });
+            } else if (weeklyItemOccursOn(item, dateStr)) {
+              out.push({
+                item,
+                date: dateStr,
+                start: item.startTime,
+                end: item.endTime,
+              });
+            }
+          });
+          return out.sort(
+            (a, b) =>
+              timeToMin(a.start) - timeToMin(b.start) ||
+              timeToMin(a.end) - timeToMin(b.end),
+          );
+        }
+        // Overlapping blocks share the day column side by side.
+        function layoutScheduleLanes(occs) {
+          let cluster = [];
+          let laneEnds = [];
+          let clusterEnd = -1;
+          const flush = () => {
+            cluster.forEach((o) => (o.lanes = laneEnds.length));
+            cluster = [];
+            laneEnds = [];
+          };
+          occs.forEach((o) => {
+            const s = timeToMin(o.start);
+            const e = timeToMin(o.end);
+            if (cluster.length && s >= clusterEnd) flush();
+            let lane = laneEnds.findIndex((end) => end <= s);
+            if (lane === -1) {
+              lane = laneEnds.length;
+              laneEnds.push(e);
+            } else {
+              laneEnds[lane] = e;
+            }
+            o.lane = lane;
+            cluster.push(o);
+            clusterEnd = cluster.length === 1 ? e : Math.max(clusterEnd, e);
+          });
+          if (cluster.length) flush();
+          return occs;
+        }
+        function scheduleSummary(item) {
+          if (item.kind === "dates") {
+            const terms = sortedScheduleTerms(item);
+            if (terms.length === 1)
+              return (
+                formatCzDate(terms[0].date) +
+                " · " +
+                terms[0].startTime +
+                "–" +
+                terms[0].endTime
+              );
+            const next = nextScheduleTerm(item);
+            return (
+              czTermCount(terms.length) +
+              (next
+                ? " · další " + formatCzDate(next.date) + " " + next.startTime
+                : " · vše proběhlo")
+            );
+          }
+          const days = (item.days || [])
+            .slice()
+            .sort((a, b) => a - b)
+            .map((d) => WEEKDAY_SHORT[d])
+            .join(", ");
+          return (
+            days +
+            " · " +
+            item.startTime +
+            "–" +
+            item.endTime +
+            (item.repeat && item.repeat !== "every"
+              ? " · " + SCHEDULE_REPEAT[item.repeat].toLowerCase()
+              : "")
+          );
+        }
+
+        function renderSchedulePage() {
+          if (!currentCharId) return;
+          if (!scheduleWeekStart) scheduleWeekStart = mondayOf(todayStr());
+          const days = Array.from({ length: 7 }, (_, i) =>
+            addDays(scheduleWeekStart, i),
+          );
+          const first = parseDate(days[0]);
+          const last = parseDate(days[6]);
+          document.getElementById("sched-week-label").textContent =
+            first.getDate() +
+            ". " +
+            (first.getMonth() + 1) +
+            ". – " +
+            last.getDate() +
+            ". " +
+            (last.getMonth() + 1) +
+            ". " +
+            last.getFullYear();
+          document.getElementById("sched-week-badge").innerHTML =
+            "<strong>" +
+            isoWeek(days[0]) +
+            ". týden</strong> · " +
+            weekParityLabel(days[0]);
+          document.getElementById("btn-sched-today").disabled =
+            scheduleWeekStart === mondayOf(todayStr());
+          const perDay = days.map((d) =>
+            layoutScheduleLanes(scheduleOccurrencesOn(d)),
+          );
+          renderScheduleGrid(days, perDay);
+          renderScheduleAgenda(days, perDay);
+          renderScheduleList();
+        }
+
+        function renderScheduleGrid(days, perDay) {
+          const grid = document.getElementById("sched-grid");
+          let fromH = 8;
+          let toH = 18;
+          perDay.flat().forEach((o) => {
+            fromH = Math.min(fromH, Math.floor(timeToMin(o.start) / 60));
+            toH = Math.max(toH, Math.ceil(timeToMin(o.end) / 60));
+          });
+          const fromMin = fromH * 60;
+          const total = (toH - fromH) * 60;
+          const pct = (min) => ((min - fromMin) / total) * 100;
+          const today = todayStr();
+          let html = '<div></div><div class="sched-times">';
+          for (let h = fromH; h < toH; h++)
+            html += '<span style="left:' + pct(h * 60) + '%">' + h + ":00</span>";
+          html += "</div>";
+          const nowDate = new Date();
+          const nowMin = nowDate.getHours() * 60 + nowDate.getMinutes();
+          // One row per day; overlapping blocks stack in lanes inside the row.
+          html += days
+            .map((d, i) => {
+              const date = parseDate(d);
+              const isToday = d === today;
+              const isLast = i === days.length - 1;
+              const lanes = Math.max(1, ...perDay[i].map((o) => o.lanes));
+              let row =
+                '<div class="sched-dayhead' +
+                (isToday ? " today" : "") +
+                (isLast ? " last" : "") +
+                '"><span>' +
+                WEEKDAY_SHORT[i] +
+                "</span><strong>" +
+                date.getDate() +
+                ". " +
+                (date.getMonth() + 1) +
+                '.</strong></div><div class="sched-row' +
+                (isToday ? " today" : "") +
+                '" data-date="' +
+                d +
+                '" style="height:' +
+                (lanes * SCHEDULE_LANE_PX + 4) +
+                'px">';
+              perDay[i].forEach((o) => {
+                const s = timeToMin(o.start);
+                const e = Math.max(timeToMin(o.end), s + 20);
+                row +=
+                  '<button type="button" class="sched-event" data-sched="' +
+                  escapeAttr(o.item.id) +
+                  '" title="' +
+                  escapeAttr(o.item.title + " · " + o.start + "–" + o.end) +
+                  '" style="--ev:' +
+                  escapeAttr(o.item.color || HABIT_COLORS[0]) +
+                  ";left:calc(" +
+                  pct(s) +
+                  "% + 2px);width:calc(" +
+                  (pct(e) - pct(s)) +
+                  "% - 4px);top:" +
+                  (o.lane * SCHEDULE_LANE_PX + 4) +
+                  "px;height:" +
+                  (SCHEDULE_LANE_PX - 4) +
+                  'px"><span class="sched-event-title">' +
+                  escapeHtml(o.item.title) +
+                  '</span><span class="sched-event-time">' +
+                  o.start +
+                  "–" +
+                  o.end +
+                  (o.item.location ? " · " + escapeHtml(o.item.location) : "") +
+                  "</span></button>";
+              });
+              if (isToday && nowMin > fromMin && nowMin < toH * 60)
+                row +=
+                  '<div class="sched-now" style="left:' + pct(nowMin) + '%"></div>';
+              return row + "</div>";
+            })
+            .join("");
+          grid.style.setProperty("--sched-hours", toH - fromH);
+          grid.dataset.fromMin = fromMin;
+          grid.dataset.total = total;
+          grid.innerHTML = html;
+        }
+
+        function renderScheduleAgenda(days, perDay) {
+          const today = todayStr();
+          document.getElementById("sched-agenda").innerHTML = days
+            .map((d, i) => {
+              const date = parseDate(d);
+              return (
+                '<div class="sched-agenda-day' +
+                (d === today ? " today" : "") +
+                '"><div class="sched-agenda-head">' +
+                WEEKDAY_LONG[i] +
+                "<span>" +
+                date.getDate() +
+                ". " +
+                (date.getMonth() + 1) +
+                ".</span></div>" +
+                (perDay[i].length
+                  ? perDay[i]
+                      .map(
+                        (o) =>
+                          '<button type="button" class="sched-agenda-item" data-sched="' +
+                          escapeAttr(o.item.id) +
+                          '" style="--ev:' +
+                          escapeAttr(o.item.color || HABIT_COLORS[0]) +
+                          '"><span class="sched-agenda-time">' +
+                          o.start +
+                          "–" +
+                          o.end +
+                          '</span><span class="sched-agenda-body"><strong>' +
+                          escapeHtml(o.item.title) +
+                          "</strong>" +
+                          (o.item.location
+                            ? "<small>" + escapeHtml(o.item.location) + "</small>"
+                            : "") +
+                          "</span></button>",
+                      )
+                      .join("")
+                  : '<div class="sched-agenda-empty">Nic naplánováno</div>') +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        function renderScheduleList() {
+          const el = document.getElementById("sched-list");
+          const mine = scheduleForChar(currentCharId);
+          if (mine.length === 0) {
+            el.innerHTML =
+              '<div class="empty-note">Rozvrh je zatím prázdný. Přidej pravidelnou aktivitu nebo akci s termínem.</div>';
+            return;
+          }
+          const firstDay = (item) =>
+            Math.min(...(item.days && item.days.length ? item.days : [7]));
+          const regular = mine
+            .filter((i) => i.kind !== "dates")
+            .sort(
+              (a, b) =>
+                firstDay(a) - firstDay(b) ||
+                timeToMin(a.startTime) - timeToMin(b.startTime),
+            );
+          // Upcoming events by their next term, then past ones, most recent first.
+          const lastTermKey = (item) => {
+            const terms = sortedScheduleTerms(item);
+            const t = terms[terms.length - 1];
+            return t ? t.date + t.startTime : "";
+          };
+          const events = mine
+            .filter((i) => i.kind === "dates")
+            .sort((a, b) => {
+              const na = nextScheduleTerm(a);
+              const nb = nextScheduleTerm(b);
+              if (na && nb)
+                return (na.date + na.startTime).localeCompare(
+                  nb.date + nb.startTime,
+                );
+              if (na || nb) return na ? -1 : 1;
+              return lastTermKey(b).localeCompare(lastTermKey(a));
+            });
+          const row = (item) => {
+            const past = item.kind === "dates" && !nextScheduleTerm(item);
+            return (
+              '<button type="button" class="sched-list-row' +
+              (past ? " past" : "") +
+              '" data-sched="' +
+              escapeAttr(item.id) +
+              '" style="--ev:' +
+              escapeAttr(item.color || HABIT_COLORS[0]) +
+              '"><span class="sched-list-body"><strong>' +
+              escapeHtml(item.title) +
+              "</strong><small>" +
+              escapeHtml(scheduleSummary(item)) +
+              (item.location ? " · " + escapeHtml(item.location) : "") +
+              "</small></span></button>"
+            );
+          };
+          const group = (title, list) =>
+            list.length
+              ? '<div class="sched-list-group"><h4>' +
+                title +
+                '</h4><div class="sched-list-items">' +
+                list.map(row).join("") +
+                "</div></div>"
+              : "";
+          el.innerHTML =
+            group("Pravidelné aktivity", regular) +
+            group("Akce a termíny", events);
+        }
+
+        function openScheduleDetailModal(id) {
+          const item = scheduleItems.find((s) => s.id === id);
+          if (!item) return;
+          const today = todayStr();
+          let meta = "";
+          if (item.kind === "dates") {
+            meta =
+              "<span>🗓️ " +
+              czTermCount((item.occurrences || []).length) +
+              "</span>" +
+              '<ul class="sched-detail-terms">' +
+              sortedScheduleTerms(item)
+                .map(
+                  (o) =>
+                    "<li" +
+                    (o.date < today ? ' class="past"' : "") +
+                    ">" +
+                    WEEKDAY_SHORT[weekdayIndex(o.date)] +
+                    " " +
+                    formatCzDate(o.date) +
+                    " · " +
+                    o.startTime +
+                    "–" +
+                    o.endTime +
+                    "</li>",
+                )
+                .join("") +
+              "</ul>";
+          } else {
+            meta =
+              "<span>🗓️ " +
+              (item.days || [])
+                .slice()
+                .sort((a, b) => a - b)
+                .map((d) => WEEKDAY_LONG[d])
+                .join(", ") +
+              " · " +
+              item.startTime +
+              "–" +
+              item.endTime +
+              "</span><span>🔁 " +
+              SCHEDULE_REPEAT[item.repeat || "every"] +
+              "</span>" +
+              (item.validFrom || item.validTo
+                ? "<span>📆 Platí " +
+                  (item.validFrom ? "od " + formatCzDate(item.validFrom) + " " : "") +
+                  (item.validTo ? "do " + formatCzDate(item.validTo) : "") +
+                  "</span>"
+                : "");
+          }
+          const modal = openModal(`
+    <div class="modal-head"><h3>${escapeHtml(item.title)}</h3><button class="btn btn-icon btn-ghost" id="m-close" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="sched-detail-meta">
+      ${item.location ? `<span>📍 ${escapeHtml(item.location)}</span>` : ""}
+      ${meta}
+    </div>
+    ${item.note ? `<p class="trip-detail-desc">${escapeHtml(item.note)}</p>` : ""}
+    <div class="modal-actions trip-detail-actions">
+      <button class="btn btn-danger btn-sm" id="s-del" type="button">Odstranit</button>
+      <button class="btn btn-gold btn-sm" id="s-edit" type="button">Upravit</button>
+    </div>
+  `);
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal
+            .querySelector("#s-edit")
+            .addEventListener("click", () => openScheduleFormModal(item));
+          modal.querySelector("#s-del").addEventListener("click", () => {
+            openConfirm(
+              'Opravdu chceš z rozvrhu odstranit "' + item.title + '"?',
+              async () => {
+                try {
+                  await Store.deleteScheduleItem(item.id);
+                  toast("Položka rozvrhu odstraněna.");
+                } catch (error) {
+                  console.error(error);
+                  toast(error.message || "Položku se nepodařilo odstranit.");
+                }
+                closeModal();
+              },
+            );
+          });
+        }
+
+        // preset: { date, startTime } when opened by clicking into the week grid
+        function openScheduleFormModal(item, preset) {
+          const editing = !!item;
+          preset = preset || {};
+          const presetDate = preset.date || todayStr();
+          const presetStart = preset.startTime || "09:00";
+          const presetEnd = minToTime(
+            Math.min(timeToMin(presetStart) + 60, 23 * 60 + 59),
+          );
+          item = item || {
+            kind: "weekly",
+            days: [weekdayIndex(presetDate)],
+            startTime: presetStart,
+            endTime: presetEnd,
+            repeat: "every",
+            color:
+              HABIT_COLORS[
+                scheduleForChar(currentCharId).length % HABIT_COLORS.length
+              ],
+          };
+          let kind = item.kind === "dates" ? "dates" : "weekly";
+          const days = new Set(item.days || []);
+          let repeat = item.repeat || "every";
+          let terms =
+            item.occurrences && item.occurrences.length
+              ? item.occurrences.map((o) => ({ ...o }))
+              : [
+                  {
+                    date: presetDate,
+                    startTime: item.startTime || presetStart,
+                    endTime: item.endTime || presetEnd,
+                  },
+                ];
+          const thisWeek = isoWeek(todayStr());
+          const modal = openModal(`
+    <div class="modal-head"><h3>${editing ? "Upravit položku rozvrhu" : "Přidat do rozvrhu"}</h3><button class="btn btn-icon btn-ghost" id="m-close" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="field"><label for="f-stitle">Název</label><input type="text" id="f-stitle" value="${escapeAttr(item.title || "")}" placeholder="Např. Trénink, Přednáška z fyziky"></div>
+    <div class="field"><label for="f-sloc">Místo</label><input type="text" id="f-sloc" value="${escapeAttr(item.location || "")}" placeholder="Nepovinné, např. učebna A2"></div>
+    <div class="field"><label>Typ</label>
+      <div class="preset-row" id="f-skind">
+        <button type="button" class="preset-chip" data-kind="weekly">Pravidelná aktivita</button>
+        <button type="button" class="preset-chip" data-kind="dates">Akce s termíny</button>
+      </div>
+    </div>
+    <div id="f-sweekly">
+      <div class="field"><label>Dny</label>
+        <div class="preset-row sched-day-picker" id="f-sdays">
+          ${WEEKDAY_SHORT.map((d, i) => '<button type="button" class="preset-chip" data-day="' + i + '">' + d + "</button>").join("")}
+        </div>
+      </div>
+      <div class="field"><label for="f-sstart">Čas</label>
+        <div class="sched-time-row"><input type="time" id="f-sstart" value="${escapeAttr(item.startTime || presetStart)}" aria-label="Začátek"><span>–</span><input type="time" id="f-send" value="${escapeAttr(item.endTime || presetEnd)}" aria-label="Konec"></div>
+      </div>
+      <div class="field"><label>Opakování</label>
+        <div class="preset-row" id="f-srepeat">
+          ${Object.entries(SCHEDULE_REPEAT).map(([k, v]) => '<button type="button" class="preset-chip" data-repeat="' + k + '">' + v + "</button>").join("")}
+        </div>
+        <span class="hint">Tento týden je ${thisWeek}. týden – ${weekParityLabel(todayStr())}.</span>
+      </div>
+      <div class="field"><label for="f-sfrom">Platnost</label>
+        <div class="sched-time-row"><input type="date" id="f-sfrom" value="${escapeAttr(item.validFrom || "")}" aria-label="Platí od"><span>–</span><input type="date" id="f-sto" value="${escapeAttr(item.validTo || "")}" aria-label="Platí do"></div>
+        <span class="hint">Nepovinné – např. začátek a konec semestru.</span>
+      </div>
+    </div>
+    <div id="f-sdates">
+      <div class="field"><label>Termíny</label>
+        <div id="f-sterms"></div>
+        <div><button type="button" class="btn btn-ghost btn-sm" id="f-sterm-add">+ Přidat termín</button></div>
+        <span class="hint">Jednorázová akce má jeden termín, další přidáš tlačítkem.</span>
+      </div>
+    </div>
+    <div class="field"><label for="f-snote">Poznámka</label><textarea id="f-snote" placeholder="Nepovinné">${escapeHtml(item.note || "")}</textarea></div>
+    <div class="field"><label>Barva</label>
+      <div class="color-row" id="f-scolor-row">
+        ${HABIT_COLORS.map((c) => '<span class="color-dot" data-color="' + c + '" style="background:' + c + '"></span>').join("")}
+        <input type="color" id="f-scolor-custom" value="${escapeAttr(item.color || HABIT_COLORS[0])}" style="width:44px;height:32px;padding:2px">
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" id="m-cancel" type="button">Zrušit</button><button class="btn btn-gold" id="m-save" type="button">${editing ? "Uložit" : "Vytvořit"}</button></div>
+  `);
+          modal.classList.add("trip-modal");
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal
+            .querySelector("#m-cancel")
+            .addEventListener("click", closeModal);
+
+          function syncChips() {
+            modal
+              .querySelectorAll("#f-skind .preset-chip")
+              .forEach((c) =>
+                c.classList.toggle("active", c.dataset.kind === kind),
+              );
+            modal
+              .querySelectorAll("#f-sdays .preset-chip")
+              .forEach((c) =>
+                c.classList.toggle("active", days.has(Number(c.dataset.day))),
+              );
+            modal
+              .querySelectorAll("#f-srepeat .preset-chip")
+              .forEach((c) =>
+                c.classList.toggle("active", c.dataset.repeat === repeat),
+              );
+            modal
+              .querySelector("#f-sweekly")
+              .classList.toggle("hidden", kind !== "weekly");
+            modal
+              .querySelector("#f-sdates")
+              .classList.toggle("hidden", kind !== "dates");
+          }
+          modal.querySelector("#f-skind").addEventListener("click", (e) => {
+            const chip = e.target.closest("[data-kind]");
+            if (!chip) return;
+            kind = chip.dataset.kind;
+            syncChips();
+          });
+          modal.querySelector("#f-sdays").addEventListener("click", (e) => {
+            const chip = e.target.closest("[data-day]");
+            if (!chip) return;
+            const d = Number(chip.dataset.day);
+            if (days.has(d)) days.delete(d);
+            else days.add(d);
+            syncChips();
+          });
+          modal.querySelector("#f-srepeat").addEventListener("click", (e) => {
+            const chip = e.target.closest("[data-repeat]");
+            if (!chip) return;
+            repeat = chip.dataset.repeat;
+            syncChips();
+          });
+
+          const termsEl = modal.querySelector("#f-sterms");
+          function readTerms() {
+            terms = Array.from(termsEl.querySelectorAll(".sched-occ-row")).map(
+              (row) => ({
+                date: row.querySelector('[data-f="date"]').value,
+                startTime: row.querySelector('[data-f="start"]').value,
+                endTime: row.querySelector('[data-f="end"]').value,
+              }),
+            );
+          }
+          function renderTerms() {
+            termsEl.innerHTML = terms
+              .map(
+                (o, i) =>
+                  '<div class="sched-occ-row"><input type="date" data-f="date" aria-label="Datum" value="' +
+                  escapeAttr(o.date || "") +
+                  '"><input type="time" data-f="start" aria-label="Začátek" value="' +
+                  escapeAttr(o.startTime || "") +
+                  '"><input type="time" data-f="end" aria-label="Konec" value="' +
+                  escapeAttr(o.endTime || "") +
+                  '"><button type="button" class="btn btn-icon btn-ghost" data-term-del="' +
+                  i +
+                  '" aria-label="Odebrat termín"' +
+                  (terms.length === 1 ? " disabled" : "") +
+                  '><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>',
+              )
+              .join("");
+          }
+          termsEl.addEventListener("click", (e) => {
+            const btn = e.target.closest("[data-term-del]");
+            if (!btn) return;
+            readTerms();
+            terms.splice(Number(btn.dataset.termDel), 1);
+            renderTerms();
+          });
+          modal.querySelector("#f-sterm-add").addEventListener("click", () => {
+            readTerms();
+            const last = terms[terms.length - 1] || {};
+            terms.push({
+              date: last.date ? addDays(last.date, 7) : todayStr(),
+              startTime: last.startTime || presetStart,
+              endTime: last.endTime || presetEnd,
+            });
+            renderTerms();
+          });
+
+          const colorInput = modal.querySelector("#f-scolor-custom");
+          modal.querySelectorAll("#f-scolor-row .color-dot").forEach((dot) => {
+            if (dot.dataset.color === colorInput.value)
+              dot.classList.add("active");
+            dot.addEventListener("click", () => {
+              modal
+                .querySelectorAll("#f-scolor-row .color-dot")
+                .forEach((d) => d.classList.remove("active"));
+              dot.classList.add("active");
+              colorInput.value = dot.dataset.color;
+            });
+          });
+          colorInput.addEventListener("input", () => {
+            modal
+              .querySelectorAll("#f-scolor-row .color-dot")
+              .forEach((d) => d.classList.remove("active"));
+          });
+
+          syncChips();
+          renderTerms();
+
+          const saveButton = modal.querySelector("#m-save");
+          saveButton.addEventListener("click", async () => {
+            const title = modal.querySelector("#f-stitle").value.trim();
+            if (!title) {
+              toast("Zadej název.");
+              return;
+            }
+            const data = {
+              title,
+              location: modal.querySelector("#f-sloc").value.trim(),
+              note: modal.querySelector("#f-snote").value.trim(),
+              color: colorInput.value,
+              kind,
+            };
+            if (kind === "weekly") {
+              const startTime = modal.querySelector("#f-sstart").value;
+              const endTime = modal.querySelector("#f-send").value;
+              const validFrom = modal.querySelector("#f-sfrom").value;
+              const validTo = modal.querySelector("#f-sto").value;
+              if (days.size === 0) {
+                toast("Vyber aspoň jeden den v týdnu.");
+                return;
+              }
+              if (!startTime || !endTime || endTime <= startTime) {
+                toast("Zadej čas – konec musí být po začátku.");
+                return;
+              }
+              if (validFrom && validTo && validTo < validFrom) {
+                toast("Konec platnosti musí být po jejím začátku.");
+                return;
+              }
+              Object.assign(data, {
+                days: Array.from(days).sort((a, b) => a - b),
+                startTime,
+                endTime,
+                repeat,
+                validFrom: validFrom || null,
+                validTo: validTo || null,
+                occurrences: [],
+              });
+            } else {
+              readTerms();
+              if (
+                terms.some(
+                  (o) =>
+                    !o.date || !o.startTime || !o.endTime || o.endTime <= o.startTime,
+                )
+              ) {
+                toast("U každého termínu vyplň datum a čas (konec po začátku).");
+                return;
+              }
+              Object.assign(data, {
+                days: [],
+                startTime: null,
+                endTime: null,
+                repeat: null,
+                validFrom: null,
+                validTo: null,
+                occurrences: terms
+                  .slice()
+                  .sort((a, b) =>
+                    (a.date + a.startTime).localeCompare(b.date + b.startTime),
+                  ),
+              });
+            }
+            saveButton.disabled = true;
+            try {
+              if (editing) {
+                await Store.updateScheduleItem(item.id, data);
+                toast("Rozvrh uložen.");
+              } else {
+                await Store.addScheduleItem({
+                  ...data,
+                  ownerId: currentCharId,
+                  createdAt: Date.now(),
+                });
+                toast('"' + title + '" přidáno do rozvrhu.');
+              }
+              if (kind === "dates") {
+                // Show the week where the (next) term actually happens.
+                const shown = data.occurrences.some(
+                  (o) =>
+                    o.date >= scheduleWeekStart &&
+                    o.date <= addDays(scheduleWeekStart, 6),
+                );
+                if (!shown) {
+                  const next =
+                    data.occurrences.find((o) => o.date >= todayStr()) ||
+                    data.occurrences[0];
+                  scheduleWeekStart = mondayOf(next.date);
+                  renderSchedulePage();
+                }
+              }
+              closeModal();
+            } catch (error) {
+              console.error(error);
+              toast(error.message || "Rozvrh se nepodařilo uložit.");
+              saveButton.disabled = false;
+            }
+          });
+        }
+
         /* ================= WIRE UP UI ================= */
         function wireStaticUI() {
           let resizeTimer = null;
@@ -7180,6 +8397,54 @@
             .addEventListener("click", () => {
               if (tripPickCancel) tripPickCancel();
             });
+          document
+            .getElementById("btn-add-schedule")
+            .addEventListener("click", () => openScheduleFormModal());
+          const shiftScheduleWeek = (delta) => {
+            scheduleWeekStart = addDays(
+              scheduleWeekStart || mondayOf(todayStr()),
+              delta * 7,
+            );
+            renderSchedulePage();
+          };
+          document
+            .getElementById("btn-sched-prev")
+            .addEventListener("click", () => shiftScheduleWeek(-1));
+          document
+            .getElementById("btn-sched-next")
+            .addEventListener("click", () => shiftScheduleWeek(1));
+          document
+            .getElementById("btn-sched-today")
+            .addEventListener("click", () => {
+              scheduleWeekStart = mondayOf(todayStr());
+              renderSchedulePage();
+            });
+          const schedGrid = document.getElementById("sched-grid");
+          schedGrid.addEventListener("click", (event) => {
+            const ev = event.target.closest("[data-sched]");
+            if (ev) {
+              openScheduleDetailModal(ev.dataset.sched);
+              return;
+            }
+            const row = event.target.closest(".sched-row");
+            if (!row) return;
+            // Empty slot: start a new entry at that day, rounded to 30 min.
+            const rect = row.getBoundingClientRect();
+            const ratio = (event.clientX - rect.left) / rect.width;
+            const min =
+              Number(schedGrid.dataset.fromMin) +
+              Math.floor((ratio * Number(schedGrid.dataset.total)) / 30) * 30;
+            openScheduleFormModal(null, {
+              date: row.dataset.date,
+              startTime: minToTime(Math.min(min, 23 * 60)),
+            });
+          });
+          ["sched-agenda", "sched-list"].forEach((id) => {
+            document.getElementById(id).addEventListener("click", (event) => {
+              const el = event.target.closest("[data-sched]");
+              if (el) openScheduleDetailModal(el.dataset.sched);
+            });
+          });
           function shiftMonth(delta) {
             calMonth += delta;
             if (calMonth < 0) {
@@ -7348,6 +8613,12 @@
             Store.watchTripTags((data) => {
               tripTags = data;
               renderTripsPage();
+            }),
+          );
+          unsubscribers.push(
+            Store.watchScheduleItems((data) => {
+              scheduleItems = data;
+              renderSchedulePage();
             }),
           );
 
