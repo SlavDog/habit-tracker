@@ -4506,19 +4506,51 @@
           const doneUntil = completedDueDate > lc ? completedDueDate : lc;
           return daysBetween(lc, today) >= 0 && today <= doneUntil;
         }
-        async function toggleRecurringTask(rt) {
+        // Due date of the i-th occurrence (occurrence i is closed by completions[i]).
+        function recurringOccurrenceDue(rt, i) {
+          return addDays(rt.baseDueDate, (rt.intervalDays || 7) * i);
+        }
+        // One entry per occurrence that is due today or already overdue and not yet done.
+        function recurringPendingDueDates(rt) {
+          const today = todayStr();
+          const dates = [];
+          for (let i = (rt.completions || []).length; ; i++) {
+            const due = recurringOccurrenceDue(rt, i);
+            if (due > today || dates.length >= 520) break;
+            dates.push(due);
+          }
+          return dates;
+        }
+        // Occurrences (due by `untilDate`) completed on or after `fromDate`.
+        function recurringCompletedOccurrences(rt, fromDate, untilDate) {
+          const out = [];
+          (rt.completions || []).forEach((completedOn, i) => {
+            if (completedOn < fromDate || completedOn > todayStr()) return;
+            const due = recurringOccurrenceDue(rt, i);
+            if (untilDate && due > untilDate) return;
+            out.push({ completedOn, dueDate: due });
+          });
+          return out;
+        }
+        async function toggleRecurringTask(rt, undo) {
           const completions = (rt.completions || []).slice();
           const owner = characters[rt.ownerId];
           const reward = recurringReward(rt);
-          if (recurringIsDoneNow(rt)) {
+          if (undo === undefined) undo = recurringIsDoneNow(rt);
+          if (undo) {
+            if (completions.length === 0) return;
             const paidReward =
               rt.lastRewardAmount || (rt.lastRewardPaid ? reward : 0);
             completions.pop();
+            const hasPrev = completions.length > 0;
             await Store.updateRecurringTask(rt.id, {
               completions,
-              lastRewardPaid: false,
-              lastRewardAmount: null,
-              lastCompletionDueDate: null,
+              // earlier completions were paid out too, so keep them refundable
+              lastRewardPaid: hasPrev,
+              lastRewardAmount: hasPrev ? reward : null,
+              lastCompletionDueDate: hasPrev
+                ? recurringOccurrenceDue(rt, completions.length - 1)
+                : null,
             });
             if (paidReward && owner) {
               await Store.updateCharacter(rt.ownerId, {
@@ -4548,17 +4580,17 @@
             toast("+" + reward + ' zlaťáků za "' + rt.title + '"!', true);
           }
         }
-        function recurringMeta(rt) {
+        function recurringMeta(rt, dueOverride) {
           const intervalTxt =
             rt.intervalDays === 14 ? "Dvoutýdenní" : "Týdenní";
-          if (recurringIsDoneNow(rt)) {
+          if (!dueOverride && recurringIsDoneNow(rt)) {
             return (
               intervalTxt +
               " · splněno " +
               formatCzDate(recurringLastCompletion(rt))
             );
           }
-          const due = recurringDueDate(rt);
+          const due = dueOverride || recurringDueDate(rt);
           const diff = daysBetween(todayStr(), due);
           if (diff < 0)
             return (
@@ -4661,14 +4693,23 @@
               ")"
             );
           }
-          if (!entry.done && recurringDueDate(item) === todayStr()) {
+          const recurTxt =
+            item.intervalDays === 14 ? "Dvoutýdenní" : "Týdenní";
+          if (entry.done) {
             return (
-              (item.intervalDays === 14 ? "Dvoutýdenní" : "Týdenní") +
-              " · " +
-              difficulty.label
+              recurTxt +
+              " · splněno " +
+              formatCzDate(entry.completedOn || recurringLastCompletion(item)) +
+              (entry.dueDate && entry.dueDate < (entry.completedOn || "")
+                ? " (termín " + formatCzDate(entry.dueDate) + ")"
+                : "")
             );
           }
-          return recurringMeta(item);
+          const due = entry.dueDate || recurringDueDate(item);
+          if (due === todayStr()) {
+            return recurTxt + " · " + difficulty.label;
+          }
+          return recurringMeta(item, due);
         }
 
         function renderTaskEntries(entries, target) {
@@ -4683,7 +4724,9 @@
               '<button class="task-check' +
               (entry.done ? " done" : "") +
               '" aria-label="Splnit"' +
-              (entry.locked ? ' disabled title="Další termín"' : "") +
+              (entry.locked
+                ? ' disabled title="Nejdřív splň zmeškané termíny"'
+                : "") +
               '><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none"><polyline points="4 12 9 17 20 6"/></svg></button>' +
               '<span class="task-swatch" style="background:' +
               escapeAttr(item.color || "#c9622a") +
@@ -4702,7 +4745,7 @@
                 if (entry.kind === "habit") {
                   await toggleHabitDay(item, entry.completionDate || todayStr());
                 } else if (entry.kind === "recurring") {
-                  await toggleRecurringTask(item);
+                  await toggleRecurringTask(item, !!entry.done);
                 } else {
                   await toggleOneOffTask(item);
                 }
@@ -4730,14 +4773,29 @@
             ...recurringForChar(currentCharId)
               .map((task) => {
                 const done = recurringIsDoneNow(task);
+                if (done && recurringCompletedDueDate(task) > today) {
+                  return {
+                    kind: "recurring",
+                    data: task,
+                    done: true,
+                    dueDate: recurringCompletedDueDate(task),
+                    upcoming: true,
+                  };
+                }
+                // Next future occurrence, even while older ones are overdue.
+                const overdueCount = recurringPendingDueDates(task).length;
                 return {
                   kind: "recurring",
                   data: task,
-                  done,
-                  dueDate: done
-                    ? recurringCompletedDueDate(task)
-                    : recurringDueDate(task),
+                  done: false,
+                  dueDate: recurringOccurrenceDue(
+                    task,
+                    (task.completions || []).length + overdueCount,
+                  ),
                   upcoming: true,
+                  // completing always closes the oldest occurrence, so lock this
+                  // row until the overdue copies are done
+                  locked: overdueCount > 0,
                 };
               })
               .filter((entry) => entry.dueDate > today),
@@ -4849,15 +4907,15 @@
               });
             });
           recurringForChar(currentCharId).forEach((task) => {
-            const completionDate = recurringLastCompletion(task);
-            if (completionDate >= oldestDate && completionDate <= today) {
+            recurringCompletedOccurrences(task, oldestDate).forEach((occ) => {
               recent.push({
                 kind: "recurring",
                 data: task,
                 done: true,
-                completedOn: completionDate,
+                completedOn: occ.completedOn,
+                dueDate: occ.dueDate,
               });
-            }
+            });
           });
           recent.sort(
             (a, b) =>
@@ -4965,19 +5023,22 @@
               data: tk,
               done: !!tk.completed && tk.completedDate === t,
             }));
-          const dueR = recurringForChar(currentCharId)
-            .filter((rt) => {
-              if (!recurringIsDoneNow(rt)) return recurringDueDate(rt) <= t;
-              return (
-                recurringLastCompletion(rt) === t &&
-                recurringCompletedDueDate(rt) <= t
-              );
-            })
-            .map((rt) => ({
+          // One row per missed/due occurrence, plus rows for occurrences completed today.
+          const dueR = recurringForChar(currentCharId).flatMap((rt) => [
+            ...recurringPendingDueDates(rt).map((dueDate) => ({
               kind: "recurring",
               data: rt,
-              done: recurringIsDoneNow(rt),
-            }));
+              done: false,
+              dueDate,
+            })),
+            ...recurringCompletedOccurrences(rt, t, t).map((occ) => ({
+              kind: "recurring",
+              data: rt,
+              done: true,
+              dueDate: occ.dueDate,
+              completedOn: occ.completedOn,
+            })),
+          ]);
           const due = [...dueH, ...dueO, ...dueR].sort((a, b) => {
             if (a.done !== b.done) return Number(a.done) - Number(b.done);
             const aLabel =
@@ -4988,7 +5049,10 @@
               (b.data.title || "").toLowerCase() ||
               (b.kind === "recurring" && b.data.title) ||
               "";
-            return aLabel.localeCompare(bLabel);
+            return (
+              aLabel.localeCompare(bLabel) ||
+              (a.dueDate || "").localeCompare(b.dueDate || "")
+            );
           });
           if (due.length === 0) {
             list.innerHTML =
