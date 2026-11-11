@@ -407,7 +407,7 @@
         cursor: pointer;
       }
       .sk-seg-btn.active {
-        background: linear-gradient(180deg, var(--gold-bright), var(--gold-dim));
+        background: var(--gold);
         color: #241a12;
       }
       .hall-bar {
@@ -3509,6 +3509,177 @@
         .char-portrait-wrap {
           width: 120px;
           height: 150px;
+        }
+      }
+
+      /* ================= MOTION ================= */
+      :root {
+        --ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+        --dur-fast: 0.16s;
+        --dur: 0.26s;
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes pop-in {
+        from {
+          opacity: 0;
+          transform: translateY(6px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes ring-grow {
+        from {
+          stroke-dasharray: 0 1000;
+        }
+      }
+      @keyframes bar-grow {
+        from {
+          width: 0;
+        }
+      }
+
+      /* pages fade in whenever they are shown */
+      .page:not(.hidden) {
+        animation: fade-up var(--dur) var(--ease) both;
+      }
+      /* modals */
+      .modal-backdrop {
+        animation: fade-in var(--dur-fast) ease both;
+      }
+      .modal-backdrop .modal {
+        animation: pop-in var(--dur) var(--ease) both;
+      }
+      .modal-backdrop.closing {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.16s ease;
+      }
+      .modal-backdrop.closing .modal {
+        transform: translateY(6px) scale(0.98);
+        transition: transform 0.16s ease;
+      }
+      #sidebar-backdrop.show {
+        animation: fade-in var(--dur) ease both;
+      }
+
+      /* controls */
+      .nav-item {
+        transition:
+          background-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease;
+      }
+      input,
+      select,
+      textarea {
+        transition:
+          border-color var(--dur-fast) ease,
+          box-shadow var(--dur-fast) ease;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        box-shadow: 0 0 0 3px rgba(215, 179, 77, 0.14);
+      }
+      .sk-seg-btn,
+      .sk-chip,
+      .sk-iconbtn,
+      .cp-btn {
+        transition:
+          background-color var(--dur-fast) ease,
+          border-color var(--dur-fast) ease,
+          color var(--dur-fast) ease,
+          transform var(--dur-fast) ease;
+      }
+      .sk-iconbtn:active,
+      .cp-btn:active,
+      .sk-seg-btn:active {
+        transform: scale(0.97);
+      }
+      .sk-circle {
+        transition:
+          box-shadow var(--dur) var(--ease),
+          transform var(--dur) var(--ease);
+      }
+      .sk-tnode:not(.sk-root):active .sk-circle {
+        transform: scale(0.94);
+      }
+      @media (hover: hover) {
+        .sk-tnode:not(.sk-root):hover .sk-circle {
+          transform: scale(1.05);
+        }
+      }
+      .hall-card {
+        transition:
+          border-color var(--dur) ease,
+          transform var(--dur) var(--ease),
+          box-shadow var(--dur) ease;
+      }
+      .hall-thumb img {
+        transition: transform 0.5s var(--ease);
+      }
+      @media (hover: hover) {
+        .hall-card:hover {
+          border-color: var(--gold-dim);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-deep);
+        }
+        .hall-card:hover .hall-thumb img {
+          transform: scale(1.04);
+        }
+      }
+      .hall-menu-btn {
+        transition: background-color var(--dur-fast) ease;
+      }
+      .hall-menu:not(.hidden) {
+        animation: pop-in var(--dur-fast) var(--ease) both;
+        transform-origin: top right;
+      }
+
+      /* skill tree / hall entrance (class set briefly from JS) */
+      .entering .sk-ring .ring-fg {
+        animation: ring-grow 0.9s var(--ease) both;
+      }
+      .entering .sk-bar > span {
+        animation: bar-grow 0.8s var(--ease) both;
+      }
+      .entering .sk-lines {
+        animation: fade-in 0.6s ease both;
+      }
+      .entering .sk-tnode {
+        animation: pop-in 0.45s var(--ease) both;
+      }
+      .entering .hall-card {
+        animation: fade-up 0.4s var(--ease) both;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
         }
       }
     </style>
@@ -6904,12 +7075,14 @@
               skillView = b.dataset.view;
               safeStorage.set("ht_skill_view", skillView);
               renderSkillsPage();
+              pulseEnter(document.getElementById("page-skills"));
             }),
           );
           el.querySelectorAll("select[data-filter]").forEach((sel) =>
             sel.addEventListener("change", () => {
               hallFilter[sel.dataset.filter] = sel.value;
               renderSkillsPage();
+              pulseEnter(document.getElementById("page-skills"));
             }),
           );
           wireHallCards(el);
@@ -7413,6 +7586,8 @@
           closeSidebar();
           if (page === "skills") renderSkillsPage();
           if (page === "hobby") renderHobbyPage();
+          if (page === "skills" || page === "hobby")
+            pulseEnter(document.getElementById("page-" + page));
           if (page === "race") renderRacePage();
           if (page === "trips") {
             renderTripsPage();
@@ -7775,7 +7950,27 @@
           return root.querySelector(".modal");
         }
         function closeModal() {
-          document.getElementById("modal-root").innerHTML = "";
+          const root = document.getElementById("modal-root");
+          const backdrop = root.querySelector(".modal-backdrop");
+          if (
+            !backdrop ||
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ) {
+            root.innerHTML = "";
+            return;
+          }
+          // Fade out first; only clear if no other modal replaced this one meanwhile.
+          backdrop.classList.add("closing");
+          setTimeout(() => {
+            if (backdrop.parentNode === root) root.innerHTML = "";
+          }, 170);
+        }
+        // Briefly marks a page as "entering" so its content can animate in.
+        function pulseEnter(el) {
+          if (!el) return;
+          el.classList.add("entering");
+          clearTimeout(el._enterTimer);
+          el._enterTimer = setTimeout(() => el.classList.remove("entering"), 900);
         }
 
         function habitFormFields(h) {
