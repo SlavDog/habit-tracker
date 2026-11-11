@@ -201,6 +201,504 @@
         width: 100%;
       }
 
+      /* ---------- Strom dovedností & Síň slávy ---------- */
+      .sk-btn {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      .sk-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .sk-tree-wrap {
+        overflow-x: auto;
+        padding: 0.5rem 0 1rem;
+      }
+      .sk-tree {
+        position: relative;
+        margin: 0 auto;
+      }
+      .sk-lines {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .sk-lines path {
+        fill: none;
+        stroke: var(--gold-dim);
+        stroke-width: 2;
+        opacity: 0.8;
+      }
+      .sk-tnode {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 0;
+        background: none;
+        border: 0;
+        color: var(--parchment);
+        font: inherit;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .sk-root {
+        cursor: default;
+      }
+      .sk-circle {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, var(--bg-panel-alt), var(--bg-void));
+        box-shadow: var(--shadow-deep);
+      }
+      .sk-tnode:not(.sk-root):hover .sk-circle,
+      .sk-tnode:not(.sk-root):focus-visible .sk-circle {
+        box-shadow: 0 0 16px rgba(242, 211, 116, 0.45);
+      }
+      .sk-ring {
+        position: absolute;
+        inset: 0;
+      }
+      .sk-ring .ring-bg {
+        fill: none;
+        stroke: var(--border-bronze);
+        opacity: 0.55;
+      }
+      .sk-ring .ring-fg {
+        fill: none;
+        stroke: var(--gold-bright);
+        stroke-linecap: round;
+        transition: stroke-dasharray 0.5s ease;
+      }
+      .sk-svgicon {
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        vertical-align: -3px;
+        flex-shrink: 0;
+      }
+      .sk-chip .sk-svgicon {
+        vertical-align: -3px;
+      }
+      .sk-iconpick {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+        gap: 0.4rem;
+      }
+      .sk-iconbtn {
+        min-height: 48px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-inset);
+        color: var(--parchment-dim);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sk-iconbtn.active {
+        border-color: var(--gold-bright);
+        color: var(--gold-bright);
+        background: rgba(215, 179, 77, 0.14);
+      }
+      .hall-thumb {
+        color: var(--gold-dim);
+      }
+      .sk-icon {
+        color: var(--gold-bright);
+        display: flex;
+        font-size: 1.9rem;
+        line-height: 1;
+      }
+      .sk-check {
+        position: absolute;
+        right: -2px;
+        top: -2px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--success);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--bg-void);
+      }
+      .sk-tlabel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        height: 54px;
+        width: 100%;
+        text-align: center;
+        overflow: hidden;
+      }
+      .sk-tlabel b {
+        font-family: var(--font-display);
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--gold-bright);
+        line-height: 1.15;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+      }
+      .sk-tlabel span {
+        font-size: 0.72rem;
+        color: var(--parchment-dim);
+      }
+      .sk-bar {
+        height: 10px;
+        border-radius: 6px;
+        background: var(--bg-inset);
+        border: 1px solid var(--border-bronze);
+        overflow: hidden;
+      }
+      .sk-bar > span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright));
+      }
+      .sk-node-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .sk-node-pct {
+        font-weight: 700;
+        color: var(--parchment);
+      }
+      .sk-note {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 0.55rem;
+      }
+      .sk-seg {
+        display: flex;
+        gap: 0.3rem;
+        padding: 0.25rem;
+        border: 1px solid var(--border-bronze);
+        border-radius: var(--radius);
+        background: var(--bg-inset);
+        align-self: flex-start;
+      }
+      .sk-seg-btn {
+        min-height: 44px;
+        padding: 0 1.1rem;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background: none;
+        color: var(--parchment-dim);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .sk-seg-btn.active {
+        background: linear-gradient(180deg, var(--gold-bright), var(--gold-dim));
+        color: #241a12;
+      }
+      .hall-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .hall-bar select {
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 44px;
+        width: auto;
+      }
+      .hall-count {
+        flex: none;
+        font-size: 0.8rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .hall-stats {
+        padding: 1.1rem 1.2rem;
+      }
+      .hall-stats h3 {
+        font-family: var(--font-display);
+        color: var(--gold-bright);
+      }
+      .sk-chips {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 0.7rem;
+      }
+      .sk-chip-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        min-width: 4.6rem;
+      }
+      .sk-chip {
+        min-height: 44px;
+        padding: 0 0.85rem;
+        border-radius: 22px;
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-panel);
+        color: var(--parchment);
+        font: inherit;
+        font-size: 0.82rem;
+        cursor: pointer;
+      }
+      .sk-chip.active {
+        border-color: var(--gold-bright);
+        color: var(--gold-bright);
+        background: rgba(215, 179, 77, 0.12);
+      }
+      .sk-chip-n {
+        color: var(--muted);
+        font-size: 0.74rem;
+      }
+      .sk-tag {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 0.12rem 0.5rem;
+        border-radius: 10px;
+        border: 1px solid var(--gold-dim);
+        color: var(--gold);
+        white-space: nowrap;
+      }
+      .sk-tag.ok {
+        border-color: var(--success);
+        color: var(--success-bright);
+      }
+      .creative-pick {
+        margin: 0.2rem 0 1rem;
+        padding: 0.9rem 1rem;
+        border: 1px solid var(--gold-dim);
+        border-radius: var(--radius);
+        background: var(--bg-inset);
+      }
+      .creative-pick h4 {
+        font-family: var(--font-display);
+        color: var(--gold-bright);
+        font-size: 1rem;
+        margin-bottom: 0.15rem;
+      }
+      .creative-pick p {
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-bottom: 0.7rem;
+      }
+      .cp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.5rem;
+      }
+      .cp-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+        min-height: 48px;
+        padding: 0.55rem 0.75rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border-bronze);
+        background: var(--bg-panel);
+        color: var(--parchment);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+      }
+      .cp-btn:hover {
+        border-color: var(--gold);
+      }
+      .hobby-head {
+        padding: 1.2rem 1.3rem;
+      }
+      .hobby-head h2 {
+        margin-bottom: 0.2rem;
+      }
+      .hall-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 0.9rem;
+      }
+      .hall-card {
+        position: relative;
+        border: 1px solid var(--border-bronze);
+        border-radius: var(--radius);
+        background: var(--bg-inset);
+      }
+      .hall-open {
+        display: block;
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        padding: 0;
+        border: 0;
+        border-radius: inherit;
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        overflow: hidden;
+      }
+      .hall-thumb {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dim);
+      }
+      .hall-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hall-cap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        padding: 1.4rem 0.6rem 0.5rem;
+        background: linear-gradient(transparent, rgba(16, 12, 20, 0.92));
+        color: var(--parchment);
+        pointer-events: none;
+      }
+      .hall-cap b {
+        font-size: 0.95rem;
+        line-height: 1.2;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+      }
+      .hall-cap-meta {
+        display: none;
+        font-size: 0.7rem;
+        color: var(--parchment-dim);
+      }
+      @media (hover: hover) {
+        .hall-cap {
+          opacity: 0;
+          transition: opacity 0.15s ease;
+        }
+        .hall-card:hover .hall-cap,
+        .hall-open:focus-visible .hall-cap {
+          opacity: 1;
+        }
+        .hall-cap-meta {
+          display: block;
+        }
+      }
+      .hall-meta {
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .hall-learned {
+        font-size: 0.88rem;
+        color: var(--parchment-dim);
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+      .hall-detail-img img {
+        width: 100%;
+        max-height: 55vh;
+        object-fit: contain;
+        border-radius: var(--radius-sm);
+        background: var(--bg-inset);
+      }
+      .hall-menu-wrap {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        z-index: 2;
+      }
+      .hall-menu-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--parchment);
+        cursor: pointer;
+      }
+      .hall-menu-btn .icon {
+        fill: currentColor;
+        stroke: none;
+        filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.8));
+      }
+      @media (hover: hover) {
+        .hall-menu-btn:hover,
+        .hall-menu-btn[aria-expanded="true"] {
+          background: rgba(16, 12, 20, 0.35);
+        }
+      }
+      .hall-menu {
+        position: absolute;
+        right: 0;
+        top: 44px;
+        min-width: 150px;
+        display: flex;
+        flex-direction: column;
+        padding: 0.3rem;
+        border: 1px solid var(--border-bronze-light);
+        border-radius: var(--radius-sm);
+        background: var(--bg-panel);
+        box-shadow: var(--shadow-deep);
+      }
+      .hall-menu > * {
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 0.8rem;
+        border: 0;
+        border-radius: 6px;
+        background: none;
+        color: var(--parchment);
+        font: inherit;
+        font-size: 0.88rem;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .hall-menu > *:hover {
+        background: rgba(215, 179, 77, 0.1);
+      }
+      .hall-menu .danger {
+        color: var(--danger-bright);
+      }
+      a.btn {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sk-toast-btn {
+        pointer-events: auto;
+        min-height: 36px;
+      }
+
       /* ---------- Panels ---------- */
       .panel {
         background: linear-gradient(
@@ -3168,6 +3666,15 @@
             </svg>
             Rozvrh
           </button>
+          <button class="nav-item" data-page="skills">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M12 21v-8" />
+              <path d="M12 13c-4 0-6-2.5-6-6 4 0 6 2 6 6z" />
+              <path d="M12 15c3.5 0 6-2 6-5.5-3.5 0-6 1.8-6 5.5z" />
+              <path d="M8 21h8" />
+            </svg>
+            Strom
+          </button>
         </nav>
         <div class="sidebar-foot">
           <button class="switch-char-btn" id="btn-switch-char">
@@ -3266,6 +3773,7 @@
                 aria-label="Průběh dnešních úkolů"
               ></div>
             </div>
+            <div id="creative-pick"></div>
             <div class="task-list" id="task-list">
               <div class="empty-note">Načítám kroniku…</div>
             </div>
@@ -3620,6 +4128,11 @@
             <div id="sched-list"></div>
           </div>
         </section>
+
+        <!-- SKILL TREE -->
+        <section class="page hidden" id="page-skills"></section>
+        <!-- HOBBY / HALL OF FAME -->
+        <section class="page hidden" id="page-hobby"></section>
       </main>
     </div>
 
@@ -3744,6 +4257,16 @@
         let trips = [];
         let tripTags = [];
         let scheduleItems = []; // weekly activities and dated events, per character
+        let hobbies = []; // skill-tree hobbies, per character
+        let creations = []; // Hall of Fame entries, per character
+        let hobbyPoints = []; // earned weekly points (never removed with a creation)
+        let skillSettings = []; // one doc per character (id = character id)
+        let skillLoaded = { hobbies: false, settings: false };
+        let skillSeeding = false;
+        let skillMigrating = false;
+        let currentHobbyId = null;
+        let skillView = safeStorage.get("ht_skill_view") === "hall" ? "hall" : "tree";
+        let hallFilter = { type: "", hobby: "", sort: "new" };
         let currentCharId = safeStorage.get(LS_CHAR_KEY) || null;
         let recentlyCompletedExpanded = false;
         let calMonth = new Date().getMonth();
@@ -4275,6 +4798,73 @@
               notifyLocal();
             }
           },
+          /* ---- skill tree: hobbies, creations, hobbyPoints, skillSettings ---- */
+          watchCol(name, cb) {
+            if (storageMode === "db") {
+              return db.collection(name).onSnapshot(
+                (snap) => cb(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+                (err) => console.error(err),
+              );
+            }
+            const fn = (d) => cb(d[name] || []);
+            localListeners.push(fn);
+            fn(loadLocal());
+            return () => {
+              localListeners = localListeners.filter((f) => f !== fn);
+            };
+          },
+          async addDoc(name, data) {
+            if (storageMode === "db") {
+              const ref = await db.collection(name).add(data);
+              return ref.id;
+            }
+            const d = loadLocal();
+            const id =
+              name.charAt(0) +
+              "_" +
+              Date.now() +
+              "_" +
+              Math.random().toString(36).slice(2, 7);
+            d[name] = d[name] || [];
+            d[name].push({ id, ...data });
+            saveLocal(d);
+            notifyLocal();
+            return id;
+          },
+          // Create or replace a document with a known id (idempotent).
+          async setDoc(name, id, data) {
+            if (storageMode === "db") {
+              await db.doc(name + "/" + id).set(data);
+            } else {
+              const d = loadLocal();
+              d[name] = (d[name] || []).filter((x) => x.id !== id);
+              d[name].push({ id, ...data });
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async updateDoc(name, id, patch) {
+            if (storageMode === "db") {
+              await db.doc(name + "/" + id).update(patch);
+            } else {
+              const d = loadLocal();
+              d[name] = (d[name] || []).map((x) =>
+                x.id === id ? { ...x, ...patch } : x,
+              );
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
+          async deleteDoc(name, id) {
+            if (storageMode === "db") {
+              await db.doc(name + "/" + id).delete();
+            } else {
+              const d = loadLocal();
+              d[name] = (d[name] || []).filter((x) => x.id !== id);
+              saveLocal(d);
+              notifyLocal();
+            }
+          },
         };
 
         /* ================= TOAST ================= */
@@ -4714,6 +5304,7 @@
 
         function renderTaskEntries(entries, target) {
           target.innerHTML = "";
+          const creativeTaskId = settingsForChar(currentCharId).creativeTaskId;
           entries.forEach((entry) => {
             const item = entry.data;
             const row = document.createElement("div");
@@ -4733,6 +5324,11 @@
               '"></span>' +
               '<div class="task-text"><div class="t-title">' +
               escapeHtml(item.title) +
+              (entry.kind === "recurring" &&
+              creativeTaskId &&
+              item.id === creativeTaskId
+                ? ' <span class="sk-tag">Strom</span>'
+                : "") +
               '</div><div class="t-meta">' +
               taskEntryMeta(entry) +
               "</div></div>" +
@@ -4746,6 +5342,12 @@
                   await toggleHabitDay(item, entry.completionDate || todayStr());
                 } else if (entry.kind === "recurring") {
                   await toggleRecurringTask(item, !!entry.done);
+                  if (
+                    !entry.done &&
+                    creativeTaskId &&
+                    item.id === creativeTaskId
+                  )
+                    creativeDoneToast();
                 } else {
                   await toggleOneOffTask(item);
                 }
@@ -5535,18 +6137,1282 @@
           });
         }
 
+        /* ================= SKILL TREE & HALL OF FAME ================= */
+        const CREATION_TYPES = {
+          image: { label: "Obrázek", icon: "image" },
+          video: { label: "Video", icon: "film" },
+          music: { label: "Hudba", icon: "music" },
+          text: { label: "Text", icon: "file" },
+          other: { label: "Jiné", icon: "star" },
+        };
+        const DEFAULT_HOBBIES = [
+          { key: "kresleni", name: "Kreslení", icon: "brush", weight: 15 },
+          { key: "3d", name: "3D modeling", icon: "cube", weight: 25 },
+          { key: "hudba", name: "Hudba", icon: "music", weight: 20 },
+          { key: "psani", name: "Psaní knihy", icon: "book", weight: 15 },
+        ];
+        // Tree geometry (px)
+        const SK_SLOT_W = 104;
+        const SK_ROOT_D = 96;
+        const SK_NODE_D = 72;
+        const SK_LABEL_H = 54;
+        const SK_ROOT_BOTTOM = SK_ROOT_D + 8 + SK_LABEL_H;
+        const SK_NODE_BOTTOM = SK_NODE_D + 8 + SK_LABEL_H;
+        const SK_GAP = 48;
+        const SK_ROW = SK_NODE_BOTTOM + SK_GAP;
+        const DEFAULT_GOAL_POINTS = 20;
+        const DEFAULT_CREATIVE_DAY = 3; // 0 = Monday … 3 = Thursday
+        const WEEKDAY_NAMES = [
+          "pondělí",
+          "úterý",
+          "středa",
+          "čtvrtek",
+          "pátek",
+          "sobota",
+          "neděle",
+        ];
+
+        function safeUrl(u) {
+          u = (u || "").trim();
+          if (!u) return "";
+          try {
+            const p = new URL(u);
+            return p.protocol === "http:" || p.protocol === "https:"
+              ? p.href
+              : "";
+          } catch (e) {
+            return "";
+          }
+        }
+        function hobbiesForChar(id) {
+          return hobbies
+            .filter((h) => h.ownerId === id)
+            .sort(
+              (a, b) =>
+                (a.order || 0) - (b.order || 0) ||
+                (a.createdAt || 0) - (b.createdAt || 0),
+            );
+        }
+        function creationsForHobby(hid) {
+          return creations
+            .filter((c) => c.ownerId === currentCharId && c.hobbyId === hid)
+            .sort(
+              (a, b) =>
+                (b.date || "").localeCompare(a.date || "") ||
+                (b.createdAt || 0) - (a.createdAt || 0),
+            );
+        }
+        function settingsForChar(id) {
+          const s = skillSettings.find((x) => x.id === id) || {};
+          return {
+            goalPoints: Math.max(1, Number(s.goalPoints) || DEFAULT_GOAL_POINTS),
+            weights: s.weights || {},
+            creativeDay: Number.isInteger(s.creativeDay)
+              ? s.creativeDay
+              : DEFAULT_CREATIVE_DAY,
+            creativeTaskId: s.creativeTaskId || "",
+            creativeScheduleId: s.creativeScheduleId || "",
+            migrations: s.migrations || {},
+          };
+        }
+        function hobbyPointCount(hid) {
+          return hobbyPoints.filter(
+            (p) => p.ownerId === currentCharId && p.hobbyId === hid,
+          ).length;
+        }
+        function hobbyPct(hid, st) {
+          return Math.min(100, (hobbyPointCount(hid) / st.goalPoints) * 100);
+        }
+        function gameDevPct(list, st) {
+          if (!list.length) return 0;
+          let sumW = 0,
+            total = 0;
+          list.forEach((h) => {
+            const w = Math.max(0, Number(st.weights[h.id]) || 0);
+            sumW += w;
+            total += w * hobbyPct(h.id, st);
+          });
+          if (sumW === 0)
+            return (
+              list.reduce((a, h) => a + hobbyPct(h.id, st), 0) / list.length
+            );
+          return total / sumW;
+        }
+        function fmtPct(n) {
+          return String(Math.round(n * 10) / 10).replace(".", ",") + " %";
+        }
+        function skillBar(pct, label) {
+          return (
+            '<div class="sk-bar" role="img" aria-label="' +
+            escapeAttr(label) +
+            '"><span style="width:' +
+            Math.max(0, Math.min(100, pct)) +
+            '%"></span></div>'
+          );
+        }
+        function hobbyHasPointForWeek(hid, date) {
+          const w = mondayOf(date);
+          return hobbyPoints.some(
+            (p) =>
+              p.ownerId === currentCharId &&
+              p.hobbyId === hid &&
+              p.weekStart === w,
+          );
+        }
+        // Returns true if the creation earned the weekly point.
+        async function addCreation(hid, data) {
+          const id = await Store.addDoc("creations", {
+            ...data,
+            ownerId: currentCharId,
+            hobbyId: hid,
+            createdAt: Date.now(),
+          });
+          if (hobbyHasPointForWeek(hid, data.date)) return false;
+          // Deterministic id: a second point for the same week is impossible.
+          await Store.setDoc(
+            "hobbyPoints",
+            currentCharId + "_" + hid + "_" + mondayOf(data.date),
+            {
+              ownerId: currentCharId,
+              hobbyId: hid,
+              weekStart: mondayOf(data.date),
+              creationId: id,
+              createdAt: Date.now(),
+            },
+          );
+          return true;
+        }
+        async function saveSkillSettings(patch) {
+          const st = settingsForChar(currentCharId);
+          await Store.setDoc("skillSettings", currentCharId, {
+            goalPoints: st.goalPoints,
+            weights: st.weights,
+            creativeDay: st.creativeDay,
+            creativeTaskId: st.creativeTaskId,
+            creativeScheduleId: st.creativeScheduleId,
+            migrations: st.migrations,
+            seeded: true,
+            ...patch,
+          });
+        }
+        async function deleteHobby(hid) {
+          const st = settingsForChar(currentCharId);
+          await Promise.all([
+            ...creations
+              .filter((c) => c.hobbyId === hid)
+              .map((c) => Store.deleteDoc("creations", c.id)),
+            ...hobbyPoints
+              .filter((p) => p.hobbyId === hid)
+              .map((p) => Store.deleteDoc("hobbyPoints", p.id)),
+            ...hobbiesForChar(currentCharId)
+              .filter((h) => h.dependsOn === hid)
+              .map((h) => Store.updateDoc("hobbies", h.id, { dependsOn: null })),
+          ]);
+          const weights = { ...st.weights };
+          delete weights[hid];
+          await saveSkillSettings({ weights });
+          await Store.deleteDoc("hobbies", hid);
+        }
+        // First visit: create the default hobbies (deterministic ids, so it is idempotent).
+        async function ensureSkillSeed() {
+          if (
+            skillSeeding ||
+            !currentCharId ||
+            !skillLoaded.hobbies ||
+            !skillLoaded.settings ||
+            skillSettings.some((s) => s.id === currentCharId)
+          )
+            return;
+          skillSeeding = true;
+          try {
+            const char = currentCharId;
+            const weights = {};
+            for (let i = 0; i < DEFAULT_HOBBIES.length; i++) {
+              const d = DEFAULT_HOBBIES[i];
+              const id = "h_" + char + "_" + d.key;
+              weights[id] = d.weight;
+              await Store.setDoc("hobbies", id, {
+                ownerId: char,
+                name: d.name,
+                icon: d.icon,
+                order: i,
+                dependsOn: d.dependsOn ? "h_" + char + "_" + d.dependsOn : null,
+                createdAt: Date.now() + i,
+              });
+            }
+            await Store.setDoc("skillSettings", char, {
+              goalPoints: DEFAULT_GOAL_POINTS,
+              weights,
+              creativeDay: DEFAULT_CREATIVE_DAY,
+              creativeTaskId: "",
+              creativeScheduleId: "",
+              seeded: true,
+            });
+          } catch (e) {
+            console.error(e);
+          } finally {
+            skillSeeding = false;
+          }
+        }
+        function lastCreationDate(hid) {
+          return creations
+            .filter((c) => c.ownerId === currentCharId && c.hobbyId === hid)
+            .reduce((m, c) => ((c.date || "") > m ? c.date : m), "");
+        }
+        // Hobby you haven't touched the longest (null if nothing stands out).
+        function longestWaitingHobby(list) {
+          if (list.length < 2) return null;
+          const rows = list.map((h) => ({ h, last: lastCreationDate(h.id) }));
+          rows.sort(
+            (a, b) =>
+              a.last.localeCompare(b.last) ||
+              (a.h.createdAt || 0) - (b.h.createdAt || 0),
+          );
+          return rows[0].last === rows[rows.length - 1].last ? null : rows[0].h;
+        }
+        function nextCreativeTermText(st) {
+          if (!st.creativeScheduleId) return "";
+          const t = todayStr();
+          for (let i = 0; i < 60; i++) {
+            const d = addDays(t, i);
+            const occ = scheduleOccurrencesOn(d).find(
+              (o) => o.item.id === st.creativeScheduleId,
+            );
+            if (occ)
+              return (
+                WEEKDAY_NAMES[weekdayIndex(d)] +
+                " " +
+                formatCzDate(d) +
+                (occ.start ? " v " + occ.start : "")
+              );
+          }
+          return "";
+        }
+
+        // Line icons (24x24, stroke) available for hobbies and creation types.
+        const SK_ICONS = {
+          brush:
+            '<path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>',
+          palette:
+            '<circle cx="13.5" cy="6.5" r=".6"/><circle cx="17.5" cy="10.5" r=".6"/><circle cx="8.5" cy="7.5" r=".6"/><circle cx="6.5" cy="12.5" r=".6"/><path d="M12 2a10 10 0 1 0 0 20c1 0 1.7-.8 1.7-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.7 1.7-1.7H16a6 6 0 0 0 6-6c0-4.4-4.5-8.2-10-8.2z"/>',
+          cube: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+          music:
+            '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+          headphones:
+            '<path d="M3 14v-2a9 9 0 0 1 18 0v2"/><path d="M21 15v3a2 2 0 0 1-2 2h-1v-6h1a2 2 0 0 1 2 2zM3 15v3a2 2 0 0 0 2 2h1v-6H5a2 2 0 0 0-2 2z"/>',
+          mic: '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5"/>',
+          book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+          pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+          code: '<path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/>',
+          gamepad:
+            '<path d="M6 12h4M8 10v4"/><circle cx="15" cy="13" r=".6"/><circle cx="18" cy="11" r=".6"/><path d="M17.3 5H6.7a4 4 0 0 0-3.9 3.2l-1.7 8A3 3 0 0 0 4 20c1 0 1.7-.5 2.3-1.3L8 17h8l1.7 1.7c.6.8 1.3 1.3 2.3 1.3a3 3 0 0 0 2.9-3.8l-1.7-8A4 4 0 0 0 17.3 5z"/>',
+          camera:
+            '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+          film: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 3v18M17 3v18M3 8h4M3 12h18M3 16h4M17 8h4M17 16h4"/>',
+          image:
+            '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+          file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>',
+          bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+          star: '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3L5.8 21 7 14.2 2 9.3l6.9-1z"/>',
+        };
+        const SK_HOBBY_ICONS = [
+          "brush",
+          "palette",
+          "cube",
+          "music",
+          "headphones",
+          "mic",
+          "book",
+          "pen",
+          "code",
+          "gamepad",
+          "camera",
+          "film",
+          "bolt",
+          "star",
+        ];
+        function skIcon(key, size) {
+          return (
+            '<svg class="sk-svgicon" viewBox="0 0 24 24" width="' +
+            size +
+            '" height="' +
+            size +
+            '" aria-hidden="true">' +
+            (SK_ICONS[key] || SK_ICONS.star) +
+            "</svg>"
+          );
+        }
+        function hobbyIconKey(h) {
+          if (h.icon && SK_ICONS[h.icon]) return h.icon;
+          const key = String(h.id || "").split("_").pop();
+          const d = DEFAULT_HOBBIES.find((x) => x.key === key);
+          return d ? d.icon : "star";
+        }
+        // Circular progress ring (SVG) drawn around a node.
+        function skillRing(d, pct) {
+          const sw = 6,
+            r = (d - sw) / 2,
+            c = 2 * Math.PI * r,
+            p = Math.max(0, Math.min(100, pct));
+          return (
+            '<svg class="sk-ring" width="' + d + '" height="' + d +
+            '" viewBox="0 0 ' + d + " " + d + '" aria-hidden="true">' +
+            '<circle class="ring-bg" cx="' + d / 2 + '" cy="' + d / 2 +
+            '" r="' + r + '" stroke-width="' + sw + '"/>' +
+            '<circle class="ring-fg" cx="' + d / 2 + '" cy="' + d / 2 +
+            '" r="' + r + '" stroke-width="' + sw +
+            '" stroke-dasharray="' + (c * p) / 100 + " " + c +
+            '" transform="rotate(-90 ' + d / 2 + " " + d / 2 + ')"/></svg>'
+          );
+        }
+        // Tidy tree: a hobby that "navazuje na" another hangs below it; leaves get one slot each.
+        function layoutSkillTree(list) {
+          const ids = new Set(list.map((h) => h.id));
+          const kids = {};
+          const roots = [];
+          list.forEach((h) => {
+            if (h.dependsOn && h.dependsOn !== h.id && ids.has(h.dependsOn))
+              (kids[h.dependsOn] = kids[h.dependsOn] || []).push(h);
+            else roots.push(h);
+          });
+          const pos = {};
+          const seen = new Set();
+          let leaf = 0;
+          const place = (h, depth, parent) => {
+            seen.add(h.id);
+            const ch = (kids[h.id] || []).filter((c) => !seen.has(c.id));
+            let x;
+            if (!ch.length) x = leaf++;
+            else {
+              const xs = ch.map((c) => place(c, depth + 1, h.id));
+              x = (Math.min(...xs) + Math.max(...xs)) / 2;
+            }
+            pos[h.id] = { x, depth, parent };
+            return x;
+          };
+          roots.forEach((r) => {
+            if (!seen.has(r.id)) place(r, 1, null);
+          });
+          list.forEach((h) => {
+            if (!seen.has(h.id)) place(h, 1, null); // dependency cycle safety
+          });
+          const top = list.filter((h) => !pos[h.id].parent).map((h) => pos[h.id].x);
+          return {
+            pos,
+            slots: leaf,
+            maxDepth: Math.max(...list.map((h) => pos[h.id].depth)),
+            rootX: (Math.min(...top) + Math.max(...top)) / 2,
+          };
+        }
+
+        // One-time cleanup: the default 3D modeling no longer "navazuje na" Kreslení.
+        async function migrateSkillData() {
+          if (
+            skillMigrating ||
+            !currentCharId ||
+            !skillLoaded.hobbies ||
+            !skillLoaded.settings ||
+            !skillSettings.some((x) => x.id === currentCharId)
+          )
+            return;
+          const st = settingsForChar(currentCharId);
+          if (st.migrations.no3dDependency) return;
+          skillMigrating = true;
+          try {
+            const h = hobbies.find(
+              (x) =>
+                x.id === "h_" + currentCharId + "_3d" &&
+                x.dependsOn === "h_" + currentCharId + "_kresleni",
+            );
+            if (h) await Store.updateDoc("hobbies", h.id, { dependsOn: null });
+            await saveSkillSettings({
+              migrations: { ...st.migrations, no3dDependency: true },
+            });
+          } catch (e) {
+            console.error(e);
+          } finally {
+            skillMigrating = false;
+          }
+        }
+
+        function renderSkillViews() {
+          if (!currentCharId) return;
+          ensureSkillSeed();
+          migrateSkillData();
+          renderSkillsPage();
+          renderHobbyPage();
+          renderCreativePick();
+          renderTasks();
+        }
+
+        function hallCardsHtml(items, showHobby) {
+          let html = '<div class="hall-grid">';
+          items.forEach((c) => {
+            const type = CREATION_TYPES[c.type] || CREATION_TYPES.other;
+            const url = safeUrl(c.url);
+            const thumb = safeUrl(c.thumbUrl) || (c.type === "image" ? url : "");
+            const hobby = showHobby && hobbies.find((h) => h.id === c.hobbyId);
+            html +=
+              '<article class="hall-card"><button type="button" class="hall-open" data-detail-creation="' +
+              escapeAttr(c.id) +
+              '" aria-label="' +
+              escapeAttr(c.title) +
+              '"><span class="hall-thumb">' +
+              (thumb
+                ? '<img src="' +
+                  escapeAttr(thumb) +
+                  '" alt="" loading="lazy" referrerpolicy="no-referrer">'
+                : skIcon(type.icon, 44)) +
+              '</span><span class="hall-cap"><b>' +
+              escapeHtml(c.title) +
+              '</b><small class="hall-cap-meta">' +
+              type.label +
+              " · " +
+              formatCzDate(c.date) +
+              (hobby ? " · " + escapeHtml(hobby.name) : "") +
+              "</small></span></button>" +
+              '<div class="hall-menu-wrap"><button type="button" class="hall-menu-btn" aria-label="Další akce" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="12" cy="19" r="1.2"/></svg></button>' +
+              '<div class="hall-menu hidden" role="menu">' +
+              (url
+                ? '<a role="menuitem" href="' +
+                  escapeAttr(url) +
+                  '" target="_blank" rel="noopener noreferrer">Otevřít odkaz</a>'
+                : "") +
+              '<button type="button" role="menuitem" data-edit-creation="' +
+              escapeAttr(c.id) +
+              '">Upravit</button><button type="button" role="menuitem" class="danger" data-del-creation="' +
+              escapeAttr(c.id) +
+              '">Smazat</button></div></div></article>';
+          });
+          return html + "</div>";
+        }
+        function closeHallMenus(except) {
+          document.querySelectorAll(".hall-menu:not(.hidden)").forEach((m) => {
+            if (m === except) return;
+            m.classList.add("hidden");
+            const b = m.parentNode.querySelector(".hall-menu-btn");
+            if (b) b.setAttribute("aria-expanded", "false");
+          });
+        }
+        function openCreationDetail(c) {
+          const type = CREATION_TYPES[c.type] || CREATION_TYPES.other;
+          const url = safeUrl(c.url);
+          const thumb = safeUrl(c.thumbUrl) || (c.type === "image" ? url : "");
+          const hobby = hobbies.find((h) => h.id === c.hobbyId);
+          const modal = openModal(
+            '<div class="modal-head"><h3>' +
+              escapeHtml(c.title) +
+              '</h3><button class="btn btn-icon btn-ghost" id="m-close" type="button" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>' +
+              (thumb
+                ? '<div class="hall-detail-img"><img src="' +
+                  escapeAttr(thumb) +
+                  '" alt="" referrerpolicy="no-referrer"></div>'
+                : "") +
+              '<div class="hall-meta" style="margin:.6rem 0">' +
+              type.label +
+              " · " +
+              formatCzDate(c.date) +
+              (hobby ? " · " + escapeHtml(hobby.name) : "") +
+              "</div>" +
+              (c.learned
+                ? '<div class="field"><label>Co jsem se naučil</label><div class="hall-learned">' +
+                  escapeHtml(c.learned) +
+                  "</div></div>"
+                : "") +
+              '<div class="modal-actions">' +
+              (url
+                ? '<a class="btn btn-gold sk-btn" href="' +
+                  escapeAttr(url) +
+                  '" target="_blank" rel="noopener noreferrer">Otevřít</a>'
+                : "") +
+              '<button class="btn btn-ghost sk-btn" id="m-cancel" type="button">Zavřít</button></div>',
+          );
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelector("#m-cancel").addEventListener("click", closeModal);
+          const img = modal.querySelector(".hall-detail-img img");
+          if (img) img.addEventListener("error", () => img.parentNode.remove());
+        }
+        if (!window.__hallMenuBound) {
+          window.__hallMenuBound = true;
+          document.addEventListener("click", (e) => {
+            if (!e.target.closest(".hall-menu-wrap")) closeHallMenus();
+          });
+        }
+        function wireHallCards(root) {
+          root.querySelectorAll(".hall-thumb img").forEach((img) =>
+            img.addEventListener("error", () => {
+              img.parentNode.innerHTML = skIcon("image", 44);
+            }),
+          );
+          root.querySelectorAll("[data-detail-creation]").forEach((b) =>
+            b.addEventListener("click", () => {
+              const c = creations.find((x) => x.id === b.dataset.detailCreation);
+              if (c) openCreationDetail(c);
+            }),
+          );
+          root.querySelectorAll(".hall-menu-btn").forEach((b) =>
+            b.addEventListener("click", (e) => {
+              e.stopPropagation();
+              const menu = b.parentNode.querySelector(".hall-menu");
+              closeHallMenus(menu);
+              const open = menu.classList.toggle("hidden") === false;
+              b.setAttribute("aria-expanded", String(open));
+            }),
+          );
+          root.querySelectorAll("[data-edit-creation]").forEach((b) =>
+            b.addEventListener("click", () => {
+              closeHallMenus();
+              const c = creations.find((x) => x.id === b.dataset.editCreation);
+              if (c) openCreationModal(c.hobbyId, c);
+            }),
+          );
+          root.querySelectorAll("[data-del-creation]").forEach((b) =>
+            b.addEventListener("click", () => {
+              closeHallMenus();
+              const c = creations.find((x) => x.id === b.dataset.delCreation);
+              if (!c) return;
+              confirmModal(
+                "Smazat výtvor",
+                'Opravdu smazat "' +
+                  c.title +
+                  '"? Bod, který výtvor případně získal, ti zůstane.',
+                "Smazat",
+                async () => {
+                  await Store.deleteDoc("creations", c.id);
+                  toast("Výtvor smazán.");
+                },
+              );
+            }),
+          );
+        }
+        // Hall of Fame overview: all creations of the character, stats + filters.
+        function hallViewHtml(list) {
+          const mine = creations.filter((c) => c.ownerId === currentCharId);
+          if (!mine.length)
+            return '<div class="empty-note">Síň slávy je zatím prázdná. Otevři koníček ve Stromu a zapiš první výtvor.</div>';
+          const f = hallFilter;
+          const byType = (t) => mine.filter((c) => c.type === t).length;
+          const byHobby = (id) => mine.filter((c) => c.hobbyId === id).length;
+          const sel = (kind, options) =>
+            '<select data-filter="' +
+            kind +
+            '" aria-label="' +
+            kind +
+            '">' +
+            options
+              .map(
+                ([value, label]) =>
+                  '<option value="' +
+                  escapeAttr(value) +
+                  '"' +
+                  (f[kind] === value ? " selected" : "") +
+                  ">" +
+                  escapeHtml(label) +
+                  "</option>",
+              )
+              .join("") +
+            "</select>";
+          let shown = mine.filter(
+            (c) =>
+              (!f.type || c.type === f.type) &&
+              (!f.hobby || c.hobbyId === f.hobby),
+          );
+          shown = shown.sort(
+            (a, b) =>
+              ((b.date || "").localeCompare(a.date || "") ||
+                (b.createdAt || 0) - (a.createdAt || 0)) *
+              (f.sort === "old" ? -1 : 1),
+          );
+          return (
+            '<div class="hall-bar">' +
+            sel("type", [
+              ["", "Typ: vše"],
+              ...Object.entries(CREATION_TYPES)
+                .filter(([k]) => byType(k) > 0)
+                .map(([k, v]) => [k, v.label + " (" + byType(k) + ")"]),
+            ]) +
+            sel("hobby", [
+              ["", "Koníček: vše"],
+              ...list
+                .filter((h) => byHobby(h.id) > 0)
+                .map((h) => [h.id, h.name + " (" + byHobby(h.id) + ")"]),
+            ]) +
+            sel("sort", [
+              ["new", "Nejnovější"],
+              ["old", "Nejstarší"],
+            ]) +
+            '<span class="hall-count">' +
+            shown.length +
+            " / " +
+            mine.length +
+            "</span></div>" +
+            (shown.length
+              ? hallCardsHtml(shown, true)
+              : '<div class="empty-note">Filtru nic neodpovídá.</div>')
+          );
+        }
+
+        function renderSkillsPage() {
+          const el = document.getElementById("page-skills");
+          if (!currentCharId) return;
+          if (!skillLoaded.hobbies || !skillLoaded.settings) {
+            el.innerHTML = '<div class="empty-note">Načítám strom…</div>';
+            return;
+          }
+          const st = settingsForChar(currentCharId);
+          const list = hobbiesForChar(currentCharId);
+          const gd = gameDevPct(list, st);
+          const totalPoints = list.reduce(
+            (a, h) => a + hobbyPointCount(h.id),
+            0,
+          );
+          const term = nextCreativeTermText(st);
+          const week = mondayOf(todayStr());
+          let html =
+            '<div class="page-head"><div><h2>Strom dovedností</h2><p>Cesta k tvým vlastním hrám</p></div>' +
+            '<div class="sk-actions"><button class="btn btn-gold sk-btn" id="sk-add" type="button">+ Koníček</button>' +
+            '<button class="btn btn-ghost sk-btn" id="sk-settings" type="button">Nastavení</button></div></div>' +
+            '<div class="sk-seg" role="tablist"><button type="button" role="tab" class="sk-seg-btn' +
+            (skillView === "tree" ? " active" : "") +
+            '" data-view="tree" aria-selected="' +
+            (skillView === "tree") +
+            '">Strom</button><button type="button" role="tab" class="sk-seg-btn' +
+            (skillView === "hall" ? " active" : "") +
+            '" data-view="hall" aria-selected="' +
+            (skillView === "hall") +
+            '">Síň slávy</button></div>' +
+            '<div class="sk-note" style="margin:0">Celkem ' +
+            totalPoints +
+            " bodů" +
+            (term ? " · další Kreativní čas: " + escapeHtml(term) : "") +
+            "</div>";
+          const goalNode = (cx, d) =>
+            '<div class="sk-tnode sk-root" style="left:' +
+            (cx - SK_SLOT_W / 2) +
+            "px;top:0;width:" +
+            SK_SLOT_W +
+            'px"><div class="sk-circle" style="width:' +
+            d +
+            "px;height:" +
+            d +
+            'px">' +
+            skillRing(d, gd) +
+            '<span class="sk-icon">' + skIcon("gamepad", 44) + "</span></div>" +
+            '<div class="sk-tlabel"><b>GameDev</b><span>' +
+            fmtPct(gd) +
+            "</span></div></div>";
+          if (skillView === "hall") {
+            html += hallViewHtml(list);
+          } else if (!list.length) {
+            html +=
+              '<div class="empty-note">Zatím žádné koníčky. Přidej první tlačítkem + Koníček.</div>';
+          } else {
+            const { pos, slots, maxDepth, rootX } = layoutSkillTree(list);
+            const W = Math.max(slots, 1) * SK_SLOT_W;
+            const topOf = (depth) =>
+              SK_ROOT_BOTTOM + SK_GAP + (depth - 1) * SK_ROW;
+            const H = topOf(maxDepth) + SK_NODE_BOTTOM;
+            const cxOf = (x) => (x + 0.5) * SK_SLOT_W;
+            let lines = "";
+            const curve = (x1, y1, x2, y2) => {
+              const m = (y1 + y2) / 2;
+              return (
+                '<path d="M' + x1 + " " + y1 + " C" + x1 + " " + m + " " +
+                x2 + " " + m + " " + x2 + " " + y2 + '"/>'
+              );
+            };
+            list.forEach((h) => {
+              const p = pos[h.id];
+              const parent = p.parent ? pos[p.parent] : null;
+              if (parent) {
+                lines += curve(
+                  cxOf(parent.x),
+                  topOf(parent.depth) + SK_NODE_BOTTOM,
+                  cxOf(p.x),
+                  topOf(p.depth),
+                );
+              } else {
+                lines += curve(cxOf(rootX), SK_ROOT_BOTTOM, cxOf(p.x), topOf(1));
+              }
+            });
+            let nodes = goalNode(cxOf(rootX), SK_ROOT_D);
+            list.forEach((h) => {
+              const p = pos[h.id];
+              const pct = hobbyPct(h.id, st);
+              const pts = hobbyPointCount(h.id);
+              nodes +=
+                '<button type="button" class="sk-tnode" data-hobby="' +
+                escapeAttr(h.id) +
+                '" aria-label="' +
+                escapeAttr(h.name + " " + fmtPct(pct)) +
+                '" style="left:' +
+                (cxOf(p.x) - SK_SLOT_W / 2) +
+                "px;top:" +
+                topOf(p.depth) +
+                "px;width:" +
+                SK_SLOT_W +
+                'px"><div class="sk-circle" style="width:' +
+                SK_NODE_D +
+                "px;height:" +
+                SK_NODE_D +
+                'px">' +
+                skillRing(SK_NODE_D, pct) +
+                '<span class="sk-icon">' +
+                skIcon(hobbyIconKey(h), 30) +
+                "</span>" +
+                (hobbyHasPointForWeek(h.id, week)
+                  ? '<span class="sk-check" title="Bod za tento týden">✓</span>'
+                  : "") +
+                '</div><div class="sk-tlabel"><b>' +
+                escapeHtml(h.name) +
+                "</b><span>" +
+                fmtPct(pct) +
+                " · " +
+                pts +
+                "/" +
+                st.goalPoints +
+                "</span></div></button>";
+            });
+            html +=
+              '<div class="sk-tree-wrap"><div class="sk-tree" style="width:' +
+              W +
+              "px;height:" +
+              H +
+              'px"><svg class="sk-lines" width="' +
+              W +
+              '" height="' +
+              H +
+              '" aria-hidden="true">' +
+              lines +
+              "</svg>" +
+              nodes +
+              "</div></div>";
+          }
+          el.innerHTML = html;
+          el.querySelector("#sk-add").addEventListener("click", () =>
+            openHobbyModal(null),
+          );
+          el.querySelector("#sk-settings").addEventListener(
+            "click",
+            openSkillSettingsModal,
+          );
+          el.querySelectorAll("[data-hobby]").forEach((b) =>
+            b.addEventListener("click", () => openHobbyPage(b.dataset.hobby)),
+          );
+          el.querySelectorAll("[data-view]").forEach((b) =>
+            b.addEventListener("click", () => {
+              skillView = b.dataset.view;
+              safeStorage.set("ht_skill_view", skillView);
+              renderSkillsPage();
+            }),
+          );
+          el.querySelectorAll("select[data-filter]").forEach((sel) =>
+            sel.addEventListener("change", () => {
+              hallFilter[sel.dataset.filter] = sel.value;
+              renderSkillsPage();
+            }),
+          );
+          wireHallCards(el);
+        }
+
+        function openHobbyPage(id) {
+          currentHobbyId = id;
+          showPage("hobby");
+        }
+
+        function renderHobbyPage() {
+          const el = document.getElementById("page-hobby");
+          if (!currentCharId || !currentHobbyId) return;
+          const hobby = hobbies.find(
+            (h) => h.id === currentHobbyId && h.ownerId === currentCharId,
+          );
+          if (!hobby) {
+            el.innerHTML = "";
+            if (!el.classList.contains("hidden")) showPage("skills");
+            return;
+          }
+          const st = settingsForChar(currentCharId);
+          const pct = hobbyPct(hobby.id, st);
+          const pts = hobbyPointCount(hobby.id);
+          const weekDone = hobbyHasPointForWeek(hobby.id, todayStr());
+          const dep = hobbies.find((h) => h.id === hobby.dependsOn);
+          const items = creationsForHobby(hobby.id);
+          let html =
+            '<div class="page-head"><button class="btn btn-ghost sk-btn" id="hb-back" type="button">← Strom</button>' +
+            '<div class="sk-actions"><button class="btn btn-gold sk-btn" id="hb-add" type="button">+ Přidat výtvor</button>' +
+            '<button class="btn btn-ghost sk-btn" id="hb-edit" type="button">Upravit koníček</button></div></div>' +
+            '<div class="panel hobby-head"><h2>' +
+            escapeHtml(hobby.name) +
+            "</h2>" +
+            '<div class="sk-node-top" style="margin:.4rem 0"><span>' +
+            pts +
+            " / " +
+            st.goalPoints +
+            ' bodů</span><span class="sk-node-pct">' +
+            fmtPct(pct) +
+            "</span></div>" +
+            skillBar(pct, hobby.name + " " + fmtPct(pct)) +
+            '<div class="sk-note">' +
+            (weekDone
+              ? '<span class="sk-tag ok">Bod za tento týden získán</span>'
+              : '<span class="sk-tag">Tento týden ještě bez bodu</span>') +
+            (dep ? " · navazuje na " + escapeHtml(dep.name) : "") +
+            "</div></div>" +
+            '<div class="page-head"><h3>Síň slávy</h3><span class="sk-note">' +
+            items.length +
+            " výtvorů</span></div>";
+          if (!items.length) {
+            html +=
+              '<div class="empty-note">Síň slávy je zatím prázdná. Zapiš první výtvor.</div>';
+          } else {
+            html += hallCardsHtml(items, false);
+          }
+          el.innerHTML = html;
+          el.querySelector("#hb-back").addEventListener("click", () =>
+            showPage("skills"),
+          );
+          el.querySelector("#hb-add").addEventListener("click", () =>
+            openCreationModal(hobby.id, null),
+          );
+          el.querySelector("#hb-edit").addEventListener("click", () =>
+            openHobbyModal(hobby.id),
+          );
+          wireHallCards(el);
+        }
+
+        function confirmModal(title, text, okLabel, onOk) {
+          const modal = openModal(
+            '<div class="modal-head"><h3>' +
+              escapeHtml(title) +
+              "</h3></div><p>" +
+              escapeHtml(text) +
+              '</p><div class="modal-actions"><button class="btn btn-ghost sk-btn" id="c-cancel" type="button">Zrušit</button><button class="btn btn-danger sk-btn" id="c-ok" type="button">' +
+              escapeHtml(okLabel) +
+              "</button></div>",
+          );
+          modal.querySelector("#c-cancel").addEventListener("click", closeModal);
+          modal.querySelector("#c-ok").addEventListener("click", async () => {
+            modal.querySelector("#c-ok").disabled = true;
+            try {
+              await onOk();
+            } catch (e) {
+              console.error(e);
+              toast("Něco se nepovedlo.");
+            }
+            closeModal();
+          });
+        }
+
+        function openCreationModal(hid, creation) {
+          const hobby = hobbies.find((h) => h.id === hid);
+          if (!hobby) return;
+          const editing = !!creation;
+          const c = creation || { type: "image", date: todayStr() };
+          const modal = openModal(
+            '<div class="modal-head"><h3>' +
+              (editing ? "Upravit výtvor" : "Přidat výtvor") +
+              " · " +
+              escapeHtml(hobby.name) +
+              '</h3><button class="btn btn-icon btn-ghost" id="m-close" type="button" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>' +
+              '<div class="field"><label for="cr-title">Název</label><input type="text" id="cr-title" value="' +
+              escapeAttr(c.title || "") +
+              '" maxlength="120"></div>' +
+              '<div class="field"><label for="cr-type">Typ</label><select id="cr-type">' +
+              Object.entries(CREATION_TYPES)
+                .map(
+                  ([k, v]) =>
+                    '<option value="' +
+                    k +
+                    '"' +
+                    (c.type === k ? " selected" : "") +
+                    ">" +
+                    v.label +
+                    "</option>",
+                )
+                .join("") +
+              "</select></div>" +
+              '<div class="field"><label for="cr-date">Datum</label><input type="date" id="cr-date" value="' +
+              escapeAttr(c.date || todayStr()) +
+              '"><span class="hint" id="cr-hint"></span></div>' +
+              '<div class="field"><label for="cr-url">Odkaz na výtvor</label><input type="url" id="cr-url" placeholder="https://…" value="' +
+              escapeAttr(c.url || "") +
+              '"></div>' +
+              '<div class="field"><label for="cr-thumb">Odkaz na náhled <span class="hint">(volitelné)</span></label><input type="url" id="cr-thumb" placeholder="https://…" value="' +
+              escapeAttr(c.thumbUrl || "") +
+              '"></div>' +
+              '<div class="field"><label for="cr-learned">Co jsem se naučil</label><textarea id="cr-learned" maxlength="500">' +
+              escapeHtml(c.learned || "") +
+              "</textarea></div>" +
+              '<div class="modal-actions"><button class="btn btn-ghost sk-btn" id="m-cancel" type="button">Zrušit</button><button class="btn btn-gold sk-btn" id="m-save" type="button">' +
+              (editing ? "Uložit" : "Zapsat") +
+              "</button></div>",
+          );
+          const hint = modal.querySelector("#cr-hint");
+          const dateInput = modal.querySelector("#cr-date");
+          const updateHint = () => {
+            if (editing) {
+              hint.textContent = "Úprava výtvoru body nemění.";
+            } else if (!dateInput.value) {
+              hint.textContent = "";
+            } else {
+              hint.textContent = hobbyHasPointForWeek(hid, dateInput.value)
+                ? "Za tento týden už má koníček bod. Výtvor se uloží, ale bod už nedá."
+                : "Za tento týden získá koníček bod.";
+            }
+          };
+          updateHint();
+          dateInput.addEventListener("input", updateHint);
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelector("#m-cancel").addEventListener("click", closeModal);
+          modal.querySelector("#m-save").addEventListener("click", async () => {
+            const title = modal.querySelector("#cr-title").value.trim();
+            const date = dateInput.value;
+            const rawUrl = modal.querySelector("#cr-url").value;
+            const rawThumb = modal.querySelector("#cr-thumb").value;
+            if (!title) return toast("Zadej název výtvoru.");
+            if (!date) return toast("Vyber datum.");
+            if (rawUrl.trim() && !safeUrl(rawUrl))
+              return toast("Odkaz musí začínat http:// nebo https://");
+            if (rawThumb.trim() && !safeUrl(rawThumb))
+              return toast("Odkaz na náhled musí začínat http:// nebo https://");
+            const data = {
+              title,
+              type: modal.querySelector("#cr-type").value,
+              date,
+              url: safeUrl(rawUrl),
+              thumbUrl: safeUrl(rawThumb),
+              learned: modal.querySelector("#cr-learned").value.trim(),
+            };
+            const save = modal.querySelector("#m-save");
+            save.disabled = true;
+            try {
+              if (editing) {
+                await Store.updateDoc("creations", creation.id, data);
+                toast("Výtvor upraven.");
+              } else {
+                const earned = await addCreation(hid, data);
+                const st = settingsForChar(currentCharId);
+                const gd = gameDevPct(hobbiesForChar(currentCharId), st);
+                toast(
+                  earned
+                    ? "+1 bod pro " + hobby.name + " · GameDev " + fmtPct(gd)
+                    : 'Výtvor uložen. Za tento týden už "' +
+                        hobby.name +
+                        '" bod má.',
+                  earned,
+                );
+              }
+              closeModal();
+            } catch (e) {
+              console.error(e);
+              toast("Uložení se nepovedlo.");
+              save.disabled = false;
+            }
+          });
+        }
+
+        function openHobbyModal(hid) {
+          const hobby = hid ? hobbies.find((h) => h.id === hid) : null;
+          const st = settingsForChar(currentCharId);
+          const others = hobbiesForChar(currentCharId).filter((h) => h.id !== hid);
+          const modal = openModal(
+            '<div class="modal-head"><h3>' +
+              (hobby ? "Upravit koníček" : "Přidat koníček") +
+              '</h3><button class="btn btn-icon btn-ghost" id="m-close" type="button" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>' +
+              '<div class="field"><label for="hb-name">Název</label><input type="text" id="hb-name" maxlength="40" value="' +
+              escapeAttr(hobby ? hobby.name : "") +
+              '"></div>' +
+              '<div class="field"><label>Ikonka</label><div class="sk-iconpick" id="hb-icons">' +
+              SK_HOBBY_ICONS.map(
+                (k) =>
+                  '<button type="button" class="sk-iconbtn' +
+                  (k === (hobby ? hobbyIconKey(hobby) : "star") ? " active" : "") +
+                  '" data-icon="' +
+                  k +
+                  '" aria-label="' +
+                  k +
+                  '">' +
+                  skIcon(k, 24) +
+                  "</button>",
+              ).join("") +
+              "</div></div>" +
+              '<div class="field"><label for="hb-weight">Váha v GameDevu</label><input type="number" id="hb-weight" min="0" max="100" step="1" value="' +
+              (hobby ? Number(st.weights[hobby.id]) || 0 : 10) +
+              '"><span class="hint">Čím vyšší váha, tím víc koníček ovlivní procenta GameDevu.</span></div>' +
+              '<div class="field"><label for="hb-dep">Navazuje na <span class="hint">(jen informace, nic se nezamyká)</span></label><select id="hb-dep"><option value="">— nic —</option>' +
+              others
+                .map(
+                  (h) =>
+                    '<option value="' +
+                    escapeAttr(h.id) +
+                    '"' +
+                    (hobby && hobby.dependsOn === h.id ? " selected" : "") +
+                    ">" +
+                    escapeHtml(h.name) +
+                    "</option>",
+                )
+                .join("") +
+              "</select></div>" +
+              '<div class="modal-actions">' +
+              (hobby
+                ? '<button class="btn btn-danger sk-btn" id="hb-del" type="button" style="margin-right:auto">Smazat</button>'
+                : "") +
+              '<button class="btn btn-ghost sk-btn" id="m-cancel" type="button">Zrušit</button><button class="btn btn-gold sk-btn" id="m-save" type="button">Uložit</button></div>',
+          );
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelector("#m-cancel").addEventListener("click", closeModal);
+          modal.querySelectorAll(".sk-iconbtn").forEach((b) =>
+            b.addEventListener("click", () => {
+              modal
+                .querySelectorAll(".sk-iconbtn")
+                .forEach((x) => x.classList.toggle("active", x === b));
+            }),
+          );
+          if (hobby) {
+            modal.querySelector("#hb-del").addEventListener("click", () => {
+              confirmModal(
+                "Smazat koníček",
+                'Smazat "' +
+                  hobby.name +
+                  '" včetně všech jeho výtvorů a bodů? Procenta GameDevu se tím změní.',
+                "Smazat",
+                async () => {
+                  await deleteHobby(hobby.id);
+                  currentHobbyId = null;
+                  showPage("skills");
+                  toast("Koníček smazán.");
+                },
+              );
+            });
+          }
+          modal.querySelector("#m-save").addEventListener("click", async () => {
+            const name = modal.querySelector("#hb-name").value.trim();
+            if (!name) return toast("Zadej název koníčku.");
+            const weight = Math.max(
+              0,
+              Math.min(100, Number(modal.querySelector("#hb-weight").value) || 0),
+            );
+            const dependsOn = modal.querySelector("#hb-dep").value || null;
+            const iconBtn = modal.querySelector("#hb-icons .active");
+            const icon = iconBtn ? iconBtn.dataset.icon : "star";
+            const save = modal.querySelector("#m-save");
+            save.disabled = true;
+            try {
+              if (hobby) {
+                await Store.updateDoc("hobbies", hobby.id, { name, icon, dependsOn });
+                await saveSkillSettings({
+                  weights: { ...st.weights, [hobby.id]: weight },
+                });
+                toast("Koníček uložen.");
+              } else {
+                const order =
+                  Math.max(
+                    -1,
+                    ...hobbiesForChar(currentCharId).map((h) => h.order || 0),
+                  ) + 1;
+                const id = await Store.addDoc("hobbies", {
+                  ownerId: currentCharId,
+                  name,
+                  icon,
+                  order,
+                  dependsOn,
+                  createdAt: Date.now(),
+                });
+                await saveSkillSettings({
+                  weights: { ...st.weights, [id]: weight },
+                });
+                toast('Koníček "' + name + '" přidán.');
+              }
+              closeModal();
+            } catch (e) {
+              console.error(e);
+              toast("Uložení se nepovedlo.");
+              save.disabled = false;
+            }
+          });
+        }
+
+        function openSkillSettingsModal() {
+          const st = settingsForChar(currentCharId);
+          const tasks = recurringForChar(currentCharId)
+            .slice()
+            .sort((a, b) => (a.title || "").localeCompare(b.title || "", "cs"));
+          const sched = scheduleForChar(currentCharId)
+            .slice()
+            .sort((a, b) => (a.title || "").localeCompare(b.title || "", "cs"));
+          const opts = (list, sel) =>
+            '<option value="">— nepropojeno —</option>' +
+            list
+              .map(
+                (x) =>
+                  '<option value="' +
+                  escapeAttr(x.id) +
+                  '"' +
+                  (x.id === sel ? " selected" : "") +
+                  ">" +
+                  escapeHtml(x.title) +
+                  "</option>",
+              )
+              .join("");
+          const modal = openModal(
+            '<div class="modal-head"><h3>Nastavení stromu</h3><button class="btn btn-icon btn-ghost" id="m-close" type="button" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>' +
+              '<div class="field"><label for="ss-goal">Cílový počet bodů koníčku (= 100 %)</label><input type="number" id="ss-goal" min="1" max="999" step="1" value="' +
+              st.goalPoints +
+              '"></div>' +
+              '<div class="field"><label for="ss-day">Kreativní den <span class="hint">(jen tip, kdy se věnovat koníčkům)</span></label><select id="ss-day">' +
+              WEEKDAY_NAMES.map(
+                (n, i) =>
+                  '<option value="' +
+                  i +
+                  '"' +
+                  (i === st.creativeDay ? " selected" : "") +
+                  ">" +
+                  n +
+                  "</option>",
+              ).join("") +
+              "</select></div>" +
+              '<div class="field"><label for="ss-task">Opakující se úkol „Kreativní čas"</label><select id="ss-task">' +
+              opts(tasks, st.creativeTaskId) +
+              '</select><span class="hint">Úkol dostane odznak Stromu a po jeho splnění nabídneme zapsat výtvor. Body se nedávají automaticky.</span></div>' +
+              '<div class="field"><label for="ss-sched">Položka rozvrhu „Kreativní čas"</label><select id="ss-sched">' +
+              opts(sched, st.creativeScheduleId) +
+              "</select></div>" +
+              '<div class="modal-actions"><button class="btn btn-ghost sk-btn" id="m-cancel" type="button">Zrušit</button><button class="btn btn-gold sk-btn" id="m-save" type="button">Uložit</button></div>',
+          );
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelector("#m-cancel").addEventListener("click", closeModal);
+          modal.querySelector("#m-save").addEventListener("click", async () => {
+            const save = modal.querySelector("#m-save");
+            save.disabled = true;
+            try {
+              await saveSkillSettings({
+                goalPoints: Math.max(
+                  1,
+                  Math.min(999, Math.round(Number(modal.querySelector("#ss-goal").value) || DEFAULT_GOAL_POINTS)),
+                ),
+                creativeDay: Number(modal.querySelector("#ss-day").value),
+                creativeTaskId: modal.querySelector("#ss-task").value,
+                creativeScheduleId: modal.querySelector("#ss-sched").value,
+              });
+              toast("Nastavení uloženo.");
+              closeModal();
+            } catch (e) {
+              console.error(e);
+              toast("Uložení se nepovedlo.");
+              save.disabled = false;
+            }
+          });
+        }
+
+        // "What will you do today?" – shown only on the creative day.
+        function renderCreativePick() {
+          const el = document.getElementById("creative-pick");
+          if (!el) return;
+          el.innerHTML = "";
+          if (
+            !currentCharId ||
+            !skillLoaded.hobbies ||
+            !skillLoaded.settings
+          )
+            return;
+          const st = settingsForChar(currentCharId);
+          const list = hobbiesForChar(currentCharId);
+          if (!list.length || weekdayIndex(todayStr()) !== st.creativeDay) return;
+          const waiting = longestWaitingHobby(list);
+          el.innerHTML =
+            '<div class="creative-pick"><h4>Co dnes budeš dělat?</h4><p>Dnes je kreativní den. Vyber si, čemu se budeš věnovat. Nic nemusíš.</p><div class="cp-grid">' +
+            list
+              .map(
+                (h) =>
+                  '<button type="button" class="cp-btn" data-pick="' +
+                  escapeAttr(h.id) +
+                  '"><span>' +
+                  escapeHtml(h.name) +
+                  "</span>" +
+                  (waiting && waiting.id === h.id
+                    ? '<span class="sk-tag">Čeká nejdéle</span>'
+                    : "") +
+                  "</button>",
+              )
+              .join("") +
+            "</div></div>";
+          el.querySelectorAll("[data-pick]").forEach((b) =>
+            b.addEventListener("click", () => openHobbyPage(b.dataset.pick)),
+          );
+        }
+
+        // Offered after the linked "Kreativní čas" task is completed. No point is given here.
+        function creativeDoneToast() {
+          if (!hobbiesForChar(currentCharId).length) return;
+          const c = document.getElementById("toast-container");
+          const el = document.createElement("div");
+          el.className = "toast gold";
+          const span = document.createElement("span");
+          span.textContent = "Kreativní čas hotov!";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn btn-gold btn-sm sk-toast-btn";
+          btn.textContent = "Zapsat výtvor";
+          btn.addEventListener("click", () => {
+            el.remove();
+            openHobbyPickerModal();
+          });
+          el.append(span, btn);
+          c.appendChild(el);
+          setTimeout(() => {
+            el.style.opacity = "0";
+            el.style.transition = "opacity .3s";
+            setTimeout(() => el.remove(), 300);
+          }, 7000);
+        }
+        function openHobbyPickerModal() {
+          const list = hobbiesForChar(currentCharId);
+          const modal = openModal(
+            '<div class="modal-head"><h3>Čemu ses věnoval?</h3><button class="btn btn-icon btn-ghost" id="m-close" type="button" aria-label="Zavřít"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="cp-grid">' +
+              list
+                .map(
+                  (h) =>
+                    '<button type="button" class="cp-btn" data-pick="' +
+                    escapeAttr(h.id) +
+                    '">' +
+                    escapeHtml(h.name) +
+                    "</button>",
+                )
+                .join("") +
+              "</div>",
+          );
+          modal.querySelector("#m-close").addEventListener("click", closeModal);
+          modal.querySelectorAll("[data-pick]").forEach((b) =>
+            b.addEventListener("click", () => openCreationModal(b.dataset.pick, null)),
+          );
+        }
+
         /* ================= NAV / PAGES ================= */
         function showPage(page) {
           if (tripPickCancel) tripPickCancel();
-          ["home", "shop", "inventory", "race", "trips", "schedule"].forEach((p) => {
+          [
+            "home",
+            "shop",
+            "inventory",
+            "race",
+            "trips",
+            "schedule",
+            "skills",
+            "hobby",
+          ].forEach((p) => {
             document
               .getElementById("page-" + p)
               .classList.toggle("hidden", p !== page);
           });
           document.querySelectorAll(".nav-item[data-page]").forEach((el) => {
-            el.classList.toggle("active", el.dataset.page === page);
+            el.classList.toggle(
+              "active",
+              el.dataset.page === (page === "hobby" ? "skills" : page),
+            );
           });
           closeSidebar();
+          if (page === "skills") renderSkillsPage();
+          if (page === "hobby") renderHobbyPage();
           if (page === "race") renderRacePage();
           if (page === "trips") {
             renderTripsPage();
@@ -5594,6 +7460,7 @@
           renderInventory();
           renderRacePage();
           renderSchedulePage();
+          renderSkillViews();
         }
 
         function raceHabitOptions(ownerId, selectedId) {
@@ -7889,6 +9756,9 @@
               escapeAttr(item.color || HABIT_COLORS[0]) +
               '"><span class="sched-list-body"><strong>' +
               escapeHtml(item.title) +
+              (item.id === settingsForChar(currentCharId).creativeScheduleId
+                ? ' <span class="sk-tag">Strom</span>'
+                : "") +
               "</strong><small>" +
               escapeHtml(scheduleSummary(item)) +
               (item.location ? " · " + escapeHtml(item.location) : "") +
@@ -8685,6 +10555,33 @@
               renderSchedulePage();
             }),
           );
+          const skillWatch = (col, apply) =>
+            unsubscribers.push(
+              Store.watchCol(col, (data) => {
+                apply(data);
+                if (
+                  !document
+                    .getElementById("screen-select")
+                    .classList.contains("hidden")
+                )
+                  return;
+                renderSkillViews();
+              }),
+            );
+          skillWatch("hobbies", (d) => {
+            hobbies = d;
+            skillLoaded.hobbies = true;
+          });
+          skillWatch("creations", (d) => {
+            creations = d;
+          });
+          skillWatch("hobbyPoints", (d) => {
+            hobbyPoints = d;
+          });
+          skillWatch("skillSettings", (d) => {
+            skillSettings = d;
+            skillLoaded.settings = true;
+          });
 
           document.getElementById("screen-select").classList.remove("hidden");
           if (currentCharId && CHAR_IDS.includes(currentCharId)) {
